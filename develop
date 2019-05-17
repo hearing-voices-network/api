@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+# Set script scope environment variables for dev or CI.
+export APP_PORT=${APP_PORT:-80}
+export DB_PORT=${DB_PORT:-3306}
+export DB_ROOT_PASS=${DB_ROOT_PASS:-secret}
+export DB_NAME=${DB_NAME:-hearing_voices_network}
+export DB_USER=${DB_USER:-hearing_voices_network}
+export DB_PASS=${DB_PASS:-secret}
+
+COMPOSE="docker-compose -f docker-compose.yml"
+
+# Pass arguments to docker-compose, or default to docker-compose ps.
+if [[ $# -gt 0  ]]; then
+    case "$1" in
+
+        art|artisan )
+            shift 1
+            ${COMPOSE} run --rm \
+                api \
+                php artisan "$@"
+            ;;
+
+        composer )
+            shift 1
+            ${COMPOSE} run --rm \
+                api \
+                composer "$@"
+            ;;
+
+        phpunit )
+            shift 1
+            ${COMPOSE} run --rm \
+                api \
+                php vendor/bin/phpunit "$@"
+            ;;
+
+        phpcs )
+            shift 1
+            ${COMPOSE} run --rm \
+                api \
+                php vendor/bin/phpcs "$@"
+            ;;
+
+        npm )
+            shift 1
+            ${COMPOSE} run --rm \
+                node \
+                npm "$@"
+            ;;
+
+        * ) ${COMPOSE} "$@"; ;;
+
+    esac
+else
+    ${COMPOSE} ps
+fi
