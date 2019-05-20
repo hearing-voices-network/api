@@ -373,16 +373,16 @@
         },
         {
             "name": "goldspecdigital/oooas",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goldspecdigital/oooas.git",
-                "reference": "f5ef7d754c71189560596f1635bad2333d3c1835"
+                "reference": "980376e1be9f3033a5ffa99107db377613c7f25a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goldspecdigital/oooas/zipball/f5ef7d754c71189560596f1635bad2333d3c1835",
-                "reference": "f5ef7d754c71189560596f1635bad2333d3c1835",
+                "url": "https://api.github.com/repos/goldspecdigital/oooas/zipball/980376e1be9f3033a5ffa99107db377613c7f25a",
+                "reference": "980376e1be9f3033a5ffa99107db377613c7f25a",
                 "shasum": ""
             },
             "require": {
@@ -418,7 +418,7 @@
                 "php",
                 "swagger"
             ],
-            "time": "2019-05-19T15:01:02+00:00"
+            "time": "2019-05-20T12:34:21+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",

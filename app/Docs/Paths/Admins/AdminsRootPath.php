@@ -2,8 +2,8 @@
 
 namespace App\Docs\Paths\Admins;
 
-use App\Docs\Operations\Admins\StoreAdminOperation;
 use App\Docs\Operations\Admins\IndexAdminOperation;
+use App\Docs\Operations\Admins\StoreAdminOperation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 
 class AdminsRootPath extends PathItem

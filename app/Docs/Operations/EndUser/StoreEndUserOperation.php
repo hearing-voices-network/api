@@ -4,7 +4,6 @@ namespace App\Docs\Operations\EndUser;
 
 use App\Docs\Schemas\EndUser\EndUserSchema;
 use App\Docs\Schemas\EndUser\StoreEndUserSchema;
-use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\EndUsersTag;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;

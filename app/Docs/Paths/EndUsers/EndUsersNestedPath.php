@@ -2,9 +2,9 @@
 
 namespace App\Docs\Paths\EndUsers;
 
+use App\Docs\Operations\EndUser\DestroyEndUserOperation;
 use App\Docs\Operations\EndUser\ShowEndUserOperation;
 use App\Docs\Operations\EndUser\UpdateEndUserOperation;
-use App\Docs\Operations\EndUser\DestroyEndUserOperation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;

@@ -24,7 +24,7 @@ class ResourceDeletedResponse extends Response
                 Schema::object()->properties(
                     Schema::string('message')->example("The $resource has been deleted.")
                 )
-            )
+            ),
         ];
     }
 }
