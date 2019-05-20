@@ -6,10 +6,8 @@ use App\Docs\Paths\Admins\AdminsNestedPath;
 use App\Docs\Paths\Admins\AdminsRootPath;
 use App\Docs\Paths\EndUsers\EndUsersNestedPath;
 use App\Docs\Paths\EndUsers\EndUsersRootPath;
-use App\Docs\SecuritySchemes\OAuth2SecurityScheme;
 use App\Docs\Tags\AdminsTag;
 use App\Docs\Tags\EndUsersTag;
-use GoldSpecDigital\ObjectOrientedOAS\Objects\Components;
 use GoldSpecDigital\ObjectOrientedOAS\OpenApi as BaseOpenApi;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
@@ -34,13 +32,12 @@ class OpenApi extends BaseOpenApi implements Responsable
             new EndUsersRootPath(),
             new EndUsersNestedPath(),
         ];
-        $this->components = Components::create()->securitySchemes(
-            new OAuth2SecurityScheme()
-        );
+        $this->components = new Components();
         $this->tags = [
             new AdminsTag(),
             new EndUsersTag(),
         ];
+        $this->externalDocs = new ExternalDocs();
     }
 
     /**
