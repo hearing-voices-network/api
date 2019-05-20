@@ -9,10 +9,10 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 
-class ListAdminsOperation extends Operation
+class IndexAdminOperation extends Operation
 {
     /**
-     * ListAdmins constructor.
+     * IndexAdminOperation constructor.
      */
     public function __construct()
     {

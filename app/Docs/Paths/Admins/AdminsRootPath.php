@@ -2,8 +2,8 @@
 
 namespace App\Docs\Paths\Admins;
 
-use App\Docs\Operations\Admins\CreateAdminOperation;
-use App\Docs\Operations\Admins\ListAdminsOperation;
+use App\Docs\Operations\Admins\StoreAdminOperation;
+use App\Docs\Operations\Admins\IndexAdminOperation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 
 class AdminsRootPath extends PathItem
@@ -17,8 +17,8 @@ class AdminsRootPath extends PathItem
 
         $this->route = '/admins';
         $this->operations = [
-            new ListAdminsOperation(),
-            new CreateAdminOperation(),
+            new IndexAdminOperation(),
+            new StoreAdminOperation(),
         ];
     }
 }

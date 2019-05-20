@@ -2,7 +2,9 @@
 
 namespace App\Docs\Paths\Admins;
 
+use App\Docs\Operations\Admins\DestroyAdminOperation;
 use App\Docs\Operations\Admins\ShowAdminOperation;
+use App\Docs\Operations\Admins\UpdateAdminOperation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
@@ -26,6 +28,8 @@ class AdminsNestedPath extends PathItem
         ];
         $this->operations = [
             new ShowAdminOperation(),
+            new UpdateAdminOperation(),
+            new DestroyAdminOperation(),
         ];
     }
 }

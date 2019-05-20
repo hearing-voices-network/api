@@ -4,23 +4,26 @@ namespace App\Docs\Schemas\Admin;
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
-class AdminSchema extends Schema
+class UpdateAdminSchema extends Schema
 {
     /**
-     * Admin constructor.
+     * UpdateAdminSchema constructor.
      */
     public function __construct()
     {
         parent::__construct();
 
         $this->type = static::TYPE_OBJECT;
+        $this->required = [
+            'name',
+            'phone',
+            'email',
+        ];
         $this->properties = [
-            Schema::string('id')->format(static::FORMAT_UUID),
             Schema::string('name')->maxLength(255),
             Schema::string('phone')->maxLength(255),
             Schema::string('email')->maxLength(255),
-            Schema::string('created_at')->format(static::FORMAT_DATE_TIME),
-            Schema::string('updated_at')->format(static::FORMAT_DATE_TIME),
+            Schema::string('password')->maxLength(255),
         ];
     }
 }
