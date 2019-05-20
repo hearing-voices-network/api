@@ -3,33 +3,28 @@
 namespace App\Docs\Operations\Admins;
 
 use App\Docs\Schemas\Admin\AdminSchema;
-use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\AdminsTag;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 
-class ListAdminsOperation extends Operation
+class ShowAdminOperation extends Operation
 {
     /**
-     * ListAdmins constructor.
+     * ShowAdminOperation constructor.
      */
     public function __construct()
     {
         parent::__construct();
 
         $this->action = static::ACTION_GET;
-        $this->summary = 'List all admins';
+        $this->summary = 'Get a specific admin';
         $this->tags = [
             (new AdminsTag())->name,
         ];
         $this->responses = [
             Response::ok()->content(
-                MediaType::json()->schema(
-                    new PaginationSchema(
-                        new AdminSchema()
-                    )
-                )
+                MediaType::json()->schema(new AdminSchema())
             ),
         ];
     }

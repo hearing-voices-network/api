@@ -2,6 +2,7 @@
 
 namespace App\Docs;
 
+use App\Docs\Paths\Admins\AdminsNestedPath;
 use App\Docs\Paths\Admins\AdminsRootPath;
 use App\Docs\Tags\AdminsTag;
 use GoldSpecDigital\ObjectOrientedOAS\OpenApi as BaseOpenApi;
@@ -21,6 +22,7 @@ class OpenApi extends BaseOpenApi implements Responsable
         $this->info = new Info();
         $this->paths = [
             new AdminsRootPath(),
+            new AdminsNestedPath(),
         ];
         $this->tags = [
             new AdminsTag(),

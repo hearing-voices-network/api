@@ -13,7 +13,7 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 class CreateAdminOperation extends Operation
 {
     /**
-     * ListAdmins constructor.
+     * CreateAdminOperation constructor.
      */
     public function __construct()
     {
