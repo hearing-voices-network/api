@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Docs\Schemas\Admin;
+namespace App\Docs\Schemas\EndUser;
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
-class AdminSchema extends Schema
+class EndUserSchema extends Schema
 {
     /**
-     * Admin constructor.
+     * EndUserSchema constructor.
      */
     public function __construct()
     {
@@ -16,9 +16,8 @@ class AdminSchema extends Schema
         $this->type = static::TYPE_OBJECT;
         $this->properties = [
             Schema::string('id')->format(static::FORMAT_UUID),
-            Schema::string('name'),
-            Schema::string('phone'),
             Schema::string('email'),
+            Schema::string('gdpr_consented_at')->format(static::FORMAT_DATE_TIME),
             Schema::string('created_at')->format(static::FORMAT_DATE_TIME),
             Schema::string('updated_at')->format(static::FORMAT_DATE_TIME),
         ];

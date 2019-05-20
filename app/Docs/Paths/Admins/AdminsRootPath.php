@@ -9,7 +9,7 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 class AdminsRootPath extends PathItem
 {
     /**
-     * UsersRoot constructor.
+     * AdminsRootPath constructor.
      */
     public function __construct()
     {

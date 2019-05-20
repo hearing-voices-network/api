@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Docs\Schemas\Admin;
+namespace App\Docs\Schemas\EndUser;
 
-class CreateAdminSchema extends UpdateAdminSchema
+class StoreEndUserSchema extends UpdateEndUserSchema
 {
     /**
-     * CreateAdminSchema constructor.
+     * StoreEndUserSchema constructor.
      */
     public function __construct()
     {

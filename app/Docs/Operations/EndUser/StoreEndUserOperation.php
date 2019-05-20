@@ -1,35 +1,36 @@
 <?php
 
-namespace App\Docs\Operations\Admins;
+namespace App\Docs\Operations\EndUser;
 
-use App\Docs\Schemas\Admin\AdminSchema;
-use App\Docs\Schemas\Admin\StoreAdminSchema;
-use App\Docs\Tags\AdminsTag;
+use App\Docs\Schemas\EndUser\EndUserSchema;
+use App\Docs\Schemas\EndUser\StoreEndUserSchema;
+use App\Docs\Schemas\PaginationSchema;
+use App\Docs\Tags\EndUsersTag;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\RequestBody;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 
-class StoreAdminOperation extends Operation
+class StoreEndUserOperation extends Operation
 {
     /**
-     * StoreAdminOperation constructor.
+     * StoreEndUserOperation constructor.
      */
     public function __construct()
     {
         parent::__construct();
 
         $this->action = static::ACTION_POST;
-        $this->summary = 'Create an admin';
+        $this->summary = 'Create an end users';
         $this->tags = [
-            (new AdminsTag())->name,
+            (new EndUsersTag())->name,
         ];
         $this->requestBody = RequestBody::create()->content(
-            MediaType::json()->schema(new StoreAdminSchema())
+            MediaType::json()->schema(new StoreEndUserSchema())
         );
         $this->responses = [
             Response::created()->content(
-                MediaType::json()->schema(new AdminSchema())
+                MediaType::json()->schema(new EndUserSchema())
             ),
         ];
     }

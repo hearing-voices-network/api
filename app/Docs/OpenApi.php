@@ -4,7 +4,10 @@ namespace App\Docs;
 
 use App\Docs\Paths\Admins\AdminsNestedPath;
 use App\Docs\Paths\Admins\AdminsRootPath;
+use App\Docs\Paths\EndUsers\EndUsersNestedPath;
+use App\Docs\Paths\EndUsers\EndUsersRootPath;
 use App\Docs\Tags\AdminsTag;
+use App\Docs\Tags\EndUsersTag;
 use GoldSpecDigital\ObjectOrientedOAS\OpenApi as BaseOpenApi;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
@@ -23,9 +26,12 @@ class OpenApi extends BaseOpenApi implements Responsable
         $this->paths = [
             new AdminsRootPath(),
             new AdminsNestedPath(),
+            new EndUsersRootPath(),
+            new EndUsersNestedPath(),
         ];
         $this->tags = [
             new AdminsTag(),
+            new EndUsersTag(),
         ];
     }
 
