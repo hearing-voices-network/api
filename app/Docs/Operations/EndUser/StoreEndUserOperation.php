@@ -21,7 +21,7 @@ class StoreEndUserOperation extends Operation
         parent::__construct();
 
         $this->action = static::ACTION_POST;
-        $this->summary = 'Create an end users';
+        $this->summary = 'Create an end user';
         $this->tags = [
             (new EndUsersTag())->name,
         ];
