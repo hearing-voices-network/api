@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function (App\Docs\OpenApiBuilder $openApiBuilder) {
+Route::get('/', function (App\Docs\OpenApi $openApiBuilder) {
     return $openApiBuilder;
 });

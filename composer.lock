@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "09023835129de77a87dd11a6c95fd47b",
+    "content-hash": "cfa57da911554f8ea3d50cfdbe29019c",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -373,16 +373,16 @@
         },
         {
             "name": "goldspecdigital/oooas",
-            "version": "v1.0.2",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goldspecdigital/oooas.git",
-                "reference": "18f427527770667d55596b014f3dd58b47786009"
+                "reference": "f5ef7d754c71189560596f1635bad2333d3c1835"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goldspecdigital/oooas/zipball/18f427527770667d55596b014f3dd58b47786009",
-                "reference": "18f427527770667d55596b014f3dd58b47786009",
+                "url": "https://api.github.com/repos/goldspecdigital/oooas/zipball/f5ef7d754c71189560596f1635bad2333d3c1835",
+                "reference": "f5ef7d754c71189560596f1635bad2333d3c1835",
                 "shasum": ""
             },
             "require": {
@@ -418,7 +418,7 @@
                 "php",
                 "swagger"
             ],
-            "time": "2019-05-17T09:09:01+00:00"
+            "time": "2019-05-19T15:01:02+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",
