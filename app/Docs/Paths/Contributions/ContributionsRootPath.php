@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Docs\Paths\Contributions;
 
 use App\Docs\Operations\Contributions\IndexContributionOperation;
+use App\Docs\Operations\Contributions\StoreContributionOperation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 
 class ContributionsRootPath extends PathItem
@@ -19,6 +20,7 @@ class ContributionsRootPath extends PathItem
         $this->route = '/contributions';
         $this->operations = [
             new IndexContributionOperation(),
+            new StoreContributionOperation(),
         ];
     }
 }

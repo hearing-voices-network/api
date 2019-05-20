@@ -18,7 +18,7 @@ class ContributionSchema extends Schema
         $this->type = static::TYPE_OBJECT;
         $this->properties = [
             Schema::string('end_user_id')->format(static::FORMAT_UUID)
-                ->description('This is only provided when the requesting user is an admin.'),
+                ->description('This is only provided when the requesting user is an admin or the same end user.'),
             Schema::string('content'),
             Schema::string('status')
                 ->enum('public', 'private', 'in_review', 'changed_requested'), // TODO: Use class constants for these.
