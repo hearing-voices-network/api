@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Docs\Paths\Contributions;
 
 use App\Docs\Operations\Contributions\IndexContributionOperation;

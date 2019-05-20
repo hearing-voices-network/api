@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Docs;
 
 use App\Docs\Paths\Admins\AdminsNestedPath;
@@ -24,9 +26,7 @@ class OpenApi extends BaseOpenApi implements Responsable
 
         $this->openapi = static::OPENAPI_3_0_2;
         $this->info = new Info();
-        $this->servers = [
-            new Server(),
-        ];
+        $this->servers = [new Server()];
         $this->paths = [
             new AdminsRootPath(),
             new AdminsNestedPath(),

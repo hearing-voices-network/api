@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Docs\Paths\Admins;
 
 use App\Docs\Operations\Admins\DestroyAdminOperation;

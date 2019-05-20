@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Docs\Operations\Contributions;
 
 use App\Docs\Schemas\Contribution\ContributionSchema;
