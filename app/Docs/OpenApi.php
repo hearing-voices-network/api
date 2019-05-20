@@ -4,6 +4,7 @@ namespace App\Docs;
 
 use App\Docs\Paths\Admins\AdminsNestedPath;
 use App\Docs\Paths\Admins\AdminsRootPath;
+use App\Docs\Paths\Contributions\ContributionsRootPath;
 use App\Docs\Paths\EndUsers\EndUsersNestedPath;
 use App\Docs\Paths\EndUsers\EndUsersRootPath;
 use App\Docs\Tags\AdminsTag;
@@ -31,6 +32,7 @@ class OpenApi extends BaseOpenApi implements Responsable
             new AdminsNestedPath(),
             new EndUsersRootPath(),
             new EndUsersNestedPath(),
+            new ContributionsRootPath(),
         ];
         $this->components = new Components();
         $this->tags = [
