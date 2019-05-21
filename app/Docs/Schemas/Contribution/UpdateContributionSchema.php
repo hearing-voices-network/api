@@ -19,7 +19,8 @@ class UpdateContributionSchema extends Schema
         $this->required = ['content', 'status'];
         $this->properties = [
             Schema::string('content')->maxLength(10000),
-            Schema::string('status')->enum('in_review', 'private') // TODO: Use class constants for these values.
+            // TODO: Use class constants for these values.
+            Schema::string('status')->enum('in_review', 'private')
                 ->description('Use `in_review` for public consumption and `private` for personal use.'),
         ];
     }

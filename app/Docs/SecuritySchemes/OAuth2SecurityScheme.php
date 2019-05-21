@@ -21,8 +21,10 @@ class OAuth2SecurityScheme extends SecurityScheme
         $this->flows = [
             OAuthFlow::create()
                 ->flow(OAuthFlow::FLOW_CLIENT_CREDENTIALS)
-                ->tokenUrl(url('/oauth/token'))// TODO: Use route()
-                ->refreshUrl(url('/oauth/token')), // TODO: Use route()
+                // TODO: Use route()
+                ->tokenUrl(url('/oauth/token'))
+                // TODO: Use route()
+                ->refreshUrl(url('/oauth/token')),
         ];
     }
 }
