@@ -61,14 +61,17 @@
             "@php artisan key:generate --ansi"
         ],
         "test": [
-            "@php vendor/bin/php-cs-fixer fix --config=.php_cs --allow-risky=yes --dry-run --diff --show-progress=dots",
+            "@php vendor/bin/php-cs-fixer fix --config=.php_cs --allow-risky=yes --dry-run --diff --verbose",
             "@php vendor/bin/phpunit"
         ],
-        "style:check": [
-            "@php vendor/bin/php-cs-fixer fix --config=.php_cs --allow-risky=yes --dry-run --diff --show-progress=dots"
+        "test:style": [
+            "@php vendor/bin/php-cs-fixer fix --config=.php_cs --allow-risky=yes --dry-run --diff --verbose"
         ],
-        "style:fix": [
-            "@php vendor/bin/php-cs-fixer fix --config=.php_cs --allow-risky=yes --show-progress=dots"
+        "test:unit": [
+            "@php vendor/bin/phpunit"
+        ],
+        "fix:style": [
+            "@php vendor/bin/php-cs-fixer fix --config=.php_cs --allow-risky=yes --verbose"
         ]
     }
 }
