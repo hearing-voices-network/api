@@ -24,21 +24,27 @@ class OpenApi extends BaseOpenApi implements Responsable
             ->paths(
                 Paths\Admins\AdminsRootPath::create(),
                 Paths\Admins\AdminsNestedPath::create(),
-                Paths\EndUsers\EndUsersRootPath::create(),
-                Paths\EndUsers\EndUsersNestedPath::create(),
+                Paths\Audits\AuditsRootPath::create(),
+                Paths\Audits\AuditsNestedPath::create(),
                 Paths\Contributions\ContributionsRootPath::create(),
                 Paths\Contributions\ContributionsNestedPath::create(),
                 Paths\Contributions\ContributionsApprovePath::create(),
                 Paths\Contributions\ContributionsRejectPath::create(),
-                Paths\Audits\AuditsRootPath::create(),
-                Paths\Audits\AuditsNestedPath::create(),
+                Paths\EndUsers\EndUsersRootPath::create(),
+                Paths\EndUsers\EndUsersNestedPath::create(),
                 Paths\Notifications\NotificationsRootPath::create(),
-                Paths\Notifications\NotificationsNestedPath::create()
+                Paths\Notifications\NotificationsNestedPath::create(),
+                Paths\Tags\TagsRootPath::create(),
+                Paths\Tags\TagsNestedPath::create()
             )
             ->components(Components::create())
             ->tags(
                 Tags\AdminsTag::create(),
-                Tags\EndUsersTag::create()
+                Tags\AuditsTag::create(),
+                Tags\ContributionsTag::create(),
+                Tags\EndUsersTag::create(),
+                Tags\NotificationsTag::create(),
+                Tags\TagsTag::create()
             )
             ->externalDocs(ExternalDocs::create());
     }
