@@ -15,8 +15,7 @@ class Server extends BaseServer
     {
         parent::__construct();
 
-        // TODO: Use route()
-        $this->url = url('/v1');
+        $this->url = url('/v1'); // TODO: Use route()
         $this->description = 'The API server';
     }
 }

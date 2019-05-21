@@ -35,13 +35,6 @@ if [[ $# -gt 0  ]]; then
                 php vendor/bin/phpunit "$@"
             ;;
 
-        phpcs )
-            shift 1
-            ${COMPOSE} run --rm \
-                api \
-                php vendor/bin/phpcs "$@"
-            ;;
-
         npm )
             shift 1
             ${COMPOSE} run --rm \
