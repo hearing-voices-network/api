@@ -24,7 +24,8 @@ class ContributionSchema extends Schema
                     // TODO: Use class constants for these.
                     ->enum('public', 'private', 'in_review', 'changes_requested'),
                 Schema::string('changes_requested')
-                    ->description('This is only provided when the requesting user is an admin or the same end user.'),
+                    ->description('This is only provided when the requesting user is an admin or the same end user.')
+                    ->nullable(),
                 Schema::string('status_last_updated_at')->format(static::FORMAT_DATE_TIME)
                     ->description('This is only provided when the requesting user is an admin or the same end user.'),
                 Schema::string('created_at')->format(static::FORMAT_DATE_TIME),

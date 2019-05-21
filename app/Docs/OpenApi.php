@@ -4,16 +4,6 @@ declare(strict_types=1);
 
 namespace App\Docs;
 
-use App\Docs\Paths\Admins\AdminsNestedPath;
-use App\Docs\Paths\Admins\AdminsRootPath;
-use App\Docs\Paths\Contributions\ContributionsApprovePath;
-use App\Docs\Paths\Contributions\ContributionsNestedPath;
-use App\Docs\Paths\Contributions\ContributionsRejectPath;
-use App\Docs\Paths\Contributions\ContributionsRootPath;
-use App\Docs\Paths\EndUsers\EndUsersNestedPath;
-use App\Docs\Paths\EndUsers\EndUsersRootPath;
-use App\Docs\Tags\AdminsTag;
-use App\Docs\Tags\EndUsersTag;
 use GoldSpecDigital\ObjectOrientedOAS\OpenApi as BaseOpenApi;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
@@ -32,19 +22,21 @@ class OpenApi extends BaseOpenApi implements Responsable
             ->info(Info::create())
             ->servers(Server::create())
             ->paths(
-                AdminsRootPath::create(),
-                AdminsNestedPath::create(),
-                EndUsersRootPath::create(),
-                EndUsersNestedPath::create(),
-                ContributionsRootPath::create(),
-                ContributionsNestedPath::create(),
-                ContributionsApprovePath::create(),
-                ContributionsRejectPath::create()
+                Paths\Admins\AdminsRootPath::create(),
+                Paths\Admins\AdminsNestedPath::create(),
+                Paths\EndUsers\EndUsersRootPath::create(),
+                Paths\EndUsers\EndUsersNestedPath::create(),
+                Paths\Contributions\ContributionsRootPath::create(),
+                Paths\Contributions\ContributionsNestedPath::create(),
+                Paths\Contributions\ContributionsApprovePath::create(),
+                Paths\Contributions\ContributionsRejectPath::create(),
+                Paths\Audits\AuditsRootPath::create(),
+                Paths\Audits\AuditsNestedPath::create()
             )
             ->components(Components::create())
             ->tags(
-                AdminsTag::create(),
-                EndUsersTag::create()
+                Tags\AdminsTag::create(),
+                Tags\EndUsersTag::create()
             )
             ->externalDocs(ExternalDocs::create());
     }

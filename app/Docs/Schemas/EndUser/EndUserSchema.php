@@ -19,6 +19,13 @@ class EndUserSchema extends Schema
             ->properties(
                 Schema::string('id')->format(static::FORMAT_UUID),
                 Schema::string('email'),
+                Schema::string('country')
+                    // TODO: Generate this from countries table
+                    ->enum('United Kingdom')
+                    ->nullable(),
+                Schema::integer('birth_year')->nullable(),
+                Schema::string('gender')->nullable(),
+                Schema::string('ethnicity')->nullable(),
                 Schema::string('gdpr_consented_at')->format(static::FORMAT_DATE_TIME),
                 Schema::string('created_at')->format(static::FORMAT_DATE_TIME),
                 Schema::string('updated_at')->format(static::FORMAT_DATE_TIME)

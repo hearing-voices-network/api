@@ -15,7 +15,7 @@ class OAuth2SecurityScheme extends SecurityScheme
      */
     public static function create(string $objectId = null): SecurityScheme
     {
-        return parent::create($objectId)
+        return parent::create('OAuth2')
             ->type(static::TYPE_OAUTH2)
             ->description('The standard OAuth2 authentication')
             ->flows(
