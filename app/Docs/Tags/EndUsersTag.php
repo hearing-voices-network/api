@@ -9,12 +9,12 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Tag;
 class EndUsersTag extends Tag
 {
     /**
-     * EndUsersTag constructor.
+     * @param string|null $objectId
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Tag
      */
-    public function __construct()
+    public static function create(string $objectId = null): Tag
     {
-        parent::__construct();
-
-        $this->name = 'End Users';
+        return parent::create($objectId)
+            ->name('End Users');
     }
 }

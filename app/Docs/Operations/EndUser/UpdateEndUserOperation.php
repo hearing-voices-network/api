@@ -15,24 +15,25 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 class UpdateEndUserOperation extends Operation
 {
     /**
-     * UpdateEndUserOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_PUT;
-        $this->summary = 'Update a specific end user';
-        $this->tags = [
-            (new EndUsersTag())->name,
-        ];
-        $this->requestBody = RequestBody::create()->content(
-            MediaType::json()->schema(new UpdateEndUserSchema())
-        );
-        $this->responses = [
-            Response::ok()->content(
-                MediaType::json()->schema(new EndUserSchema())
-            ),
-        ];
+        return parent::create($objectId)
+            ->action(static::ACTION_PUT)
+            ->summary('Update a specific end user')
+            ->tags(EndUsersTag::create())
+            ->requestBody(
+                RequestBody::create()->content(
+                    MediaType::json()->schema(UpdateEndUserSchema::create())
+                )
+            )
+            ->responses(
+                Response::ok()->content(
+                    MediaType::json()->schema(EndUserSchema::create())
+                )
+            );
     }
 }

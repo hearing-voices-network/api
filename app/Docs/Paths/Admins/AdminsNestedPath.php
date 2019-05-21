@@ -14,24 +14,25 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 class AdminsNestedPath extends PathItem
 {
     /**
-     * AdminsNestedPath constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public function __construct()
+    public static function create(string $objectId = null): PathItem
     {
-        parent::__construct();
-
-        $this->route = '/admins/{admin}';
-        $this->parameters = [
-            Parameter::path()
-                ->name('admin')
-                ->description('The ID of the admin')
-                ->schema(Schema::string()->format(Schema::FORMAT_UUID))
-                ->required(),
-        ];
-        $this->operations = [
-            new ShowAdminOperation(),
-            new UpdateAdminOperation(),
-            new DestroyAdminOperation(),
-        ];
+        return parent::create($objectId)
+            ->route('/admins/{admin}')
+            ->parameters(
+                Parameter::path()
+                    ->name('admin')
+                    ->description('The ID of the admin')
+                    ->schema(Schema::string()->format(Schema::FORMAT_UUID))
+                    ->required()
+            )
+            ->operations(
+                ShowAdminOperation::create(),
+                UpdateAdminOperation::create(),
+                DestroyAdminOperation::create()
+            );
     }
 }

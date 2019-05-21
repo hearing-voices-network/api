@@ -15,24 +15,25 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 class UpdateAdminOperation extends Operation
 {
     /**
-     * UpdateAdminOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_PUT;
-        $this->summary = 'Update a specific admin';
-        $this->tags = [
-            (new AdminsTag())->name,
-        ];
-        $this->requestBody = RequestBody::create()->content(
-            MediaType::json()->schema(new UpdateAdminSchema())
-        );
-        $this->responses = [
-            Response::ok()->content(
-                MediaType::json()->schema(new AdminSchema())
-            ),
-        ];
+        return parent::create($objectId)
+            ->action(static::ACTION_PUT)
+            ->summary('Update a specific admin')
+            ->tags(AdminsTag::create())
+            ->requestBody(
+                RequestBody::create()->content(
+                    MediaType::json()->schema(UpdateAdminSchema::create())
+                )
+            )
+            ->responses(
+                Response::ok()->content(
+                    MediaType::json()->schema(AdminSchema::create())
+                )
+            );
     }
 }

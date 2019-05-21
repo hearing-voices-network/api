@@ -4,15 +4,24 @@ declare(strict_types=1);
 
 namespace App\Docs\Schemas\EndUser;
 
+use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
+
 class StoreEndUserSchema extends UpdateEndUserSchema
 {
     /**
-     * StoreEndUserSchema constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
-    public function __construct()
+    public static function create(string $objectId = null): Schema
     {
-        parent::__construct();
+        $instance = parent::create($objectId);
 
-        $this->required[] = 'password';
+        $instance = $instance->required(
+            'password',
+            ...$instance->required
+        );
+
+        return $instance;
     }
 }

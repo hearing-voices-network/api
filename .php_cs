@@ -99,7 +99,6 @@ $rules = [
     'phpdoc_no_package' => true,
     'phpdoc_order' => true,
     'phpdoc_scalar' => true,
-    'phpdoc_separation' => true,
     'phpdoc_single_line_var_spacing' => true,
     'phpdoc_summary' => true,
     'phpdoc_trim' => true,

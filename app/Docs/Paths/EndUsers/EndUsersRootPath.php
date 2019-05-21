@@ -11,16 +11,17 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 class EndUsersRootPath extends PathItem
 {
     /**
-     * EndUsersRootPath constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public function __construct()
+    public static function create(string $objectId = null): PathItem
     {
-        parent::__construct();
-
-        $this->route = '/end-users';
-        $this->operations = [
-            new IndexEndUserOperation(),
-            new StoreEndUserOperation(),
-        ];
+        return parent::create($objectId)
+            ->route('/end-users')
+            ->operations(
+                IndexEndUserOperation::create(),
+                StoreEndUserOperation::create()
+            );
     }
 }

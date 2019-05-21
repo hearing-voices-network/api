@@ -14,25 +14,22 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 class IndexEndUserOperation extends Operation
 {
     /**
-     * IndexEndUserOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_GET;
-        $this->summary = 'List all end users';
-        $this->tags = [
-            (new EndUsersTag())->name,
-        ];
-        $this->responses = [
-            Response::ok()->content(
-                MediaType::json()->schema(
-                    new PaginationSchema(
-                        new EndUserSchema()
+        return parent::create($objectId)
+            ->action(static::ACTION_GET)
+            ->summary('List all end users')
+            ->tags(EndUsersTag::create())
+            ->responses(
+                Response::ok()->content(
+                    MediaType::json()->schema(
+                        PaginationSchema::create(null, EndUserSchema::create())
                     )
                 )
-            ),
-        ];
+            );
     }
 }

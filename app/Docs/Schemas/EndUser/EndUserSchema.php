@@ -9,19 +9,19 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 class EndUserSchema extends Schema
 {
     /**
-     * EndUserSchema constructor.
+     * @param string|null $objectId
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
-    public function __construct()
+    public static function create(string $objectId = null): Schema
     {
-        parent::__construct();
-
-        $this->type = static::TYPE_OBJECT;
-        $this->properties = [
-            Schema::string('id')->format(static::FORMAT_UUID),
-            Schema::string('email'),
-            Schema::string('gdpr_consented_at')->format(static::FORMAT_DATE_TIME),
-            Schema::string('created_at')->format(static::FORMAT_DATE_TIME),
-            Schema::string('updated_at')->format(static::FORMAT_DATE_TIME),
-        ];
+        return parent::create($objectId)
+            ->type(static::TYPE_OBJECT)
+            ->properties(
+                Schema::string('id')->format(static::FORMAT_UUID),
+                Schema::string('email'),
+                Schema::string('gdpr_consented_at')->format(static::FORMAT_DATE_TIME),
+                Schema::string('created_at')->format(static::FORMAT_DATE_TIME),
+                Schema::string('updated_at')->format(static::FORMAT_DATE_TIME)
+            );
     }
 }

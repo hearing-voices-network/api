@@ -13,21 +13,20 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 class ShowContributionOperation extends Operation
 {
     /**
-     * ShowContributionOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_GET;
-        $this->summary = 'Get a specific contribution';
-        $this->tags = [
-            (new ContributionsTag())->name,
-        ];
-        $this->responses = [
-            Response::ok()->content(
-                MediaType::json()->schema(new ContributionSchema())
-            ),
-        ];
+        return parent::create($objectId)
+            ->action(static::ACTION_GET)
+            ->summary('Get a specific contribution')
+            ->tags(ContributionsTag::create())
+            ->responses(
+                Response::ok()->content(
+                    MediaType::json()->schema(ContributionSchema::create())
+                )
+            );
     }
 }

@@ -11,22 +11,22 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 class ResourceDeletedResponse extends Response
 {
     /**
-     * ResourceDeletedResponse constructor.
-     *
-     * @param string $resource
+     * @param string|null $objectId
+     * @param string|null $resource
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Response
      */
-    public function __construct(string $resource)
+    public static function create(string $objectId = null, string $resource = null): Response
     {
-        parent::__construct();
-
-        $this->statusCode = 200;
-        $this->description = 'OK';
-        $this->content = [
-            MediaType::json()->schema(
-                Schema::object()->properties(
-                    Schema::string('message')->example("The $resource has been deleted.")
+        return parent::create($objectId)
+            ->statusCode(200)
+            ->description('OK')
+            ->content(
+                MediaType::json()->schema(
+                    Schema::object()->properties(
+                        Schema::string('message')
+                            ->example("The $resource has been deleted.")
+                    )
                 )
-            ),
-        ];
+            );
     }
 }

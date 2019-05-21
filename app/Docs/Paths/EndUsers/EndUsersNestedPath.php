@@ -14,24 +14,25 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 class EndUsersNestedPath extends PathItem
 {
     /**
-     * EndUsersNestedPath constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public function __construct()
+    public static function create(string $objectId = null): PathItem
     {
-        parent::__construct();
-
-        $this->route = '/end-users/{end_user}';
-        $this->parameters = [
-            Parameter::path()
-                ->name('end_user')
-                ->description('The ID of the end user')
-                ->schema(Schema::string()->format(Schema::FORMAT_UUID))
-                ->required(),
-        ];
-        $this->operations = [
-            new ShowEndUserOperation(),
-            new UpdateEndUserOperation(),
-            new DestroyEndUserOperation(),
-        ];
+        return parent::create($objectId)
+            ->route('/end-users/{end_user}')
+            ->parameters(
+                Parameter::path()
+                    ->name('end_user')
+                    ->description('The ID of the end user')
+                    ->schema(Schema::string()->format(Schema::FORMAT_UUID))
+                    ->required()
+            )
+            ->operations(
+                ShowEndUserOperation::create(),
+                UpdateEndUserOperation::create(),
+                DestroyEndUserOperation::create()
+            );
     }
 }

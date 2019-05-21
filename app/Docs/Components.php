@@ -10,14 +10,12 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Components as BaseComponents;
 class Components extends BaseComponents
 {
     /**
-     * Components constructor.
+     * @param string|null $objectId
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Components
      */
-    public function __construct()
+    public static function create(string $objectId = null): BaseComponents
     {
-        parent::__construct();
-
-        $this->securitySchemes = [
-            new OAuth2SecurityScheme(),
-        ];
+        return parent::create($objectId)
+            ->securitySchemes(OAuth2SecurityScheme::create());
     }
 }

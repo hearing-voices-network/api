@@ -9,23 +9,24 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 class UpdateAdminSchema extends Schema
 {
     /**
-     * UpdateAdminSchema constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
-    public function __construct()
+    public static function create(string $objectId = null): Schema
     {
-        parent::__construct();
-
-        $this->type = static::TYPE_OBJECT;
-        $this->required = [
-            'name',
-            'phone',
-            'email',
-        ];
-        $this->properties = [
-            Schema::string('name')->maxLength(255),
-            Schema::string('phone')->maxLength(255),
-            Schema::string('email')->maxLength(255),
-            Schema::string('password')->maxLength(255),
-        ];
+        return parent::create($objectId)
+            ->type(static::TYPE_OBJECT)
+            ->required(
+                'name',
+                'phone',
+                'email'
+            )
+            ->properties(
+                Schema::string('name')->maxLength(255),
+                Schema::string('phone')->maxLength(255),
+                Schema::string('email')->maxLength(255),
+                Schema::string('password')->maxLength(255)
+            );
     }
 }

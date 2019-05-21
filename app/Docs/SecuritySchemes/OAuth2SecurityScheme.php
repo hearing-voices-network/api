@@ -10,21 +10,21 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\SecurityScheme;
 class OAuth2SecurityScheme extends SecurityScheme
 {
     /**
-     * OAuth2 constructor.
+     * @param string|null $objectId
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\SecurityScheme
      */
-    public function __construct()
+    public static function create(string $objectId = null): SecurityScheme
     {
-        parent::__construct('OAuth2');
-
-        $this->type = static::TYPE_OAUTH2;
-        $this->description = 'The standard OAuth2 authentication';
-        $this->flows = [
-            OAuthFlow::create()
-                ->flow(OAuthFlow::FLOW_CLIENT_CREDENTIALS)
-                // TODO: Use route()
-                ->tokenUrl(url('/oauth/token'))
-                // TODO: Use route()
-                ->refreshUrl(url('/oauth/token')),
-        ];
+        return parent::create($objectId)
+            ->type(static::TYPE_OAUTH2)
+            ->description('The standard OAuth2 authentication')
+            ->flows(
+                OAuthFlow::create()
+                    ->flow(OAuthFlow::FLOW_CLIENT_CREDENTIALS)
+                    // TODO: Use route()
+                    ->tokenUrl(url('/oauth/token'))
+                    // TODO: Use route()
+                    ->refreshUrl(url('/oauth/token'))
+            );
     }
 }

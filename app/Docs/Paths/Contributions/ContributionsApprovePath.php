@@ -12,23 +12,24 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 class ContributionsApprovePath extends PathItem
 {
     /**
-     * ContributionsApprovePath constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public function __construct()
+    public static function create(string $objectId = null): PathItem
     {
-        parent::__construct();
-
-        $this->route = '/contributions/{contribution}/approve';
-        $this->description = 'This endpoint can only be invoked if the contribution is awaiting';
-        $this->parameters = [
-            Parameter::path()
-                ->name('contribution')
-                ->description('The ID of the contribution')
-                ->schema(Schema::string()->format(Schema::FORMAT_UUID))
-                ->required(),
-        ];
-        $this->operations = [
-            new ApproveContributionOperation(),
-        ];
+        return parent::create($objectId)
+            ->route('/contributions/{contribution}/approve')
+            ->description('This endpoint can only be invoked if the contribution is awaiting')
+            ->parameters(
+                Parameter::path()
+                    ->name('contribution')
+                    ->description('The ID of the contribution')
+                    ->schema(Schema::string()->format(Schema::FORMAT_UUID))
+                    ->required()
+            )
+            ->operations(
+                ApproveContributionOperation::create()
+            );
     }
 }

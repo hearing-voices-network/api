@@ -9,19 +9,20 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 class UpdateEndUserSchema extends Schema
 {
     /**
-     * UpdateEndUserSchema constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
-    public function __construct()
+    public static function create(string $objectId = null): Schema
     {
-        parent::__construct();
-
-        $this->type = static::TYPE_OBJECT;
-        $this->required = [
-            'email',
-        ];
-        $this->properties = [
-            Schema::string('email')->maxLength(255),
-            Schema::string('password')->maxLength(255),
-        ];
+        return parent::create($objectId)
+            ->type(static::TYPE_OBJECT)
+            ->required(
+                'email'
+            )
+            ->properties(
+                Schema::string('email')->maxLength(255),
+                Schema::string('password')->maxLength(255)
+            );
     }
 }

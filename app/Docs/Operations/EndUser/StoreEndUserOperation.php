@@ -15,24 +15,25 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 class StoreEndUserOperation extends Operation
 {
     /**
-     * StoreEndUserOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_POST;
-        $this->summary = 'Create an end user';
-        $this->tags = [
-            (new EndUsersTag())->name,
-        ];
-        $this->requestBody = RequestBody::create()->content(
-            MediaType::json()->schema(new StoreEndUserSchema())
-        );
-        $this->responses = [
-            Response::created()->content(
-                MediaType::json()->schema(new EndUserSchema())
-            ),
-        ];
+        return parent::create($objectId)
+            ->action(static::ACTION_POST)
+            ->summary('Create an end user')
+            ->tags(EndUsersTag::create())
+            ->requestBody(
+                RequestBody::create()->content(
+                    MediaType::json()->schema(StoreEndUserSchema::create())
+                )
+            )
+            ->responses(
+                Response::created()->content(
+                    MediaType::json()->schema(EndUserSchema::create())
+                )
+            );
     }
 }

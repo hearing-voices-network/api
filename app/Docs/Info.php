@@ -10,18 +10,20 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Info as BaseInfo;
 class Info extends BaseInfo
 {
     /**
-     * Info constructor.
+     * @param string|null $objectId
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Info
      */
-    public function __construct()
+    public static function create(string $objectId = null): BaseInfo
     {
-        parent::__construct();
-
-        $this->title = 'Hearing Voices Network API';
-        $this->description = 'Documentation on how to use the API';
-        $this->contact = Contact::create()
-            ->name('Ayup Digital')
-            ->url('https://ayup.agency')
-            ->email('info@ayup.agency');
-        $this->version = 'v1';
+        return parent::create($objectId)
+            ->title('Hearing Voices Network API')
+            ->description('Documentation on how to use the API')
+            ->contact(
+                Contact::create()
+                    ->name('Ayup Digital')
+                    ->url('https://ayup.agency')
+                    ->email('info@ayup.agency')
+            )
+            ->version('v1');
     }
 }

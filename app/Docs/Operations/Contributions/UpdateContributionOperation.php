@@ -15,24 +15,25 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 class UpdateContributionOperation extends Operation
 {
     /**
-     * UpdateContributionOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_PUT;
-        $this->summary = 'Update a specific contribution';
-        $this->tags = [
-            (new ContributionsTag())->name,
-        ];
-        $this->requestBody = RequestBody::create()->content(
-            MediaType::json()->schema(new UpdateContributionSchema())
-        );
-        $this->responses = [
-            Response::ok()->content(
-                MediaType::json()->schema(new ContributionSchema())
-            ),
-        ];
+        return parent::create($objectId)
+            ->action(static::ACTION_PUT)
+            ->summary('Update a specific contribution')
+            ->tags(ContributionsTag::create())
+            ->requestBody(
+                RequestBody::create()->content(
+                    MediaType::json()->schema(UpdateContributionSchema::create())
+                )
+            )
+            ->responses(
+                Response::ok()->content(
+                    MediaType::json()->schema(ContributionSchema::create())
+                )
+            );
     }
 }

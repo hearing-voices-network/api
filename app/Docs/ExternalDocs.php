@@ -9,13 +9,13 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\ExternalDocs as BaseExternalDocs;
 class ExternalDocs extends BaseExternalDocs
 {
     /**
-     * ExternalDocs constructor.
+     * @param string|null $objectId
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\ExternalDocs
      */
-    public function __construct()
+    public static function create(string $objectId = null): BaseExternalDocs
     {
-        parent::__construct();
-
-        $this->description = 'The GitHub repo';
-        $this->url = 'https://github.com/hearing-voices-network/api';
+        return parent::create($objectId)
+            ->description('The GitHub repo')
+            ->url('https://github.com/hearing-voices-network/api');
     }
 }

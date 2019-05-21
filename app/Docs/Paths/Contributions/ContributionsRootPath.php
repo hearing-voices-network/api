@@ -11,16 +11,17 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 class ContributionsRootPath extends PathItem
 {
     /**
-     * ContributionsRootPath constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public function __construct()
+    public static function create(string $objectId = null): PathItem
     {
-        parent::__construct();
-
-        $this->route = '/contributions';
-        $this->operations = [
-            new IndexContributionOperation(),
-            new StoreContributionOperation(),
-        ];
+        return parent::create($objectId)
+            ->route('/contributions')
+            ->operations(
+                IndexContributionOperation::create(),
+                StoreContributionOperation::create()
+            );
     }
 }

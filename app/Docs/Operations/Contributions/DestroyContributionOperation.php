@@ -11,19 +11,18 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 class DestroyContributionOperation extends Operation
 {
     /**
-     * DestroyContributionOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_DELETE;
-        $this->summary = 'Delete a specific contribution';
-        $this->tags = [
-            (new ContributionsTag())->name,
-        ];
-        $this->responses = [
-            new ResourceDeletedResponse('contribution'),
-        ];
+        return parent::create($objectId)
+            ->action(static::ACTION_DELETE)
+            ->summary('Delete a specific contribution')
+            ->tags(ContributionsTag::create())
+            ->responses(
+                ResourceDeletedResponse::create(null, 'contribution')
+            );
     }
 }

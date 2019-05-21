@@ -14,25 +14,22 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 class IndexAdminOperation extends Operation
 {
     /**
-     * IndexAdminOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_GET;
-        $this->summary = 'List all admins';
-        $this->tags = [
-            (new AdminsTag())->name,
-        ];
-        $this->responses = [
-            Response::ok()->content(
-                MediaType::json()->schema(
-                    new PaginationSchema(
-                        new AdminSchema()
+        return parent::create($objectId)
+            ->action(static::ACTION_GET)
+            ->summary('List all admins')
+            ->tags(AdminsTag::create())
+            ->responses(
+                Response::ok()->content(
+                    MediaType::json()->schema(
+                        PaginationSchema::create(null, AdminSchema::create())
                     )
                 )
-            ),
-        ];
+            );
     }
 }

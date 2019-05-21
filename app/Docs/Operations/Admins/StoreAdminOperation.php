@@ -15,24 +15,25 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 class StoreAdminOperation extends Operation
 {
     /**
-     * StoreAdminOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_POST;
-        $this->summary = 'Create an admin';
-        $this->tags = [
-            (new AdminsTag())->name,
-        ];
-        $this->requestBody = RequestBody::create()->content(
-            MediaType::json()->schema(new StoreAdminSchema())
-        );
-        $this->responses = [
-            Response::created()->content(
-                MediaType::json()->schema(new AdminSchema())
-            ),
-        ];
+        return parent::create($objectId)
+            ->action(static::ACTION_POST)
+            ->summary('Create an admin')
+            ->tags(AdminsTag::create())
+            ->requestBody(
+                RequestBody::create()->content(
+                    MediaType::json()->schema(StoreAdminSchema::create())
+                )
+            )
+            ->responses(
+                Response::created()->content(
+                    MediaType::json()->schema(AdminSchema::create())
+                )
+            );
     }
 }

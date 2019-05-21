@@ -15,24 +15,25 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 class StoreContributionOperation extends Operation
 {
     /**
-     * StoreContributionOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_POST;
-        $this->summary = 'Create a contribution';
-        $this->tags = [
-            (new ContributionsTag())->name,
-        ];
-        $this->requestBody = RequestBody::create()->content(
-            MediaType::json()->schema(new StoreContributionSchema())
-        );
-        $this->responses = [
-            Response::created()->content(
-                MediaType::json()->schema(new ContributionSchema())
-            ),
-        ];
+        return parent::create($objectId)
+            ->action(static::ACTION_POST)
+            ->summary('Create a contribution')
+            ->tags(ContributionsTag::create())
+            ->requestBody(
+                RequestBody::create()->content(
+                    MediaType::json()->schema(StoreContributionSchema::create())
+                )
+            )
+            ->responses(
+                Response::created()->content(
+                    MediaType::json()->schema(ContributionSchema::create())
+                )
+            );
     }
 }

@@ -11,16 +11,17 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 class AdminsRootPath extends PathItem
 {
     /**
-     * AdminsRootPath constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public function __construct()
+    public static function create(string $objectId = null): PathItem
     {
-        parent::__construct();
-
-        $this->route = '/admins';
-        $this->operations = [
-            new IndexAdminOperation(),
-            new StoreAdminOperation(),
-        ];
+        return parent::create($objectId)
+            ->route('/admins')
+            ->operations(
+                IndexAdminOperation::create(),
+                StoreAdminOperation::create()
+            );
     }
 }

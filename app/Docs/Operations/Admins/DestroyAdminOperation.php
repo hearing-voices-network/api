@@ -11,19 +11,18 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 class DestroyAdminOperation extends Operation
 {
     /**
-     * DestroyAdminOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_DELETE;
-        $this->summary = 'Delete a specific admin';
-        $this->tags = [
-            (new AdminsTag())->name,
-        ];
-        $this->responses = [
-            new ResourceDeletedResponse('admin'),
-        ];
+        return parent::create($objectId)
+            ->action(static::ACTION_DELETE)
+            ->summary('Delete a specific admin')
+            ->tags(AdminsTag::create())
+            ->responses(
+                ResourceDeletedResponse::create('admin')
+            );
     }
 }

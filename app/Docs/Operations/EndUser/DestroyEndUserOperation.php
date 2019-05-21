@@ -13,24 +13,23 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 class DestroyEndUserOperation extends Operation
 {
     /**
-     * DestroyEndUserOperation constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public function __construct()
+    public static function create(string $objectId = null): Operation
     {
-        parent::__construct();
-
-        $this->action = static::ACTION_DELETE;
-        $this->summary = 'Delete a specific end user';
-        $this->tags = [
-            (new EndUsersTag())->name,
-        ];
-        $this->parameters = [
-            Parameter::query()->name('type')->required()->schema(
-                Schema::string()->enum('soft_delete', 'force_delete')
-            ),
-        ];
-        $this->responses = [
-            new ResourceDeletedResponse('end user'),
-        ];
+        return parent::create($objectId)
+            ->action(static::ACTION_DELETE)
+            ->summary('Delete a specific end user')
+            ->tags(EndUsersTag::create())
+            ->parameters(
+                Parameter::query()->name('type')->required()->schema(
+                    Schema::string()->enum('soft_delete', 'force_delete')
+                )
+            )
+            ->responses(
+                ResourceDeletedResponse::create(null, 'end user')
+            );
     }
 }

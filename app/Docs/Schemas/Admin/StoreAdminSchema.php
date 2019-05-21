@@ -4,15 +4,24 @@ declare(strict_types=1);
 
 namespace App\Docs\Schemas\Admin;
 
+use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
+
 class StoreAdminSchema extends UpdateAdminSchema
 {
     /**
-     * CreateAdminSchema constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
-    public function __construct()
+    public static function create(string $objectId = null): Schema
     {
-        parent::__construct();
+        $instance = parent::create($objectId);
 
-        $this->required[] = 'password';
+        $instance = $instance->required(
+            'password',
+            ...$instance->required
+        );
+
+        return $instance;
     }
 }

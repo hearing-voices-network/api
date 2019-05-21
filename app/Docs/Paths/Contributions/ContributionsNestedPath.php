@@ -14,24 +14,25 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 class ContributionsNestedPath extends PathItem
 {
     /**
-     * ContributionsNestedPath constructor.
+     * @param string|null $objectId
+     * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public function __construct()
+    public static function create(string $objectId = null): PathItem
     {
-        parent::__construct();
-
-        $this->route = '/contributions/{contribution}';
-        $this->parameters = [
-            Parameter::path()
-                ->name('contribution')
-                ->description('The ID of the contribution')
-                ->schema(Schema::string()->format(Schema::FORMAT_UUID))
-                ->required(),
-        ];
-        $this->operations = [
-            new ShowContributionOperation(),
-            new UpdateContributionOperation(),
-            new DestroyContributionOperation(),
-        ];
+        return parent::create($objectId)
+            ->route('/contributions/{contribution}')
+            ->parameters(
+                Parameter::path()
+                    ->name('contribution')
+                    ->description('The ID of the contribution')
+                    ->schema(Schema::string()->format(Schema::FORMAT_UUID))
+                    ->required()
+            )
+            ->operations(
+                ShowContributionOperation::create(),
+                UpdateContributionOperation::create(),
+                DestroyContributionOperation::create()
+            );
     }
 }

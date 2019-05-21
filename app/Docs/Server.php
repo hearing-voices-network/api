@@ -9,13 +9,14 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\Server as BaseServer;
 class Server extends BaseServer
 {
     /**
-     * Server constructor.
+     * @param string|null $objectId
+     * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Server
      */
-    public function __construct()
+    public static function create(string $objectId = null): BaseServer
     {
-        parent::__construct();
-
-        $this->url = url('/v1'); // TODO: Use route()
-        $this->description = 'The API server';
+        return parent::create($objectId)
+            // TODO: Use route()
+            ->url('/v1')
+            ->description('The API server');
     }
 }
