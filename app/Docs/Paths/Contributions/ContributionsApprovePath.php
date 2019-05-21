@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Paths\Contributions;
 
+use App\Docs\Operations\Contributions\ApproveContributionOperation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
@@ -18,6 +19,7 @@ class ContributionsApprovePath extends PathItem
         parent::__construct();
 
         $this->route = '/contributions/{contribution}/approve';
+        $this->description = 'This endpoint can only be invoked if the contribution is awaiting';
         $this->parameters = [
             Parameter::path()
                 ->name('contribution')
@@ -26,9 +28,7 @@ class ContributionsApprovePath extends PathItem
                 ->required(),
         ];
         $this->operations = [
-            new ShowContributionOperation(),
-            new UpdateContributionOperation(),
-            new DestroyContributionOperation(),
+            new ApproveContributionOperation(),
         ];
     }
 }
