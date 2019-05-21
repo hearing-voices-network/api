@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Tags;
 
+use App\Docs\Parameters\PageParameter;
+use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Schemas\Tag\TagSchema;
 use App\Docs\Tags\TagsTag;
@@ -24,6 +26,10 @@ class IndexTagOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('List all tags')
             ->tags(TagsTag::create())
+            ->parameters(
+                PageParameter::create(),
+                PerPageParameter::create()
+            )
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Audits;
 
+use App\Docs\Parameters\PageParameter;
+use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\Audit\AuditSchema;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\AuditsTag;
@@ -24,6 +26,10 @@ class IndexAuditOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('List all audits')
             ->tags(AuditsTag::create())
+            ->parameters(
+                PageParameter::create(),
+                PerPageParameter::create()
+            )
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(

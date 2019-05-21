@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Notifications;
 
+use App\Docs\Parameters\PageParameter;
+use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\Notification\NotificationSchema;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\NotificationsTag;
@@ -24,6 +26,10 @@ class IndexNotificationOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('List all notifications')
             ->tags(NotificationsTag::create())
+            ->parameters(
+                PageParameter::create(),
+                PerPageParameter::create()
+            )
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(

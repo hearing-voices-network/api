@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Contributions;
 
+use App\Docs\Parameters\PageParameter;
+use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\Contribution\ContributionSchema;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\ContributionsTag;
@@ -24,6 +26,10 @@ class IndexContributionOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('List all contributions')
             ->tags(ContributionsTag::create())
+            ->parameters(
+                PageParameter::create(),
+                PerPageParameter::create()
+            )
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(

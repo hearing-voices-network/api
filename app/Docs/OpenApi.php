@@ -38,6 +38,7 @@ class OpenApi extends BaseOpenApi implements Responsable
                 Paths\Tags\TagsNestedPath::create()
             )
             ->components(Components::create())
+            ->security(SecurityRequirement::create())
             ->tags(
                 Tags\AdminsTag::create(),
                 Tags\AuditsTag::create(),

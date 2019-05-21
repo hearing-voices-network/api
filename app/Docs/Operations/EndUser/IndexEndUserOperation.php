@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\EndUser;
 
+use App\Docs\Parameters\PageParameter;
+use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\EndUser\EndUserSchema;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\EndUsersTag;
@@ -24,6 +26,10 @@ class IndexEndUserOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('List all end users')
             ->tags(EndUsersTag::create())
+            ->parameters(
+                PageParameter::create(),
+                PerPageParameter::create()
+            )
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(
