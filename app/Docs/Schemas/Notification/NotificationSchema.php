@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Docs\Schemas\Audit;
+namespace App\Docs\Schemas\Notification;
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
-class AuditSchema extends Schema
+class NotificationSchema extends Schema
 {
     /**
      * @param string|null $objectId
@@ -19,14 +19,14 @@ class AuditSchema extends Schema
             ->properties(
                 Schema::string('id')->format(static::FORMAT_UUID),
                 Schema::string('user_id')->format(static::FORMAT_UUID)->nullable(),
-                Schema::integer('oauth_client_id')->nullable(),
-                Schema::string('action')
+                Schema::string('channel')
                     // TODO: Use class constants for these.
-                    ->enum('create', 'read', 'update', 'delete', 'login', 'logout'),
-                Schema::string('description')->nullable(),
-                Schema::string('ip_address'),
-                Schema::string('user_agent')->nullable(),
-                Schema::string('created_at')->format(static::FORMAT_DATE_TIME)
+                    ->enum('email', 'sms'),
+                Schema::string('recipient'),
+                Schema::string('content'),
+                Schema::string('sent_at')->format(static::FORMAT_DATE_TIME)->nullable(),
+                Schema::string('created_at')->format(static::FORMAT_DATE_TIME),
+                Schema::string('updated_at')->format(static::FORMAT_DATE_TIME)
             );
     }
 }

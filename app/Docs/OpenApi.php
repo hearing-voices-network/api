@@ -31,7 +31,9 @@ class OpenApi extends BaseOpenApi implements Responsable
                 Paths\Contributions\ContributionsApprovePath::create(),
                 Paths\Contributions\ContributionsRejectPath::create(),
                 Paths\Audits\AuditsRootPath::create(),
-                Paths\Audits\AuditsNestedPath::create()
+                Paths\Audits\AuditsNestedPath::create(),
+                Paths\Notifications\NotificationsRootPath::create(),
+                Paths\Notifications\NotificationsNestedPath::create()
             )
             ->components(Components::create())
             ->tags(
