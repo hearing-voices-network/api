@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Docs\Paths\Contributions;
 
-use App\Docs\Operations\Contributions\ApproveContributionOperation;
+use App\Docs\Operations\Contributions\RejectContributionOperation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
-class ContributionsApprovePath extends PathItem
+class ContributionsRejectPath extends PathItem
 {
     /**
      * @param string|null $objectId
@@ -19,7 +19,7 @@ class ContributionsApprovePath extends PathItem
     public static function create(string $objectId = null): PathItem
     {
         return parent::create($objectId)
-            ->route('/contributions/{contribution}/approve')
+            ->route('/contributions/{contribution}/reject')
             ->description('This endpoint can only be invoked if the contribution is in review')
             ->parameters(
                 Parameter::path()
@@ -29,7 +29,7 @@ class ContributionsApprovePath extends PathItem
                     ->required()
             )
             ->operations(
-                ApproveContributionOperation::create()
+                RejectContributionOperation::create()
             );
     }
 }

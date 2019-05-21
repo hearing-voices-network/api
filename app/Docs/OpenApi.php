@@ -8,6 +8,7 @@ use App\Docs\Paths\Admins\AdminsNestedPath;
 use App\Docs\Paths\Admins\AdminsRootPath;
 use App\Docs\Paths\Contributions\ContributionsApprovePath;
 use App\Docs\Paths\Contributions\ContributionsNestedPath;
+use App\Docs\Paths\Contributions\ContributionsRejectPath;
 use App\Docs\Paths\Contributions\ContributionsRootPath;
 use App\Docs\Paths\EndUsers\EndUsersNestedPath;
 use App\Docs\Paths\EndUsers\EndUsersRootPath;
@@ -37,7 +38,8 @@ class OpenApi extends BaseOpenApi implements Responsable
                 EndUsersNestedPath::create(),
                 ContributionsRootPath::create(),
                 ContributionsNestedPath::create(),
-                ContributionsApprovePath::create()
+                ContributionsApprovePath::create(),
+                ContributionsRejectPath::create()
             )
             ->components(Components::create())
             ->tags(
