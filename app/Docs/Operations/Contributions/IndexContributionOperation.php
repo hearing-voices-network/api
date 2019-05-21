@@ -26,6 +26,7 @@ class IndexContributionOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('List all contributions')
             ->tags(ContributionsTag::create())
+            ->noSecurity()
             ->parameters(
                 PageParameter::create(),
                 PerPageParameter::create()

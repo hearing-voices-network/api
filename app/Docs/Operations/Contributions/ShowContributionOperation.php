@@ -23,6 +23,7 @@ class ShowContributionOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('Get a specific contribution')
             ->tags(ContributionsTag::create())
+            ->noSecurity()
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(ContributionSchema::create())
