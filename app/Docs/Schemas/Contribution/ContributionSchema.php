@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Schemas\Contribution;
 
+use App\Docs\Schemas\Tag\TagSchema;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class ContributionSchema extends Schema
@@ -33,7 +34,9 @@ class ContributionSchema extends Schema
                 Schema::string('created_at')
                     ->format(static::FORMAT_DATE_TIME),
                 Schema::string('updated_at')
-                    ->format(static::FORMAT_DATE_TIME)
+                    ->format(static::FORMAT_DATE_TIME),
+                Schema::array('tags')
+                    ->items(TagSchema::create())
             );
     }
 }

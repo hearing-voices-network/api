@@ -19,7 +19,8 @@ class StoreContributionSchema extends Schema
             ->type(static::TYPE_OBJECT)
             ->required(
                 'content',
-                'status'
+                'status',
+                'tags'
             )
             ->properties(
                 Schema::string('content')
@@ -27,7 +28,14 @@ class StoreContributionSchema extends Schema
                 // TODO: Use class constants for these values.
                 Schema::string('status')
                     ->enum('in_review', 'private')
-                    ->description('Use `in_review` for public consumption and `private` for personal use.')
+                    ->description('Use `in_review` for public consumption and `private` for personal use.'),
+                Schema::array('tags')
+                    ->items(
+                        Schema::object()->properties(
+                            Schema::string('id')
+                                ->format(Schema::FORMAT_UUID)
+                        )
+                    )
             );
     }
 }
