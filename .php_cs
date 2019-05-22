@@ -48,7 +48,6 @@ $rules = [
     'fully_qualified_strict_types' => true,
     'function_to_constant' => true,
     'function_typehint_space' => true,
-    'heredoc_indentation' => true,
     'heredoc_to_nowdoc' => true,
     'list_syntax' => true,
     'logical_operators' => true,

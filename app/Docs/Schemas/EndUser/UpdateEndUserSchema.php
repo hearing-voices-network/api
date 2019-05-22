@@ -26,8 +26,8 @@ class UpdateEndUserSchema extends Schema
                     ->enum('United Kingdom')
                     ->nullable(),
                 Schema::integer('birth_year')
-                    ->minimum(today()->year - config('hvn.max_age_requirement'))
-                    ->maximum(today()->year - config('hvn.min_age_requirement'))
+                    ->minimum(today()->year - config('hvn.age_requirement.max'))
+                    ->maximum(today()->year - config('hvn.age_requirement.min'))
                     ->nullable(),
                 Schema::string('gender')
                     ->nullable(),

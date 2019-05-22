@@ -18,9 +18,12 @@ class PerPageParameter extends Parameter
         return parent::create($objectId)
             ->in(static::IN_QUERY)
             ->name('per_page')
+            ->description('The number of items to load per page')
             ->schema(
-                // TODO: Get maximum from config.
-                Schema::integer()->minimum(1)->maximum(100)
+                Schema::integer()
+                    ->minimum(1)
+                    ->maximum((int)config('hvn.pagination.max'))
+                    ->default((int)config('hvn.pagination.default'))
             );
     }
 }

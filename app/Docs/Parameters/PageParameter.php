@@ -18,6 +18,9 @@ class PageParameter extends Parameter
         return parent::create($objectId)
             ->in(static::IN_QUERY)
             ->name('page')
-            ->schema(Schema::integer());
+            ->description('The page offset')
+            ->schema(
+                Schema::integer()->default(1)
+            );
     }
 }

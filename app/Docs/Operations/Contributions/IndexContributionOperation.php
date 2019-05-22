@@ -11,7 +11,9 @@ use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\ContributionsTag;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class IndexContributionOperation extends Operation
 {
@@ -29,7 +31,21 @@ class IndexContributionOperation extends Operation
             ->noSecurity()
             ->parameters(
                 PageParameter::create(),
-                PerPageParameter::create()
+                PerPageParameter::create(),
+                Parameter::query()
+                    ->name('filter[end_user_id]')
+                    ->description(
+                        <<<'EOT'
+                        The ID of an end user to filter by
+
+                        * Only accessible by an admin
+                        EOT
+                    )
+                    ->schema(Schema::string()->format(Schema::FORMAT_UUID)),
+                Parameter::query()
+                    ->name('filter[tag_ids]')
+                    ->description('A comma separated list of tag IDs to filter by')
+                    ->schema(Schema::string())
             )
             ->responses(
                 Response::ok()->content(
