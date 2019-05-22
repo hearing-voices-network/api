@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Tags;
 
-use App\Docs\Parameters\PageParameter;
-use App\Docs\Parameters\PerPageParameter;
-use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Schemas\Tag\TagSchema;
 use App\Docs\Tags\TagsTag;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class IndexTagOperation extends Operation
 {
@@ -25,15 +23,12 @@ class IndexTagOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_GET)
             ->summary('List all tags')
+            ->description('This endpoint does not return a paginated set, but instead all tags at once')
             ->tags(TagsTag::create())
-            ->parameters(
-                PageParameter::create(),
-                PerPageParameter::create()
-            )
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(
-                        PaginationSchema::create(null, TagSchema::create())
+                        Schema::array()->items(TagSchema::create())
                     )
                 )
             );
