@@ -20,7 +20,7 @@ class OAuth2SecurityScheme extends SecurityScheme
             ->description('The standard OAuth2 authentication')
             ->flows(
                 OAuthFlow::create()
-                    ->flow(OAuthFlow::FLOW_CLIENT_CREDENTIALS)
+                    ->flow(OAuthFlow::FLOW_PASSWORD)
                     // TODO: Use route()
                     ->tokenUrl(url('/oauth/token'))
                     // TODO: Use route()
