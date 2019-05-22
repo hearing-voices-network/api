@@ -20,7 +20,6 @@ class ContributionsRejectPath extends PathItem
     {
         return parent::create($objectId)
             ->route('/contributions/{contribution}/reject')
-            ->description('This endpoint can only be invoked if the contribution is in review')
             ->parameters(
                 Parameter::path()
                     ->name('contribution')

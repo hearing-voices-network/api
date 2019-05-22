@@ -22,6 +22,7 @@ class ApproveContributionOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_PUT)
             ->summary('Approve a specific contribution')
+            ->description('This endpoint can only be invoked if the contribution is in review')
             ->tags(ContributionsTag::create())
             ->responses(
                 Response::ok()->content(

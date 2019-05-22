@@ -24,6 +24,7 @@ class RejectContributionOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_PUT)
             ->summary('Reject a specific contribution')
+            ->description('This endpoint can only be invoked if the contribution is in review')
             ->tags(ContributionsTag::create())
             ->requestBody(
                 RequestBody::create()->required()->content(

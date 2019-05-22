@@ -6,7 +6,7 @@ namespace App\Docs\Schemas\Admin;
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
-class StoreAdminSchema extends UpdateAdminSchema
+class StoreAdminSchema extends Schema
 {
     /**
      * @param string|null $objectId
@@ -15,13 +15,23 @@ class StoreAdminSchema extends UpdateAdminSchema
      */
     public static function create(string $objectId = null): Schema
     {
-        $instance = parent::create($objectId);
-
-        $instance = $instance->required(
-            'password',
-            ...$instance->required
-        );
-
-        return $instance;
+        return parent::create($objectId)
+            ->type(static::TYPE_OBJECT)
+            ->required(
+                'name',
+                'phone',
+                'email',
+                'password'
+            )
+            ->properties(
+                Schema::string('name')
+                    ->maxLength(255),
+                Schema::string('phone')
+                    ->maxLength(255),
+                Schema::string('email')
+                    ->maxLength(255),
+                Schema::string('password')
+                    ->maxLength(255)
+            );
     }
 }

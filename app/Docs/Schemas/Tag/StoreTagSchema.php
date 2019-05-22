@@ -21,8 +21,10 @@ class StoreTagSchema extends Schema
                 'name'
             )
             ->properties(
-                Schema::string('parent_tag_id')->format(static::FORMAT_UUID),
-                Schema::string('name')->maxLength(255)
+                Schema::string('parent_tag_id')
+                    ->format(static::FORMAT_UUID),
+                Schema::string('name')
+                    ->maxLength(255)
             );
     }
 }

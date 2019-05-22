@@ -17,12 +17,15 @@ class AdminSchema extends Schema
         return parent::create($objectId)
             ->type(static::TYPE_OBJECT)
             ->properties(
-                Schema::string('id')->format(static::FORMAT_UUID),
+                Schema::string('id')
+                    ->format(static::FORMAT_UUID),
                 Schema::string('name'),
                 Schema::string('phone'),
                 Schema::string('email'),
-                Schema::string('created_at')->format(static::FORMAT_DATE_TIME),
-                Schema::string('updated_at')->format(static::FORMAT_DATE_TIME)
+                Schema::string('created_at')
+                    ->format(static::FORMAT_DATE_TIME),
+                Schema::string('updated_at')
+                    ->format(static::FORMAT_DATE_TIME)
             );
     }
 }
