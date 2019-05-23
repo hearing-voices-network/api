@@ -25,40 +25,16 @@ class SettingsSchema extends Schema
                 ),
                 Schema::object('email_content')->properties(
                     Schema::object('admin')->properties(
-                        Schema::object('new_contribution')->properties(
-                            Schema::string('subject'),
-                            Schema::string('body')
-                        ),
-                        Schema::object('updated_contribution')->properties(
-                            Schema::string('subject'),
-                            Schema::string('body')
-                        ),
-                        Schema::object('new_end_user')->properties(
-                            Schema::string('subject'),
-                            Schema::string('body')
-                        ),
-                        Schema::object('password_reset')->properties(
-                            Schema::string('subject'),
-                            Schema::string('body')
-                        )
+                        EmailContentSchema::create('new_contribution'),
+                        EmailContentSchema::create('updated_contribution'),
+                        EmailContentSchema::create('new_end_user'),
+                        EmailContentSchema::create('password_reset')
                     ),
                     Schema::object('end_user')->properties(
-                        Schema::object('email_confirmation')->properties(
-                            Schema::string('subject'),
-                            Schema::string('body')
-                        ),
-                        Schema::object('password_reset')->properties(
-                            Schema::string('subject'),
-                            Schema::string('body')
-                        ),
-                        Schema::object('contribution_approved')->properties(
-                            Schema::string('subject'),
-                            Schema::string('body')
-                        ),
-                        Schema::object('contribution_rejected')->properties(
-                            Schema::string('subject'),
-                            Schema::string('body')
-                        )
+                        EmailContentSchema::create('email_confirmation'),
+                        EmailContentSchema::create('password_reset'),
+                        EmailContentSchema::create('contribution_approved'),
+                        EmailContentSchema::create('contribution_rejected')
                     )
                 )
             );
