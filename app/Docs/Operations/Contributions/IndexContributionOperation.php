@@ -44,7 +44,14 @@ class IndexContributionOperation extends Operation
                     ->schema(Schema::string()->format(Schema::FORMAT_UUID)),
                 Parameter::query()
                     ->name('filter[tag_ids]')
-                    ->description('A comma separated list of tag IDs to filter by')
+                    ->description(
+                        <<<'EOT'
+                        A comma separated list of tag IDs to filter by
+                        
+                        * Use `untagged` to search for contributions that have no tag (ignores soft 
+                          deleted tags)
+                        EOT
+                    )
                     ->schema(Schema::string())
             )
             ->responses(
