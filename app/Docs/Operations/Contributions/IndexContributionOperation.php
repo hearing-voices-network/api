@@ -27,6 +27,7 @@ class IndexContributionOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_GET)
             ->summary('List all contributions')
+            ->description('If invoked by an end user, then only their contributions will be available')
             ->tags(ContributionsTag::create())
             ->noSecurity()
             ->parameters(
