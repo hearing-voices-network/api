@@ -30,7 +30,7 @@ class DownloadFileOperation extends Operation
                     ['Public', Admin::class, EndUser::class],
                     <<<'EOT'
                     * Public files are accessible from the public
-                    * Private files require the `token` parameter 
+                    * Private files require the `token` parameter which must be requested
                     EOT
                 )
             )
