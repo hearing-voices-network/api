@@ -22,6 +22,7 @@ class ContributionSchema extends Schema
                     ->format(static::FORMAT_UUID)
                     ->description('This is only provided when the requesting user is an admin or the same end user.'),
                 Schema::string('content'),
+                Schema::string('excerpt'),
                 Schema::string('status')
                     // TODO: Use class constants for these.
                     ->enum('public', 'private', 'in_review', 'changes_requested'),

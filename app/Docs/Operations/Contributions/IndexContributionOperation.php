@@ -49,7 +49,7 @@ class IndexContributionOperation extends Operation
                         A comma separated list of tag IDs to filter by
                         
                         * Use `untagged` to search for contributions that have no tag (ignores soft 
-                          deleted tags)
+                        deleted tags)
                         EOT
                     )
                     ->schema(Schema::string())
