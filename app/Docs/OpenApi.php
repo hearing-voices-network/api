@@ -37,6 +37,7 @@ class OpenApi extends BaseOpenApi implements Responsable
                 Paths\Files\FilesDownloadPath::create(),
                 Paths\Notifications\NotificationsRootPath::create(),
                 Paths\Notifications\NotificationsNestedPath::create(),
+                Paths\Settings\SettingsRootPath::create(),
                 Paths\Tags\TagsRootPath::create(),
                 Paths\Tags\TagsNestedPath::create()
             )
@@ -50,6 +51,7 @@ class OpenApi extends BaseOpenApi implements Responsable
                 Tags\ExportsTag::create(),
                 Tags\FilesTag::create(),
                 Tags\NotificationsTag::create(),
+                Tags\SettingsTag::create(),
                 Tags\TagsTag::create()
             )
             ->externalDocs(ExternalDocs::create());
