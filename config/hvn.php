@@ -14,4 +14,9 @@ return [
         'max' => 100,
     ],
 
+    'export_download_url' => [
+        // 5 minutes.
+        'expiry_time' => 60 * 5,
+    ],
+
 ];
