@@ -7,6 +7,8 @@ namespace App\Docs\Operations\Admins;
 use App\Docs\Schemas\Admin\AdminSchema;
 use App\Docs\Schemas\Admin\UpdateAdminSchema;
 use App\Docs\Tags\AdminsTag;
+use App\Docs\Utils;
+use App\Models\Admin;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\RequestBody;
@@ -24,6 +26,9 @@ class UpdateAdminOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_PUT)
             ->summary('Update a specific admin')
+            ->description(
+                Utils::operationDescription([Admin::class])
+            )
             ->tags(AdminsTag::create())
             ->requestBody(
                 RequestBody::create()->content(

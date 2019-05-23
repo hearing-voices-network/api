@@ -6,6 +6,8 @@ namespace App\Docs\Operations\EndUser;
 
 use App\Docs\Responses\ResourceDeletedResponse;
 use App\Docs\Tags\EndUsersTag;
+use App\Docs\Utils;
+use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
@@ -22,6 +24,9 @@ class DestroyEndUserOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_DELETE)
             ->summary('Delete a specific end user')
+            ->description(
+                Utils::operationDescription([EndUser::class])
+            )
             ->tags(EndUsersTag::create())
             ->parameters(
                 Parameter::query()->name('type')->required()->schema(

@@ -7,6 +7,8 @@ namespace App\Docs\Operations\Contributions;
 use App\Docs\Schemas\Contribution\ContributionSchema;
 use App\Docs\Schemas\Contribution\UpdateContributionSchema;
 use App\Docs\Tags\ContributionsTag;
+use App\Docs\Utils;
+use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\RequestBody;
@@ -24,6 +26,9 @@ class UpdateContributionOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_PUT)
             ->summary('Update a specific contribution')
+            ->description(
+                Utils::operationDescription([EndUser::class])
+            )
             ->tags(ContributionsTag::create())
             ->requestBody(
                 RequestBody::create()->content(

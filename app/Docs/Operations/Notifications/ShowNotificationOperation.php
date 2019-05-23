@@ -6,6 +6,8 @@ namespace App\Docs\Operations\Notifications;
 
 use App\Docs\Schemas\Notification\NotificationSchema;
 use App\Docs\Tags\NotificationsTag;
+use App\Docs\Utils;
+use App\Models\Admin;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
@@ -22,6 +24,9 @@ class ShowNotificationOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_GET)
             ->summary('Get a specific notification')
+            ->description(
+                Utils::operationDescription([Admin::class])
+            )
             ->tags(NotificationsTag::create())
             ->responses(
                 Response::ok()->content(

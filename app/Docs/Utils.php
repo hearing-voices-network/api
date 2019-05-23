@@ -56,7 +56,7 @@ class Utils
 
         // Prepare the required markdown string.
         $markdown = <<<EOT
-        Accessible by:
+        ### Access control
         $accessibleBy
         EOT;
 
@@ -64,6 +64,8 @@ class Utils
         if ($description) {
             $markdown .= <<<EOT
             
+            
+            ### Description
             
             $description
             EOT;

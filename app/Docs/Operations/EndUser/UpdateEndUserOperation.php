@@ -7,6 +7,8 @@ namespace App\Docs\Operations\EndUser;
 use App\Docs\Schemas\EndUser\EndUserSchema;
 use App\Docs\Schemas\EndUser\UpdateEndUserSchema;
 use App\Docs\Tags\EndUsersTag;
+use App\Docs\Utils;
+use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\RequestBody;
@@ -24,6 +26,9 @@ class UpdateEndUserOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_PUT)
             ->summary('Update a specific end user')
+            ->description(
+                Utils::operationDescription([EndUser::class])
+            )
             ->tags(EndUsersTag::create())
             ->requestBody(
                 RequestBody::create()->content(

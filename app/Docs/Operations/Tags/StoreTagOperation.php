@@ -7,6 +7,8 @@ namespace App\Docs\Operations\Tags;
 use App\Docs\Schemas\Tag\StoreTagSchema;
 use App\Docs\Schemas\Tag\TagSchema;
 use App\Docs\Tags\TagsTag;
+use App\Docs\Utils;
+use App\Models\Admin;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\RequestBody;
@@ -24,6 +26,9 @@ class StoreTagOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_POST)
             ->summary('Create a tag')
+            ->description(
+                Utils::operationDescription([Admin::class])
+            )
             ->tags(TagsTag::create())
             ->requestBody(
                 RequestBody::create()->content(

@@ -6,6 +6,8 @@ namespace App\Docs\Operations\Tags;
 
 use App\Docs\Schemas\Tag\TagSchema;
 use App\Docs\Tags\TagsTag;
+use App\Docs\Utils;
+use App\Models\Admin;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
@@ -23,7 +25,12 @@ class IndexTagOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_GET)
             ->summary('List all tags')
-            ->description('This endpoint does not return a paginated set, but instead all tags at once')
+            ->description(
+                Utils::operationDescription(
+                    [Admin::class],
+                    'This endpoint does not return a paginated set, but instead all tags at once.'
+                )
+            )
             ->tags(TagsTag::create())
             ->responses(
                 Response::ok()->content(

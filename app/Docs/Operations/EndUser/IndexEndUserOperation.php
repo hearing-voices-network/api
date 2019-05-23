@@ -9,6 +9,8 @@ use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\EndUser\EndUserSchema;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\EndUsersTag;
+use App\Docs\Utils;
+use App\Models\Admin;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
@@ -25,6 +27,9 @@ class IndexEndUserOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_GET)
             ->summary('List all end users')
+            ->description(
+                Utils::operationDescription([Admin::class])
+            )
             ->tags(EndUsersTag::create())
             ->parameters(
                 PageParameter::create(),

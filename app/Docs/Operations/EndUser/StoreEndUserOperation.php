@@ -7,6 +7,9 @@ namespace App\Docs\Operations\EndUser;
 use App\Docs\Schemas\EndUser\EndUserSchema;
 use App\Docs\Schemas\EndUser\StoreEndUserSchema;
 use App\Docs\Tags\EndUsersTag;
+use App\Docs\Utils;
+use App\Models\Admin;
+use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\RequestBody;
@@ -24,6 +27,9 @@ class StoreEndUserOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_POST)
             ->summary('Create an end user')
+            ->description(
+                Utils::operationDescription(['Public', Admin::class, EndUser::class])
+            )
             ->tags(EndUsersTag::create())
             ->noSecurity()
             ->requestBody(

@@ -9,6 +9,8 @@ use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\Admin\AdminSchema;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\AdminsTag;
+use App\Docs\Utils;
+use App\Models\Admin;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
@@ -25,6 +27,9 @@ class IndexAdminOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_GET)
             ->summary('List all admins')
+            ->description(
+                Utils::operationDescription([Admin::class])
+            )
             ->tags(AdminsTag::create())
             ->parameters(
                 PageParameter::create(),

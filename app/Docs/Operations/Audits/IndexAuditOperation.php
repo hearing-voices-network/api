@@ -9,6 +9,8 @@ use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\Audit\AuditSchema;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\AuditsTag;
+use App\Docs\Utils;
+use App\Models\Admin;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
@@ -27,6 +29,9 @@ class IndexAuditOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_GET)
             ->summary('List all audits')
+            ->description(
+                Utils::operationDescription([Admin::class])
+            )
             ->tags(AuditsTag::create())
             ->parameters(
                 PageParameter::create(),

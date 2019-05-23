@@ -31,10 +31,7 @@ class IndexContributionOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('List all contributions')
             ->description(
-                Utils::operationDescription(
-                    [Admin::class, EndUser::class],
-                    'If invoked by an end user, then only their contributions will be available'
-                )
+                Utils::operationDescription(['Public', Admin::class, EndUser::class])
             )
             ->tags(ContributionsTag::create())
             ->noSecurity()
@@ -47,7 +44,7 @@ class IndexContributionOperation extends Operation
                         <<<'EOT'
                         The ID of an end user to filter by
 
-                        * Only accessible by an admin
+                        * Only usable by an admin
                         EOT
                     )
                     ->schema(Schema::string()->format(Schema::FORMAT_UUID)),

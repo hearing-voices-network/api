@@ -6,6 +6,8 @@ namespace App\Docs\Operations\Contributions;
 
 use App\Docs\Schemas\Contribution\ContributionSchema;
 use App\Docs\Tags\ContributionsTag;
+use App\Docs\Utils;
+use App\Models\Admin;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\RequestBody;
@@ -24,7 +26,12 @@ class RejectContributionOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_PUT)
             ->summary('Reject a specific contribution')
-            ->description('This endpoint can only be invoked if the contribution is in review')
+            ->description(
+                Utils::operationDescription(
+                    [Admin::class],
+                    'This endpoint can only be invoked if the contribution is in review.'
+                )
+            )
             ->tags(ContributionsTag::create())
             ->requestBody(
                 RequestBody::create()->required()->content(
