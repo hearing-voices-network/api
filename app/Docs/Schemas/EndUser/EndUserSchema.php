@@ -32,6 +32,9 @@ class EndUserSchema extends Schema
                     ->nullable(),
                 Schema::string('gdpr_consented_at')
                     ->format(static::FORMAT_DATE_TIME),
+                Schema::string('email_verified_at')
+                    ->format(static::FORMAT_DATE_TIME)
+                    ->nullable(),
                 Schema::string('created_at')
                     ->format(static::FORMAT_DATE_TIME),
                 Schema::string('updated_at')

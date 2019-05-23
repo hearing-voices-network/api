@@ -25,6 +25,7 @@ class StoreEndUserOperation extends Operation
             ->action(static::ACTION_POST)
             ->summary('Create an end user')
             ->tags(EndUsersTag::create())
+            ->noSecurity()
             ->requestBody(
                 RequestBody::create()->content(
                     MediaType::json()->schema(StoreEndUserSchema::create())
