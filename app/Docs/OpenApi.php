@@ -32,7 +32,9 @@ class OpenApi extends BaseOpenApi implements Responsable
                 Paths\Contributions\ContributionsRejectPath::create(),
                 Paths\EndUsers\EndUsersRootPath::create(),
                 Paths\EndUsers\EndUsersNestedPath::create(),
-                Paths\Exports\ExportsNestedPath::create(),
+                Paths\Exports\ExportsRequestPath::create(),
+                Paths\Files\FilesRequestPath::create(),
+                Paths\Files\FilesDownloadPath::create(),
                 Paths\Notifications\NotificationsRootPath::create(),
                 Paths\Notifications\NotificationsNestedPath::create(),
                 Paths\Tags\TagsRootPath::create(),
@@ -46,6 +48,7 @@ class OpenApi extends BaseOpenApi implements Responsable
                 Tags\ContributionsTag::create(),
                 Tags\EndUsersTag::create(),
                 Tags\ExportsTag::create(),
+                Tags\FilesTag::create(),
                 Tags\NotificationsTag::create(),
                 Tags\TagsTag::create()
             )

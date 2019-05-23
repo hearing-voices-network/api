@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Export;
 
+use App\Docs\Schemas\File\FileDownloadUrlSchema;
 use App\Docs\Tags\ExportsTag;
 use App\Docs\Utils;
 use App\Models\Admin;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\AllOf;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
-class ShowExportOperation extends Operation
+class RequestExportOperation extends Operation
 {
     /**
      * @param string|null $objectId
@@ -22,8 +24,8 @@ class ShowExportOperation extends Operation
     public static function create(string $objectId = null): Operation
     {
         return parent::create($objectId)
-            ->action(static::ACTION_GET)
-            ->summary('Download a specific export')
+            ->action(static::ACTION_POST)
+            ->summary('Request a download URL for a specific export')
             ->description(
                 Utils::operationDescription(
                     [Admin::class],
@@ -32,7 +34,7 @@ class ShowExportOperation extends Operation
                         This returns a download URL which will expire within %d seconds, and can 
                         only be accessed once.
                         EOT,
-                        config('hvn.export_download_url.expiry_time')
+                        config('hvn.file_tokens.expiry_time')
                     )
                 )
             )
@@ -40,10 +42,11 @@ class ShowExportOperation extends Operation
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(
-                        Schema::object()->properties(
-                            Schema::string('download_url'),
-                            Schema::string('expires_at')
-                                ->format(Schema::FORMAT_DATE_TIME)
+                        AllOf::create()->schemas(
+                            FileDownloadUrlSchema::create(),
+                            Schema::object()->properties(
+                                Schema::string('decryption_key')
+                            )
                         )
                     )
                 )

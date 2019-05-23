@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Docs\Paths\Exports;
 
-use App\Docs\Operations\Export\ShowExportOperation;
+use App\Docs\Operations\Export\RequestExportOperation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
-class ExportsNestedPath extends PathItem
+class ExportsRequestPath extends PathItem
 {
     /**
      * @param string|null $objectId
@@ -19,7 +19,7 @@ class ExportsNestedPath extends PathItem
     public static function create(string $objectId = null): PathItem
     {
         return parent::create($objectId)
-            ->route('/exports/{export}')
+            ->route('/exports/{export}/request')
             ->parameters(
                 Parameter::path()
                     ->name('export')
@@ -29,7 +29,7 @@ class ExportsNestedPath extends PathItem
                     ->required()
             )
             ->operations(
-                ShowExportOperation::create()
+                RequestExportOperation::create()
             );
     }
 }
