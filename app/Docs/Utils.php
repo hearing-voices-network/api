@@ -66,7 +66,6 @@ class Utils
             
             
             ### Description
-            
             $description
             EOT;
         }
