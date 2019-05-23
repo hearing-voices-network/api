@@ -17,6 +17,12 @@ class SettingsSchema extends Schema
         return parent::create($objectId)
             ->type(static::TYPE_OBJECT)
             ->properties(
+                Schema::object('frontend_content')->properties(
+                    Schema::object('home_page')->properties(
+                        // TODO: Fill in from designs.
+                        Schema::string('title')
+                    )
+                ),
                 Schema::object('email_content')->properties(
                     Schema::object('admin')->properties(
                         // TODO: Fill in from notification cards.
