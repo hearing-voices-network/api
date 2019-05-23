@@ -9,6 +9,9 @@ use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\Contribution\ContributionSchema;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\ContributionsTag;
+use App\Docs\Utils;
+use App\Models\Admin;
+use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
@@ -27,7 +30,12 @@ class IndexContributionOperation extends Operation
         return parent::create($objectId)
             ->action(static::ACTION_GET)
             ->summary('List all contributions')
-            ->description('If invoked by an end user, then only their contributions will be available')
+            ->description(
+                Utils::operationDescription(
+                    [Admin::class, EndUser::class],
+                    'If invoked by an end user, then only their contributions will be available'
+                )
+            )
             ->tags(ContributionsTag::create())
             ->noSecurity()
             ->parameters(
