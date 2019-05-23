@@ -11,6 +11,7 @@ use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class DownloadFileOperation extends Operation
 {
@@ -37,11 +38,13 @@ class DownloadFileOperation extends Operation
             ->noSecurity()
             ->responses(
                 Response::ok()->content(
-                    MediaType::pdf(),
-                    MediaType::jpeg(),
-                    MediaType::png(),
-                    MediaType::create()->mediaType('application/zip'),
+                    MediaType::pdf()->schema(Schema::string()->format(Schema::FORMAT_BINARY)),
+                    MediaType::jpeg()->schema(Schema::string()->format(Schema::FORMAT_BINARY)),
+                    MediaType::png()->schema(Schema::string()->format(Schema::FORMAT_BINARY)),
+                    MediaType::create()->mediaType('application/zip')->schema(
+                        Schema::string()->format(Schema::FORMAT_BINARY)
                     )
+                )
             );
     }
 }
