@@ -20,9 +20,9 @@ class Info extends BaseInfo
             ->description('Documentation on how to use the API')
             ->contact(
                 Contact::create()
-                    ->name('Ayup Digital')
-                    ->url('https://ayup.agency')
-                    ->email('info@ayup.agency')
+                    ->name((string)config('ayup.name'))
+                    ->url((string)config('ayup.url'))
+                    ->email((string)config('ayup.email'))
             )
             ->version('v1');
     }
