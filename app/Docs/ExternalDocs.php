@@ -16,6 +16,6 @@ class ExternalDocs extends BaseExternalDocs
     {
         return parent::create($objectId)
             ->description('The GitHub repo')
-            ->url('https://github.com/hearing-voices-network/api');
+            ->url((string)config('hvn.repo_url'));
     }
 }

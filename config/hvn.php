@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 return [
 
+    'repo_url' => 'https://github.com/hearing-voices-network/api',
+
     'age_requirement' => [
         'min' => 13,
         'max' => 100,
