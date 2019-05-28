@@ -18,4 +18,11 @@ class EndUser extends BaseModel
     protected $casts = [
         'gdpr_consented_at' => 'datetime',
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 }
