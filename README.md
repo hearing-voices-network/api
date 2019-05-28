@@ -1,72 +1,144 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Connecting Voices - API
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+The main API component for the Connecting Voices platform.
 
-## About Laravel
+## Getting Started
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+These instructions will get you a copy of the project up and running on your 
+local machine for development and testing purposes. See deployment for notes on 
+how to deploy the project on a live system.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+To run this project, you must have the following installed on your host machine:
 
-## Learning Laravel
+* [Docker](https://docs.docker.com/install/)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### The helper script
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1400 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+To abstract the long commands needed to work with Docker Compose, a helper 
+script called `develop` has been created at the root of the project. This is 
+referenced throughout the rest of this guide and should be used for day-to-day 
+tasks when developing.
 
-## Laravel Sponsors
+It essentially just proxies commands to the relevant docker containers. Feel 
+free to add commands when necessary.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Installing
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
+Start by building the Docker image and spinning up the development environment:
+
+```bash
+./develop build
+./develop up -d
+```
+
+At this point you must then download the dependencies and compile the static 
+assets:
+
+```bash
+# Install dependencies.
+./develop composer install
+./develop npm install
+
+# Either do a dingle compilation.
+./develop npm run dev
+
+# Or, run a watcher for compilation upon file change.
+./develop npm run watch
+```
+
+Next, configure the environment file:
+
+```bash
+# Copy the example file.
+cp .env.example .env
+
+# Fill out the details needed.
+vim .env
+```
+
+Then generate an application key:
+
+```bash
+./develop art key:generate
+```
+
+Now run the database migrations:
+
+```bash
+# Optionally append "--seed" if you want test data to work with.
+./develop art migrate [--seed]
+```
+
+Create a user for yourself to login with:
+
+```bash
+# If you don't specify a password, one will be generated and outputted for you.
+./develop art cv:make:admin <name> <email> <phone> [--password=secret] 
+```
+
+And finally create OAuth clients for trusted apps:
+
+```bash
+# TODO
+```
+
+You should now be able to login to the API, and the admin web app once you've 
+set it up.
+
+## Running the tests
+
+To run the test suite you can use the following commands:
+
+```bash
+# To run both style and unit tests.
+composer test
+
+# To run only style tests.
+composer test:style
+
+# To run only unit tests.
+composer test:unit
+```
+
+If you receive any errors from the style tests, you can automatically fix most, 
+if not all of the issues with the following command:
+
+```bash
+composer fix:style
+```
+
+## Deployment
+
+Deployment is all automated through Travis CI. Pushes to the `develop` branch 
+will automatically deploy to staging, whereas pushes to `master` will 
+automatically deploy to production.
+
+It is important to tag any releases to production using [SemVer](http://semver.org/).
+
+## Built with
+
+* [Laravel 5.8](https://laravel.com/docs/5.8) - The PHP framework used
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of 
+conduct, and the process for submitting pull requests to us.
 
-## Security Vulnerabilities
+## Versioning
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+We use [SemVer](http://semver.org/) for versioning. For the versions available, 
+see the [tags on this repository](https://github.com/hearing-voices-network/api/tags). 
+
+## Authors
+
+* [Ayup Digital](https://ayup.agency)
+
+See also the list of [contributors](https://github.com/hearing-voices-network/api/contributors) 
+who participated in this project.
 
 ## License
 
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) 
+file for details.

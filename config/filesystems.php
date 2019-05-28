@@ -50,6 +50,21 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'local_testing' => [
+            'driver' => 'local',
+            'root' => storage_path('testing/app'),
+        ],
+
+        'local_cloud' => [
+            'driver' => 'local',
+            'root' => storage_path('cloud'),
+        ],
+
+        'local_cloud_testing' => [
+            'driver' => 'local',
+            'root' => storage_path('testing/cloud'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -59,11 +74,11 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'key' => env('AWS_S3_ACCESS_KEY_ID'),
+            'secret' => env('AWS_S3_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_S3_DEFAULT_REGION'),
+            'bucket' => env('AWS_S3_BUCKET'),
+            'url' => env('AWS_S3_URL'),
         ],
 
     ],

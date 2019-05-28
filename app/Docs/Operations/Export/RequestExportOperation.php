@@ -34,7 +34,7 @@ class RequestExportOperation extends Operation
                         This returns a download URL which will expire within %d seconds, and can 
                         only be accessed once.
                         EOT,
-                        config('hvn.file_tokens.expiry_time')
+                        config('connecting_voices.file_tokens.expiry_time')
                     )
                 )
             )

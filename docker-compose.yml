@@ -29,7 +29,7 @@ services:
       - .:/var/www/html
     networks:
       - app-net
-    command: php artisan schedule:loop
+    command: php artisan cv:schedule:loop
 
   node:
     image: hearing-voices-network/api/node
