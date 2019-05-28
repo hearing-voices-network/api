@@ -17,6 +17,13 @@ abstract class BaseModel extends Model
     protected $keyType = 'string';
 
     /**
+     * Indicates if the IDs are UUIDs.
+     *
+     * @var bool
+     */
+    protected $uuidKey = true;
+
+    /**
      * Indicates if the IDs are auto-incrementing.
      *
      * @var bool
@@ -47,8 +54,9 @@ abstract class BaseModel extends Model
     {
         parent::boot();
 
-        static::creating(function (Model $model) {
-            if (empty($model->{$model->getKeyName()})) {
+        static::creating(function (BaseModel $model) {
+            // Automatically generate a UUID if using them, and not provided.
+            if ($model->uuidKey && empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = Str::uuid()->toString();
             }
         });
