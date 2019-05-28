@@ -21,7 +21,7 @@ class ModelCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Create a new Eloquent model class along with useful traits';
 
     /**
      * Execute the console command.

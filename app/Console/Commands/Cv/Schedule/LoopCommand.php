@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Console\Commands\Schedule;
+namespace App\Console\Commands\Cv\Schedule;
 
 use Illuminate\Console\Command;
 
@@ -15,7 +15,7 @@ class LoopCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'schedule:loop';
+    protected $signature = 'cv:schedule:loop';
 
     /**
      * The console command description.
