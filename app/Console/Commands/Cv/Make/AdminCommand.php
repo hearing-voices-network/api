@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Cv\Make;
 
-use App\Models\Admin;
-use App\Models\User;
+use App\Services\AdminService;
 use Illuminate\Console\Command;
 
 class AdminCommand extends Command
@@ -29,22 +28,37 @@ class AdminCommand extends Command
     protected $description = 'Create a new admin user';
 
     /**
+     * @var \App\Services\AdminService
+     */
+    protected $adminService;
+
+    /**
+     * AdminCommand constructor.
+     *
+     * @param \App\Services\AdminService $adminService
+     */
+    public function __construct(AdminService $adminService)
+    {
+        parent::__construct();
+
+        $this->adminService = $adminService;
+    }
+
+    /**
      * Execute the console command.
+     *
+     * @throws \Throwable
      */
     public function handle(): void
     {
         $password = $this->option('password') ?? 'secret';
 
-        // TODO: Refactor this to use a repository.
         db()->transaction(function () use ($password): void {
-            Admin::create([
+            $this->adminService->create([
                 'name' => $this->argument('name'),
                 'phone' => $this->argument('phone'),
-                'user_id' => User::create([
-                    'email' => $this->argument('email'),
-                    'password' => $password,
-                    'email_verified_at' => now(),
-                ])->id,
+                'email' => $this->argument('email'),
+                'password' => $password,
             ]);
         });
 
