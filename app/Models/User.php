@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Mutators\UserMutators;
     use Relationships\UserRelationships;
