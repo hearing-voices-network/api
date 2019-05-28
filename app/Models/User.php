@@ -9,6 +9,9 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    use Mutators\UserMutators;
+    use Relationships\UserRelationships;
+    use Scopes\UserScopes;
     use Notifiable;
 
     /**
