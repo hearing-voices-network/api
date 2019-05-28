@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-class Admin
+class Admin extends BaseModel
 {
-    // TODO
+    use Mutators\AdminMutators;
+    use Relationships\AdminRelationships;
+    use Scopes\AdminScopes;
+
+    //
 }

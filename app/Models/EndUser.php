@@ -4,7 +4,18 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-class EndUser
+class EndUser extends BaseModel
 {
-    // TODO
+    use Mutators\EndUserMutators;
+    use Relationships\EndUserRelationships;
+    use Scopes\EndUserScopes;
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'gdpr_consented_at' => 'datetime',
+    ];
 }
