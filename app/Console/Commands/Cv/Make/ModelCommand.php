@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Cv\Make;
 
-use Exception;
 use Illuminate\Console\Command;
 
 class ModelCommand extends Command
@@ -33,7 +32,9 @@ class ModelCommand extends Command
     {
         $name = $this->argument('name');
 
-        $this->checkIfModelExists($name);
+        if (!$this->checkIfModelExists($name)) {
+            return;
+        }
 
         $this->makeModelClass($name);
         $this->makeMutatorsTrait($name);
@@ -45,33 +46,35 @@ class ModelCommand extends Command
 
     /**
      * @param string $name
-     * @throws \Exception
+     * @return bool
      */
-    protected function checkIfModelExists(string $name): void
+    protected function checkIfModelExists(string $name): bool
     {
         if (is_file(app_path("Models/{$name}.php"))) {
             $this->error("{$name} model already exists.");
 
-            throw new Exception("{$name} model already exists.");
+            return false;
         }
 
         if (is_file(app_path("Models/Mutators/{$name}Mutators.php"))) {
             $this->error("{$name} mutators already exist.");
 
-            throw new Exception("{$name} mutators already exist.");
+            return false;
         }
 
         if (is_file(app_path("Models/Relationships/{$name}Relationships.php"))) {
             $this->error("{$name} relationships already exist.");
 
-            throw new Exception("{$name} relationships already exist.");
+            return false;
         }
 
         if (is_file(app_path("Models/Scopes/{$name}Scopes.php"))) {
             $this->error("{$name} scopes already exist.");
 
-            throw new Exception("{$name} scopes already exist.");
+            return false;
         }
+
+        return true;
     }
 
     /**
