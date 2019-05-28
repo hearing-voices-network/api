@@ -22,8 +22,8 @@ class PerPageParameter extends Parameter
             ->schema(
                 Schema::integer()
                     ->minimum(1)
-                    ->maximum((int)config('hvn.pagination.max'))
-                    ->default((int)config('hvn.pagination.default'))
+                    ->maximum((int)config('connecting_voices.pagination.max'))
+                    ->default((int)config('connecting_voices.pagination.default'))
             );
     }
 }

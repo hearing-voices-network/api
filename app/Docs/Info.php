@@ -16,7 +16,7 @@ class Info extends BaseInfo
     public static function create(string $objectId = null): BaseInfo
     {
         return parent::create($objectId)
-            ->title('Hearing Voices Network API')
+            ->title(config('app.name') . ' API')
             ->description('Documentation on how to use the API')
             ->contact(
                 Contact::create()

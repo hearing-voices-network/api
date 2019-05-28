@@ -30,8 +30,8 @@ class StoreEndUserSchema extends Schema
                     // TODO: Generate this from countries table
                     ->enum('United Kingdom'),
                 Schema::integer('birth_year')
-                    ->minimum(today()->year - config('hvn.age_requirement.max'))
-                    ->maximum(today()->year - config('hvn.age_requirement.min')),
+                    ->minimum(today()->year - config('connecting_voices.age_requirement.max'))
+                    ->maximum(today()->year - config('connecting_voices.age_requirement.min')),
                 Schema::string('gender'),
                 Schema::string('ethnicity')
             );
