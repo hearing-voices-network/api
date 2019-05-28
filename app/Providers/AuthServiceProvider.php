@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Passport\Passport;
+use Laravel\Passport\RouteRegistrar;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Passport::routes(function (RouteRegistrar $router): void {
+            $router->forAuthorization();
+            $router->forAccessTokens();
+            $router->forTransientTokens();
+        });
+        Passport::tokensExpireIn(now()->addMinutes(30));
+        Passport::refreshTokensExpireIn(now()->addMinutes(60));
     }
 }
