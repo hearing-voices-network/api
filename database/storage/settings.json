@@ -1,0 +1,51 @@
+[
+  {
+    "key": "frontend_content",
+    "value": {
+      "home_page": {
+        "title": "string"
+      }
+    }
+  },
+  {
+    "key": "email_content",
+    "value": {
+      "admin": {
+        "new_contribution": {
+          "subject": "string",
+          "body": "string"
+        },
+        "updated_contribution": {
+          "subject": "string",
+          "body": "string"
+        },
+        "new_end_user": {
+          "subject": "string",
+          "body": "string"
+        },
+        "password_reset": {
+          "subject": "string",
+          "body": "string"
+        }
+      },
+      "end_user": {
+        "email_confirmation": {
+          "subject": "string",
+          "body": "string"
+        },
+        "password_reset": {
+          "subject": "string",
+          "body": "string"
+        },
+        "contribution_approved": {
+          "subject": "string",
+          "body": "string"
+        },
+        "contribution_rejected": {
+          "subject": "string",
+          "body": "string"
+        }
+      }
+    }
+  }
+]
