@@ -1,0 +1,20 @@
+[
+  {
+    "action": "login"
+  },
+  {
+    "action": "logout"
+  },
+  {
+    "action": "create"
+  },
+  {
+    "action": "read"
+  },
+  {
+    "action": "update"
+  },
+  {
+    "action": "delete"
+  }
+]
