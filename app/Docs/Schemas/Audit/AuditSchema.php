@@ -22,7 +22,7 @@ class AuditSchema extends Schema
                 Schema::string('user_id')
                     ->format(static::FORMAT_UUID)
                     ->nullable(),
-                Schema::integer('oauth_client_id')
+                Schema::integer('client_id')
                     ->nullable(),
                 Schema::string('action')
                     // TODO: Use class constants for these.

@@ -23,6 +23,6 @@ trait AuditRelationships
      */
     public function client(): BelongsTo
     {
-        return $this->belongsTo(Client::class, 'oauth_client_id');
+        return $this->belongsTo(Client::class, 'client_id');
     }
 }

@@ -17,8 +17,8 @@ class CreateAuditsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedInteger('oauth_client_id')->nullable();
-            $table->foreign('oauth_client_id')->references('id')->on('oauth_clients');
+            $table->unsignedInteger('client_id')->nullable();
+            $table->foreign('client_id')->references('id')->on('oauth_clients');
             $table->string('action');
             $table->foreign('action')->references('action')->on('audit_actions');
             $table->text('description')->nullable();
