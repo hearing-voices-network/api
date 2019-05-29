@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Docs\Schemas\Notification;
 
+use App\Models\Notification;
+use App\Support\Enum;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class NotificationSchema extends Schema
@@ -23,8 +25,7 @@ class NotificationSchema extends Schema
                     ->format(static::FORMAT_UUID)
                     ->nullable(),
                 Schema::string('channel')
-                    // TODO: Use class constants for these.
-                    ->enum('email', 'sms'),
+                    ->enum(...(new Enum(Notification::class))->getValues('CHANNEL')),
                 Schema::string('recipient'),
                 Schema::string('content'),
                 Schema::string('sent_at')

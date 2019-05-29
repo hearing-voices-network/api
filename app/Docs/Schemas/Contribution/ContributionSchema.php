@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Docs\Schemas\Contribution;
 
 use App\Docs\Schemas\Tag\TagSchema;
+use App\Models\Contribution;
+use App\Support\Enum;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class ContributionSchema extends Schema
 {
     /**
      * @param string|null $objectId
+     * @throws \ReflectionException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
     public static function create(string $objectId = null): Schema
@@ -24,8 +27,7 @@ class ContributionSchema extends Schema
                 Schema::string('content'),
                 Schema::string('excerpt'),
                 Schema::string('status')
-                    // TODO: Use class constants for these.
-                    ->enum('public', 'private', 'in_review', 'changes_requested'),
+                    ->enum(...(new Enum(Contribution::class))->getValues('STATUS')),
                 Schema::string('changes_requested')
                     ->description('This is only provided when the requesting user is an admin or the same end user.')
                     ->nullable(),

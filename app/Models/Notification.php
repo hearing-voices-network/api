@@ -10,6 +10,9 @@ class Notification extends BaseModel
     use Relationships\NotificationRelationships;
     use Scopes\NotificationScopes;
 
+    const CHANNEL_EMAIL = 'email';
+    const CHANNEL_SMS = 'sms';
+
     /**
      * The attributes that should be cast to native types.
      *
