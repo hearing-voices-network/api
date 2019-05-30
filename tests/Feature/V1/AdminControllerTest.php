@@ -87,4 +87,82 @@ class AdminControllerTest extends TestCase
             ],
         ]);
     }
+
+    /*
+     * Show.
+     */
+
+    /** @test */
+    public function guest_cannot_show()
+    {
+        $admin = factory(Admin::class)->create();
+
+        $response = $this->json('GET', "/v1/admins/{$admin->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function end_user_cannot_show()
+    {
+        $admin = factory(Admin::class)->create();
+
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->json('GET', "/v1/admins/{$admin->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function admin_can_show()
+    {
+        $admin = factory(Admin::class)->create();
+
+        Passport::actingAs($admin->user);
+
+        $response = $this->json('GET', "/v1/admins/{$admin->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function structure_correct_for_show(): void
+    {
+        $admin = factory(Admin::class)->create();
+
+        Passport::actingAs($admin->user);
+
+        $response = $this->json('GET', "/v1/admins/{$admin->id}");
+
+        $response->assertResourceDataStructure([
+            'id',
+            'name',
+            'phone',
+            'email',
+            'created_at',
+            'updated_at',
+        ]);
+    }
+
+    /** @test */
+    public function values_correct_for_show(): void
+    {
+        $admin = factory(Admin::class)->create();
+
+        Passport::actingAs($admin->user);
+
+        $response = $this->json('GET', "/v1/admins/{$admin->id}");
+
+        $response->assertResourceData([
+            'id' => $admin->id,
+            'name' => $admin->name,
+            'phone' => $admin->phone,
+            'email' => $admin->user->email,
+            'created_at' => $admin->user->created_at->toIso8601String(),
+            'updated_at' => $admin->user->updated_at->toIso8601String(),
+        ]);
+    }
 }

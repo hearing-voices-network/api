@@ -9,6 +9,7 @@ use App\Http\Resources\AdminResource;
 use App\Models\Admin;
 use App\Support\Pagination;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -38,5 +39,14 @@ class AdminController extends Controller
             ->paginate($this->perPage);
 
         return AdminResource::collection($admins);
+    }
+
+    /**
+     * @param \App\Models\Admin $admin
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     */
+    public function show(Admin $admin): JsonResource
+    {
+        return new AdminResource($admin);
     }
 }

@@ -32,7 +32,7 @@ class AdminPolicy
      */
     public function view(User $user, Admin $admin): bool
     {
-        //
+        return $user->isAdmin();
     }
 
     /**
