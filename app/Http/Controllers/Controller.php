@@ -13,7 +13,9 @@ use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests {
+        AuthorizesRequests::resourceAbilityMap as baseResourceAbilityMap;
+    }
     use DispatchesJobs;
     use ValidatesRequests;
 
@@ -31,5 +33,18 @@ class Controller extends BaseController
     public function __construct(Request $request, Pagination $pagination)
     {
         $this->perPage = $pagination->perPage($request->per_page);
+    }
+
+    /**
+     * Overridden to add the index method to the map.
+     *
+     * @return array
+     */
+    protected function resourceAbilityMap(): array
+    {
+        return array_merge([
+            'list' => 'list',
+            'index' => 'list',
+        ], $this->baseResourceAbilityMap());
     }
 }

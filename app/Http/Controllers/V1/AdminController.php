@@ -7,11 +7,26 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdminResource;
 use App\Models\Admin;
+use App\Support\Pagination;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class AdminController extends Controller
 {
+    /**
+     * AdminController constructor.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Support\Pagination $pagination
+     */
+    public function __construct(Request $request, Pagination $pagination)
+    {
+        parent::__construct($request, $pagination);
+
+        $this->authorizeResource(Admin::class);
+    }
+
     /**
      * @return \Illuminate\Http\Resources\Json\ResourceCollection
      */

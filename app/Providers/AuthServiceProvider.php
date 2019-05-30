@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
 use Laravel\Passport\RouteRegistrar;
 
@@ -24,6 +25,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::guessPolicyNamesUsing(function (string $modelClass): string {
+            $className = class_basename($modelClass);
+
+            return "App\\Policies\\{$className}Policy";
+        });
+
         $this->registerPolicies();
 
         Passport::routes(function (RouteRegistrar $router): void {

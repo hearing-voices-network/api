@@ -21,7 +21,7 @@ class AdminControllerTest extends TestCase
     {
         $response = $this->json('GET', '/v1/admins');
 
-        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     /** @test */
@@ -33,7 +33,7 @@ class AdminControllerTest extends TestCase
 
         $response = $this->json('GET', '/v1/admins');
 
-        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     /** @test */

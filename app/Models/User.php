@@ -26,4 +26,20 @@ class User extends Authenticatable implements MustVerifyEmail
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->admin !== null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEndUser(): bool
+    {
+        return $this->endUser !== null;
+    }
 }
