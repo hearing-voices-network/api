@@ -20,7 +20,7 @@ class AdminService
             'phone' => $data['phone'],
             'user_id' => User::create([
                 'email' => $data['email'],
-                'password' => $data['password'],
+                'password' => bcrypt($data['password']),
                 'email_verified_at' => now(),
             ])->id,
         ]);

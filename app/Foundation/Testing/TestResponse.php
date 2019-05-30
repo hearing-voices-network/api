@@ -42,12 +42,4 @@ class TestResponse extends BaseTestResponse
     {
         $this->assertJsonStructure(['data' => $structure]);
     }
-
-    /**
-     * @param array|null $structure
-     */
-    public function assertResourceData(array $structure = null): void
-    {
-        $this->assertJsonFragment(['data' => $structure]);
-    }
 }

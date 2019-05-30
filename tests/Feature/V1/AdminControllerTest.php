@@ -19,9 +19,9 @@ class AdminControllerTest extends TestCase
     /** @test */
     public function guest_cannot_index(): void
     {
-        $response = $this->json('GET', '/v1/admins');
+        $response = $this->getJson('/v1/admins');
 
-        $response->assertStatus(Response::HTTP_FORBIDDEN);
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     /** @test */
@@ -31,7 +31,7 @@ class AdminControllerTest extends TestCase
             factory(EndUser::class)->create()->user
         );
 
-        $response = $this->json('GET', '/v1/admins');
+        $response = $this->getJson('/v1/admins');
 
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
@@ -43,7 +43,7 @@ class AdminControllerTest extends TestCase
             factory(Admin::class)->create()->user
         );
 
-        $response = $this->json('GET', '/v1/admins');
+        $response = $this->getJson('/v1/admins');
 
         $response->assertStatus(Response::HTTP_OK);
     }
@@ -55,7 +55,7 @@ class AdminControllerTest extends TestCase
             factory(Admin::class)->create()->user
         );
 
-        $response = $this->json('GET', '/v1/admins');
+        $response = $this->getJson('/v1/admins');
 
         $response->assertCollectionDataStructure([
             'id',
@@ -74,7 +74,7 @@ class AdminControllerTest extends TestCase
 
         Passport::actingAs($admin->user);
 
-        $response = $this->json('GET', '/v1/admins');
+        $response = $this->getJson('/v1/admins');
 
         $response->assertJsonFragment([
             [
@@ -89,6 +89,97 @@ class AdminControllerTest extends TestCase
     }
 
     /*
+     * Store.
+     */
+
+    /** @test */
+    public function guest_cannot_store()
+    {
+        $response = $this->postJson('/v1/admins');
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
+    public function end_user_cannot_store()
+    {
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->postJson('/v1/admins');
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function admin_can_store()
+    {
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->postJson('/v1/admins', [
+            'name' => 'John',
+            'phone' => '07000000000',
+            'email' => 'john.doe@example.com',
+            'password' => 'secret',
+        ]);
+
+        $response->assertStatus(Response::HTTP_CREATED);
+    }
+
+    /** @test */
+    public function structure_correct_for_store()
+    {
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->postJson('/v1/admins', [
+            'name' => 'John',
+            'phone' => '07000000000',
+            'email' => 'john.doe@example.com',
+            'password' => 'secret',
+        ]);
+
+        $response->assertResourceDataStructure([
+            'id',
+            'name',
+            'phone',
+            'email',
+            'created_at',
+            'updated_at',
+        ]);
+    }
+
+    /** @test */
+    public function values_correct_for_store()
+    {
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->postJson('/v1/admins', [
+            'name' => 'John',
+            'phone' => '07000000000',
+            'email' => 'john.doe@example.com',
+            'password' => 'secret',
+        ]);
+
+        $response->assertJsonFragment([
+            'name' => 'John',
+            'phone' => '07000000000',
+            'email' => 'john.doe@example.com',
+        ]);
+    }
+
+    /*
+     * TODO: Test for UK mobile number.
+     * TODO: Test for secure password.
+     */
+
+    /*
      * Show.
      */
 
@@ -97,9 +188,9 @@ class AdminControllerTest extends TestCase
     {
         $admin = factory(Admin::class)->create();
 
-        $response = $this->json('GET', "/v1/admins/{$admin->id}");
+        $response = $this->getJson("/v1/admins/{$admin->id}");
 
-        $response->assertStatus(Response::HTTP_FORBIDDEN);
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     /** @test */
@@ -111,7 +202,7 @@ class AdminControllerTest extends TestCase
 
         Passport::actingAs($endUser->user);
 
-        $response = $this->json('GET', "/v1/admins/{$admin->id}");
+        $response = $this->getJson("/v1/admins/{$admin->id}");
 
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
@@ -123,7 +214,7 @@ class AdminControllerTest extends TestCase
 
         Passport::actingAs($admin->user);
 
-        $response = $this->json('GET', "/v1/admins/{$admin->id}");
+        $response = $this->getJson("/v1/admins/{$admin->id}");
 
         $response->assertStatus(Response::HTTP_OK);
     }
@@ -135,7 +226,7 @@ class AdminControllerTest extends TestCase
 
         Passport::actingAs($admin->user);
 
-        $response = $this->json('GET', "/v1/admins/{$admin->id}");
+        $response = $this->getJson("/v1/admins/{$admin->id}");
 
         $response->assertResourceDataStructure([
             'id',
@@ -154,9 +245,9 @@ class AdminControllerTest extends TestCase
 
         Passport::actingAs($admin->user);
 
-        $response = $this->json('GET', "/v1/admins/{$admin->id}");
+        $response = $this->getJson("/v1/admins/{$admin->id}");
 
-        $response->assertResourceData([
+        $response->assertJsonFragment([
             'id' => $admin->id,
             'name' => $admin->name,
             'phone' => $admin->phone,

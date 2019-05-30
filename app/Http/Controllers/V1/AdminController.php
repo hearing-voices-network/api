@@ -7,6 +7,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdminResource;
 use App\Models\Admin;
+use App\Services\AdminService;
 use App\Support\Pagination;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -25,6 +26,7 @@ class AdminController extends Controller
     {
         parent::__construct($request, $pagination);
 
+        $this->middleware('auth');
         $this->authorizeResource(Admin::class);
     }
 
@@ -39,6 +41,26 @@ class AdminController extends Controller
             ->paginate($this->perPage);
 
         return AdminResource::collection($admins);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Services\AdminService $adminService
+     * @throws \Throwable
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     */
+    public function store(Request $request, AdminService $adminService): JsonResource
+    {
+        $admin = db()->transaction(function () use ($request, $adminService): Admin {
+            return $adminService->create([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => $request->password,
+            ]);
+        });
+
+        return new AdminResource($admin);
     }
 
     /**
