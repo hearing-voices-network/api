@@ -6,7 +6,7 @@ use App\Models\EndUser;
 use App\Models\User;
 use Faker\Generator as Faker;
 
-/* @var $factory \Illuminate\Database\Eloquent\Factory */
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(EndUser::class, function (Faker $faker) {
     return [
         'user_id' => function () {

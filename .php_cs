@@ -117,7 +117,6 @@ $rules = [
     'simple_to_complex_string_variable' => true,
     'simplified_null_return' => true,
     'single_blank_line_before_namespace' => true,
-    'single_line_comment_style' => true,
     'single_quote' => true,
     'single_trait_insert_per_statement' => true,
     'standardize_not_equals' => true,

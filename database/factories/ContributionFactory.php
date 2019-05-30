@@ -6,7 +6,7 @@ use App\Models\Contribution;
 use App\Models\EndUser;
 use Faker\Generator as Faker;
 
-/* @var $factory \Illuminate\Database\Eloquent\Factory */
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Contribution::class, function (Faker $faker) {
     return [
         'end_user_id' => function () {
@@ -25,7 +25,7 @@ $factory->state(Contribution::class, 'inReview', [
     'status' => Contribution::STATUS_IN_REVIEW,
 ]);
 
-$factory->state(Contribution::class, 'changesRequested',  function (Faker $faker) {
+$factory->state(Contribution::class, 'changesRequested', function (Faker $faker) {
     return [
         'status' => Contribution::STATUS_CHANGES_REQUESTED,
         'changes_requested' => $faker->paragraph,

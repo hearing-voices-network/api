@@ -70,7 +70,7 @@ services:
     networks:
       - app-net
 
-  redis-testings:
+  redis-testing:
     image: redis:5.0-alpine
     networks:
       - app-net

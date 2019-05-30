@@ -72,7 +72,7 @@ class AdminControllerTest extends TestCase
     {
         $admin = factory(Admin::class)->create();
 
-        Passport::actingAs($admin);
+        Passport::actingAs($admin->user);
 
         $response = $this->json('GET', '/v1/admins');
 
@@ -81,9 +81,9 @@ class AdminControllerTest extends TestCase
                 'id' => $admin->id,
                 'name' => $admin->name,
                 'phone' => $admin->phone,
-                'email' => $admin->email,
-                'created_at' => $admin->created_at->toIso8601string(),
-                'updated_at' => $admin->updated_at->toIso8601string(),
+                'email' => $admin->user->email,
+                'created_at' => $admin->user->created_at->toIso8601String(),
+                'updated_at' => $admin->user->updated_at->toIso8601String(),
             ],
         ]);
     }
