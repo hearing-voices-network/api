@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreAdminRequest;
 use App\Http\Requests\Admin\UpdateAdminRequest;
 use App\Http\Resources\AdminResource;
+use App\Http\Responses\ResourceDeletedResponse;
 use App\Models\Admin;
 use App\Services\AdminService;
 use App\Support\Pagination;
@@ -19,17 +20,25 @@ use Spatie\QueryBuilder\QueryBuilder;
 class AdminController extends Controller
 {
     /**
+     * @var \App\Services\AdminService
+     */
+    protected $adminService;
+
+    /**
      * AdminController constructor.
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Support\Pagination $pagination
+     * @param \App\Services\AdminService $adminService
      */
-    public function __construct(Request $request, Pagination $pagination)
+    public function __construct(Request $request, Pagination $pagination, AdminService $adminService)
     {
         parent::__construct($request, $pagination);
 
         $this->middleware('auth');
         $this->authorizeResource(Admin::class);
+
+        $this->adminService = $adminService;
     }
 
     /**
@@ -47,14 +56,13 @@ class AdminController extends Controller
 
     /**
      * @param \App\Http\Requests\Admin\StoreAdminRequest $request
-     * @param \App\Services\AdminService $adminService
      * @throws \Throwable
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function store(StoreAdminRequest $request, AdminService $adminService): JsonResource
+    public function store(StoreAdminRequest $request): JsonResource
     {
-        $admin = db()->transaction(function () use ($request, $adminService): Admin {
-            return $adminService->create([
+        $admin = db()->transaction(function () use ($request): Admin {
+            return $this->adminService->create([
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'email' => $request->email,
@@ -77,17 +85,13 @@ class AdminController extends Controller
     /**
      * @param \App\Http\Requests\Admin\UpdateAdminRequest $request
      * @param \App\Models\Admin $admin
-     * @param \App\Services\AdminService $adminService
      * @throws \Throwable
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function update(
-        UpdateAdminRequest $request,
-        Admin $admin,
-        AdminService $adminService
-    ): JsonResource {
-        $admin = db()->transaction(function () use ($request, $admin, $adminService) {
-            return $adminService->update([
+    public function update(UpdateAdminRequest $request, Admin $admin): JsonResource
+    {
+        $admin = db()->transaction(function () use ($request, $admin) {
+            return $this->adminService->update([
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'email' => $request->email,
@@ -96,5 +100,19 @@ class AdminController extends Controller
         });
 
         return new AdminResource($admin);
+    }
+
+    /**
+     * @param \App\Models\Admin $admin
+     * @throws \Throwable
+     * @return \App\Http\Responses\ResourceDeletedResponse
+     */
+    public function destroy(Admin $admin): ResourceDeletedResponse
+    {
+        db()->transaction(function () use ($admin) {
+            $this->adminService->delete($admin);
+        });
+
+        return new ResourceDeletedResponse('admin');
     }
 }

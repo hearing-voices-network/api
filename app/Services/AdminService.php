@@ -47,4 +47,19 @@ class AdminService
 
         return $admin;
     }
+
+    /**
+     * @param \App\Models\Admin $admin
+     * @throws \Exception
+     */
+    public function delete(Admin $admin): void
+    {
+        /** @var \App\Models\User $user */
+        $user = $admin->user;
+        $admin->delete();
+        $user->audits()->delete();
+        $user->notifications()->delete();
+        $user->fileToken()->delete();
+        $user->delete();
+    }
 }

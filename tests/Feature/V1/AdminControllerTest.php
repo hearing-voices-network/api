@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Tests\Feature\V1;
 
 use App\Models\Admin;
+use App\Models\Audit;
 use App\Models\EndUser;
+use App\Models\Notification;
 use Illuminate\Http\Response;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -404,5 +406,68 @@ class AdminControllerTest extends TestCase
             'phone' => $admin->phone,
             'email' => $admin->user->email,
         ]);
+    }
+
+    /*
+     * Destroy.
+     */
+
+    /** @test */
+    public function guest_cannot_destroy()
+    {
+        $admin = factory(Admin::class)->create();
+
+        $response = $this->deleteJson("/v1/admins/{$admin->id}");
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
+    public function end_user_cannot_destroy()
+    {
+        $admin = factory(Admin::class)->create();
+
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->deleteJson("/v1/admins/{$admin->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function admin_can_destroy()
+    {
+        $admin = factory(Admin::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->deleteJson("/v1/admins/{$admin->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function database_records_and_relationships_deleted_for_destroy()
+    {
+        $admin = factory(Admin::class)->create();
+        $audit = factory(Audit::class)->create(['user_id' => $admin->user->id]);
+        $notification = factory(Notification::class)->create(['user_id' => $admin->user->id]);
+        $fileToken = $this->createPngFile()->fileTokens()->create(['user_id' => $admin->user->id]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $this->deleteJson("/v1/admins/{$admin->id}");
+
+        $this->assertDatabaseMissing('admins', ['id' => $admin->id]);
+        $this->assertDatabaseMissing('users', ['id' => $admin->user->id]);
+        $this->assertDatabaseMissing('audits', ['id' => $audit->id]);
+        $this->assertDatabaseMissing('notifications', ['id' => $notification->id]);
+        $this->assertDatabaseMissing('file_tokens', ['id' => $fileToken->id]);
     }
 }

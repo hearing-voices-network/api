@@ -67,6 +67,6 @@ class AdminPolicy
      */
     public function delete(User $user, Admin $admin): bool
     {
-        //
+        return $user->isAdmin();
     }
 }
