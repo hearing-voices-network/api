@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Docs\Schemas\Audit;
 
+use App\Models\Audit;
+use App\Support\Enum;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class AuditSchema extends Schema
 {
     /**
      * @param string|null $objectId
+     * @throws \ReflectionException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
     public static function create(string $objectId = null): Schema
@@ -22,11 +25,10 @@ class AuditSchema extends Schema
                 Schema::string('user_id')
                     ->format(static::FORMAT_UUID)
                     ->nullable(),
-                Schema::integer('oauth_client_id')
+                Schema::integer('client_id')
                     ->nullable(),
                 Schema::string('action')
-                    // TODO: Use class constants for these.
-                    ->enum('create', 'read', 'update', 'delete', 'login', 'logout'),
+                    ->enum(...(new Enum(Audit::class))->getValues('ACTION')),
                 Schema::string('description')
                     ->nullable(),
                 Schema::string('ip_address'),

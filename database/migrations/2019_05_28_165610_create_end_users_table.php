@@ -17,11 +17,10 @@ class CreateEndUsersTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id')->unique();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->char('country', 2)->nullable();
-            $table->foreign('country')->references('alpha_2')->on('countries');
-            $table->unsignedInteger('birth_year')->nullable();
-            $table->string('gender')->nullable();
-            $table->string('ethnicity')->nullable();
+            $table->text('country')->nullable();
+            $table->text('birth_year')->nullable();
+            $table->text('gender')->nullable();
+            $table->text('ethnicity')->nullable();
             $table->timestamp('gdpr_consented_at')->nullable();
         });
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Schemas\Contribution;
 
+use App\Models\Contribution;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class StoreContributionSchema extends Schema
@@ -25,9 +26,8 @@ class StoreContributionSchema extends Schema
             ->properties(
                 Schema::string('content')
                     ->maxLength(10000),
-                // TODO: Use class constants for these values.
                 Schema::string('status')
-                    ->enum('in_review', 'private')
+                    ->enum(Contribution::STATUS_IN_REVIEW, Contribution::STATUS_PRIVATE)
                     ->description('Use `in_review` for public consumption and `private` for personal use.'),
                 Schema::array('tags')
                     ->items(

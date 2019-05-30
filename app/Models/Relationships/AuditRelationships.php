@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models\Relationships;
 
-use App\Models\Contribution;
-use App\Models\Country;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Passport\Client;
 
-trait EndUserRelationships
+trait AuditRelationships
 {
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -23,16 +21,8 @@ trait EndUserRelationships
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function country(): BelongsTo
+    public function client(): BelongsTo
     {
-        return $this->belongsTo(Country::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function contributions(): HasMany
-    {
-        return $this->hasMany(Contribution::class);
+        return $this->belongsTo(Client::class, 'client_id');
     }
 }
