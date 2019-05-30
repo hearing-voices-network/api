@@ -17,7 +17,7 @@ class Filesystem
     {
         // Safety precaution to ensure that only directories within the app can be cleared.
         if (!Str::startsWith($dir, storage_path())) {
-            throw new RuntimeException("Only files within the storage path can be cleared");
+            throw new RuntimeException('Only files within the storage path can be cleared');
         }
 
         // Don't do anything if the directory doesn't exist.
