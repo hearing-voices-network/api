@@ -123,7 +123,7 @@ class AdminControllerTest extends TestCase
             'name' => 'John',
             'phone' => '07000000000',
             'email' => 'john.doe@example.com',
-            'password' => 'secret',
+            'password' => 'P@55w0rD!',
         ]);
 
         $response->assertStatus(Response::HTTP_CREATED);
@@ -140,7 +140,7 @@ class AdminControllerTest extends TestCase
             'name' => 'John',
             'phone' => '07000000000',
             'email' => 'john.doe@example.com',
-            'password' => 'secret',
+            'password' => 'P@55w0rD!',
         ]);
 
         $response->assertResourceDataStructure([
@@ -164,7 +164,7 @@ class AdminControllerTest extends TestCase
             'name' => 'John',
             'phone' => '07000000000',
             'email' => 'john.doe@example.com',
-            'password' => 'secret',
+            'password' => 'P@55w0rD!',
         ]);
 
         $response->assertJsonFragment([
@@ -174,10 +174,41 @@ class AdminControllerTest extends TestCase
         ]);
     }
 
-    /*
-     * TODO: Test for UK mobile number.
-     * TODO: Test for secure password.
-     */
+    /** @test */
+    public function uk_mobile_required_for_store()
+    {
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->postJson('/v1/admins', [
+            'name' => 'John',
+            'phone' => '+1-541-754-3010',
+            'email' => 'john.doe@example.com',
+            'password' => 'secret',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors('phone');
+    }
+
+    /** @test */
+    public function secure_password_required_for_store()
+    {
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->postJson('/v1/admins', [
+            'name' => 'John',
+            'phone' => '07000000000',
+            'email' => 'john.doe@example.com',
+            'password' => 'secret',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors('password');
+    }
 
     /*
      * Show.

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreAdminRequest;
 use App\Http\Resources\AdminResource;
 use App\Models\Admin;
 use App\Services\AdminService;
@@ -44,12 +45,12 @@ class AdminController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Admin\StoreAdminRequest $request
      * @param \App\Services\AdminService $adminService
      * @throws \Throwable
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function store(Request $request, AdminService $adminService): JsonResource
+    public function store(StoreAdminRequest $request, AdminService $adminService): JsonResource
     {
         $admin = db()->transaction(function () use ($request, $adminService): Admin {
             return $adminService->create([
