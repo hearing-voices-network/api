@@ -1,0 +1,9 @@
+{
+  "Type": ["Voice", "Vision", "Tactile/touch", "Taste", "Smell", "Thought", "Presence", "Other"],
+  "Characteristics": ["Male", "Female", "Genderless", "Baby", "Child", "Teenager", "Adult", "Older person", "Ageless", "Animal", "Non-human", "Single", "Group", "Crowd", "Other", "Unknown", "Can’t say"],
+  "Tone": ["Warm", "Supportive", "Attacking", "Critical", "Suspicious", "Funny", "Playful", "Detached", "Sad", "Manipulative", "Aggressive", "Guiding", "Advising", "Terrifying", "Commanding", "Superior", "Calming", "Shaming", "Helpful", "Confusing", "Scary", "Angry", "Hopeful", "Predicting future", "Inspirational", "Boring", "Irritating", "Other", "Unknown", "Can’t say"],
+  "Form": ["Whispering", "Talking", "Shouting", "Singing", "Sounds (not words)", "Screaming", "Crying", "Silent", "Monotone", "Signing", "Pictures", "In colour", "In black and white", "In the world", "Inside me", "Other", "Unknown", "Can’t say"],
+  "Where": ["At home", "At work", "At school", "At college/university", "On holiday", "At appointment", "In hospital", "In interview", "Outside", "Inside", "With friends", "With family", "With acquaintances", "With strangers", "Alone", "In a busy place", "In nature", "Other", "Can’t say"],
+  "Identity": ["Human (known to me)", "Human (unknown)", "Alien", "Spirit", "Ghost", "Ancestor", "God/deity", "Guide", "Demon", "From the past", "From the future", "Subconscious", "Technological", "Memory", "Trauma-related", "Dissociative part", "Animal/bird", "Other", "Unknown"],
+  "Impact": ["Positive", "Negative", "Neutral", "Mixed", "It's complicated"]
+}
