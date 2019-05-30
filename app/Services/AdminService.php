@@ -33,13 +33,17 @@ class AdminService
      */
     public function update(array $data, Admin $admin): Admin
     {
-        $admin->name = $data['name'] ?? $admin->name;
-        $admin->phone = $data['phone'] ?? $admin->phone;
-        $admin->user->email = $data['email'] ?? $admin->user->email;
-        $admin->user->password = bcrypt($data['password']) ?? $admin->user->password;
+        $admin->update([
+            'name' => $data['name'] ?? $admin->name,
+            'phone' => $data['phone'] ?? $admin->phone,
+        ]);
 
-        $admin->save();
-        $admin->user->save();
+        $admin->user()->update([
+            'email' => $data['email'] ?? $admin->user->email,
+            'password' => $data['password'] !== null
+                ? bcrypt($data['password'])
+                : $admin->user->password,
+        ]);
 
         return $admin;
     }

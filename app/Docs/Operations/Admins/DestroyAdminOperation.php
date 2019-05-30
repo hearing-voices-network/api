@@ -27,7 +27,7 @@ class DestroyAdminOperation extends Operation
             )
             ->tags(AdminsTag::create())
             ->responses(
-                ResourceDeletedResponse::create('admin')
+                ResourceDeletedResponse::create(null, 'admin')
             );
     }
 }
