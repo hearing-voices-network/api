@@ -25,7 +25,9 @@ $factory->state(Contribution::class, 'inReview', [
     'status' => Contribution::STATUS_IN_REVIEW,
 ]);
 
-$factory->state(Contribution::class, 'changesRequested', [
-    'status' => Contribution::STATUS_CHANGES_REQUESTED,
-    'changes_requested' => $faker->paragraph,
-]);
+$factory->state(Contribution::class, 'changesRequested',  function (Faker $faker) {
+    return [
+        'status' => Contribution::STATUS_CHANGES_REQUESTED,
+        'changes_requested' => $faker->paragraph,
+    ];
+});
