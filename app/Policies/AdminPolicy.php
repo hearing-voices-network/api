@@ -55,7 +55,7 @@ class AdminPolicy
      */
     public function update(User $user, Admin $admin): bool
     {
-        //
+        return $user->isAdmin();
     }
 
     /**

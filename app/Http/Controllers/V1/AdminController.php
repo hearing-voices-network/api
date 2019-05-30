@@ -6,6 +6,7 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreAdminRequest;
+use App\Http\Requests\Admin\UpdateAdminRequest;
 use App\Http\Resources\AdminResource;
 use App\Models\Admin;
 use App\Services\AdminService;
@@ -70,6 +71,30 @@ class AdminController extends Controller
      */
     public function show(Admin $admin): JsonResource
     {
+        return new AdminResource($admin);
+    }
+
+    /**
+     * @param \App\Http\Requests\Admin\UpdateAdminRequest $request
+     * @param \App\Models\Admin $admin
+     * @param \App\Services\AdminService $adminService
+     * @throws \Throwable
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     */
+    public function update(
+        UpdateAdminRequest $request,
+        Admin $admin,
+        AdminService $adminService
+    ): JsonResource {
+        $admin = db()->transaction(function () use ($request, $admin, $adminService) {
+            return $adminService->update([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => $request->password,
+            ], $admin);
+        });
+
         return new AdminResource($admin);
     }
 }

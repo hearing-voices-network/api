@@ -25,4 +25,22 @@ class AdminService
             ])->id,
         ]);
     }
+
+    /**
+     * @param array $data
+     * @param \App\Models\Admin $admin
+     * @return \App\Models\Admin
+     */
+    public function update(array $data, Admin $admin): Admin
+    {
+        $admin->name = $data['name'] ?? $admin->name;
+        $admin->phone = $data['phone'] ?? $admin->phone;
+        $admin->user->email = $data['email'] ?? $admin->email;
+        $admin->user->password = bcrypt($data['password']) ?? $admin->password;
+
+        $admin->save();
+        $admin->user->save();
+
+        return $admin;
+    }
 }
