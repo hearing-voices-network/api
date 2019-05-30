@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Contributions;
 
+use App\Docs\Parameters\FilterParameter;
 use App\Docs\Parameters\PageParameter;
 use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\Contribution\ContributionSchema;
@@ -14,7 +15,6 @@ use App\Models\Admin;
 use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
-use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
@@ -38,8 +38,7 @@ class IndexContributionOperation extends Operation
             ->parameters(
                 PageParameter::create(),
                 PerPageParameter::create(),
-                Parameter::query()
-                    ->name('filter[end_user_id]')
+                FilterParameter::create(null, 'end_user_id')
                     ->description(
                         <<<'EOT'
                         The ID of an end user to filter by
@@ -48,8 +47,7 @@ class IndexContributionOperation extends Operation
                         EOT
                     )
                     ->schema(Schema::string()->format(Schema::FORMAT_UUID)),
-                Parameter::query()
-                    ->name('filter[tag_ids]')
+                FilterParameter::create(null, 'tag_ids')
                     ->description(
                         <<<'EOT'
                         A comma separated list of tag IDs to filter by

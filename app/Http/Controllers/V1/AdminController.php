@@ -5,17 +5,21 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Admin\EmailFilter;
 use App\Http\Requests\Admin\StoreAdminRequest;
 use App\Http\Requests\Admin\UpdateAdminRequest;
 use App\Http\Resources\AdminResource;
 use App\Http\Responses\ResourceDeletedResponse;
+use App\Http\Sorts\Admin\EmailSort;
 use App\Models\Admin;
 use App\Services\AdminService;
 use App\Support\Pagination;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\Sort;
 
 class AdminController extends Controller
 {
@@ -49,6 +53,16 @@ class AdminController extends Controller
         $baseQuery = Admin::query();
 
         $admins = QueryBuilder::for($baseQuery)
+            ->allowedFilters([
+                'name',
+                'phone',
+                Filter::custom('email', EmailFilter::class),
+            ])
+            ->allowedSorts([
+                'name',
+                'phone',
+                Sort::custom('email', EmailSort::class),
+            ])
             ->paginate($this->perPage);
 
         return AdminResource::collection($admins);

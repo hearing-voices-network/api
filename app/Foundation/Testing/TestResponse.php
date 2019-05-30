@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Foundation\Testing;
 
+use Illuminate\Foundation\Testing\Assert as PHPUnit;
 use Illuminate\Foundation\Testing\TestResponse as BaseTestResponse;
 
 class TestResponse extends BaseTestResponse
@@ -41,5 +42,17 @@ class TestResponse extends BaseTestResponse
     public function assertResourceDataStructure(array $structure = null): void
     {
         $this->assertJsonStructure(['data' => $structure]);
+    }
+
+    /**
+     * @param int $index
+     * @param string $id
+     */
+    public function assertNthIdInCollection(int $index, string $id): void
+    {
+        $data = json_decode($this->getContent(), true)['data'];
+
+        PHPUnit::assertGreaterThan($index + 1, count($data));
+        PHPUnit::assertEquals($id, $data[$index]['id']);
     }
 }

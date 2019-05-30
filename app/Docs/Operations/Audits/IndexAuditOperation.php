@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Audits;
 
+use App\Docs\Parameters\FilterParameter;
 use App\Docs\Parameters\PageParameter;
 use App\Docs\Parameters\PerPageParameter;
 use App\Docs\Schemas\Audit\AuditSchema;
@@ -13,7 +14,6 @@ use App\Docs\Utils;
 use App\Models\Admin;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
-use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
@@ -36,12 +36,10 @@ class IndexAuditOperation extends Operation
             ->parameters(
                 PageParameter::create(),
                 PerPageParameter::create(),
-                Parameter::query()
-                    ->name('filter[admin_id]')
+                FilterParameter::create(null, 'admin_id')
                     ->description('The ID of an admin to filter by')
                     ->schema(Schema::string()->format(Schema::FORMAT_UUID)),
-                Parameter::query()
-                    ->name('filter[end_user_id]')
+                FilterParameter::create(null, 'end_user_id')
                     ->description('The ID of an end user to filter by')
                     ->schema(Schema::string()->format(Schema::FORMAT_UUID))
             )

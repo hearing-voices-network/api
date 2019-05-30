@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\EndUser;
 use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Http\Response;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -88,6 +89,136 @@ class AdminControllerTest extends TestCase
                 'updated_at' => $admin->user->updated_at->toIso8601String(),
             ],
         ]);
+    }
+
+    /** @test */
+    public function can_filter_by_name_for_index()
+    {
+        $admin1 = factory(Admin::class)->create([
+            'name' => 'John',
+        ]);
+        $admin2 = factory(Admin::class)->create([
+            'name' => 'Doe',
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/admins', ['filter[name]' => 'John']);
+
+        $response->assertJsonFragment(['id' => $admin1->id]);
+        $response->assertJsonMissing(['id' => $admin2->id]);
+    }
+
+    /** @test */
+    public function can_filter_by_email_for_index()
+    {
+        $admin1 = factory(Admin::class)->create([
+            'user_id' => factory(User::class)->create([
+                'email' => 'john.doe@example.com',
+            ])->id,
+        ]);
+        $admin2 = factory(Admin::class)->create([
+            'user_id' => factory(User::class)->create([
+                'email' => 'foo.bar@example.com',
+            ])->id,
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/admins', ['filter[email]' => 'john.doe@example.com']);
+
+        $response->assertJsonFragment(['id' => $admin1->id]);
+        $response->assertJsonMissing(['id' => $admin2->id]);
+    }
+
+    /** @test */
+    public function can_filter_by_phone_for_index()
+    {
+        $admin1 = factory(Admin::class)->create([
+            'phone' => '07000000000',
+        ]);
+        $admin2 = factory(Admin::class)->create([
+            'phone' => '07999999999',
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/admins', ['filter[phone]' => '07000000000']);
+
+        $response->assertJsonFragment(['id' => $admin1->id]);
+        $response->assertJsonMissing(['id' => $admin2->id]);
+    }
+
+    /** @test */
+    public function can_sort_by_name_for_index()
+    {
+        $admin1 = factory(Admin::class)->create([
+            'name' => 'Borris',
+        ]);
+        $admin2 = factory(Admin::class)->create([
+            'name' => 'Andrew',
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/admins', ['sort' => 'name']);
+
+        $response->assertNthIdInCollection(1, $admin1->id);
+        $response->assertNthIdInCollection(0, $admin2->id);
+    }
+
+    /** @test */
+    public function can_sort_by_email_for_index()
+    {
+        $admin1 = factory(Admin::class)->create([
+            'user_id' => factory(User::class)->create([
+                'email' => 'borris@example.com',
+            ])->id,
+        ]);
+        $admin2 = factory(Admin::class)->create([
+            'user_id' => factory(User::class)->create([
+                'email' => 'andrew@example.com',
+            ])->id,
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/admins', ['sort' => 'email']);
+
+        $response->assertNthIdInCollection(1, $admin1->id);
+        $response->assertNthIdInCollection(0, $admin2->id);
+    }
+
+    /** @test */
+    public function can_sort_by_phone_for_index()
+    {
+        $admin1 = factory(Admin::class)->create([
+            'phone' => '07111111111',
+        ]);
+        $admin2 = factory(Admin::class)->create([
+            'phone' => '07000000000',
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create([
+                'phone' => '07222222222',
+            ])->user
+        );
+
+        $response = $this->getJson('/v1/admins', ['sort' => 'phone']);
+
+        $response->assertNthIdInCollection(1, $admin1->id);
+        $response->assertNthIdInCollection(0, $admin2->id);
     }
 
     /*
