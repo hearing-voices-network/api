@@ -27,11 +27,11 @@ class AdminService
     }
 
     /**
-     * @param array $data
      * @param \App\Models\Admin $admin
+     * @param array $data
      * @return \App\Models\Admin
      */
-    public function update(array $data, Admin $admin): Admin
+    public function update(Admin $admin, array $data): Admin
     {
         $admin->update([
             'name' => $data['name'] ?? $admin->name,

@@ -91,12 +91,12 @@ class AdminController extends Controller
     public function update(UpdateAdminRequest $request, Admin $admin): JsonResource
     {
         $admin = db()->transaction(function () use ($request, $admin) {
-            return $this->adminService->update([
+            return $this->adminService->update($admin, [
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'email' => $request->email,
                 'password' => $request->password,
-            ], $admin);
+            ]);
         });
 
         return new AdminResource($admin);
