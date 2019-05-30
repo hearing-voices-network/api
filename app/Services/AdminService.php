@@ -35,8 +35,8 @@ class AdminService
     {
         $admin->name = $data['name'] ?? $admin->name;
         $admin->phone = $data['phone'] ?? $admin->phone;
-        $admin->user->email = $data['email'] ?? $admin->email;
-        $admin->user->password = bcrypt($data['password']) ?? $admin->password;
+        $admin->user->email = $data['email'] ?? $admin->user->email;
+        $admin->user->password = bcrypt($data['password']) ?? $admin->user->password;
 
         $admin->save();
         $admin->user->save();

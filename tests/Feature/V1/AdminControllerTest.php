@@ -384,4 +384,25 @@ class AdminControllerTest extends TestCase
             'email' => 'john.doe@example.com',
         ]);
     }
+
+    /** @test */
+    public function only_password_can_be_provided_for_update()
+    {
+        $admin = factory(Admin::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->putJson("/v1/admins/{$admin->id}", [
+            'password' => 'P@55w0rD!',
+        ]);
+
+        $response->assertJsonFragment([
+            'id' => $admin->id,
+            'name' => $admin->name,
+            'phone' => $admin->phone,
+            'email' => $admin->user->email,
+        ]);
+    }
 }
