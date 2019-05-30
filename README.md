@@ -2,7 +2,7 @@
 
 The main API component for the Connecting Voices platform.
 
-## Getting Started
+## Getting started
 
 These instructions will get you a copy of the project up and running on your 
 local machine for development and testing purposes. See deployment for notes on 
