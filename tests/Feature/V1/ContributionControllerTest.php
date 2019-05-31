@@ -164,4 +164,58 @@ class ContributionControllerTest extends TestCase
         $response->assertJsonFragment(['id' => $contribution1->id]);
         $response->assertJsonMissing(['id' => $contribution2->id]);
     }
+
+    /** @test */
+    public function guest_can_only_view_public_for_index()
+    {
+        $publicContribution = factory(Contribution::class)
+            ->create();
+        $privateContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_PRIVATE)
+            ->create();
+        $inReviewContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_IN_REVIEW)
+            ->create();
+        $changesRequestedContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_CHANGES_REQUESTED)
+            ->create();
+
+        $response = $this->getJson('/v1/contributions');
+
+        $response->assertJsonFragment(['id' => $publicContribution->id]);
+        $response->assertJsonMissing(['id' => $privateContribution->id]);
+        $response->assertJsonMissing(['id' => $inReviewContribution->id]);
+        $response->assertJsonMissing(['id' => $changesRequestedContribution->id]);
+    }
+
+    /** @test */
+    public function end_user_can_only_view_public_and_their_own_for_index()
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        $endUserContribution = $privateContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_PRIVATE)
+            ->create(['end_user_id' => $endUser->id]);
+        $publicContribution = factory(Contribution::class)
+            ->create();
+        $privateContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_PRIVATE)
+            ->create();
+        $inReviewContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_IN_REVIEW)
+            ->create();
+        $changesRequestedContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_CHANGES_REQUESTED)
+            ->create();
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->getJson('/v1/contributions');
+
+        $response->assertJsonFragment(['id' => $endUserContribution->id]);
+        $response->assertJsonFragment(['id' => $publicContribution->id]);
+        $response->assertJsonMissing(['id' => $privateContribution->id]);
+        $response->assertJsonMissing(['id' => $inReviewContribution->id]);
+        $response->assertJsonMissing(['id' => $changesRequestedContribution->id]);
+    }
 }

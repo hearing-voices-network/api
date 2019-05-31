@@ -18,15 +18,15 @@ $factory->define(Contribution::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(Contribution::class, 'private', [
+$factory->state(Contribution::class, Contribution::STATUS_PRIVATE, [
     'status' => Contribution::STATUS_PRIVATE,
 ]);
 
-$factory->state(Contribution::class, 'inReview', [
+$factory->state(Contribution::class, Contribution::STATUS_IN_REVIEW, [
     'status' => Contribution::STATUS_IN_REVIEW,
 ]);
 
-$factory->state(Contribution::class, 'changesRequested', function (Faker $faker) {
+$factory->state(Contribution::class, Contribution::STATUS_CHANGES_REQUESTED, function (Faker $faker) {
     return [
         'status' => Contribution::STATUS_CHANGES_REQUESTED,
         'changes_requested' => $faker->paragraph,
