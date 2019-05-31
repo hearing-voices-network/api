@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Tags;
 
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Schemas\Tag\StoreTagSchema;
 use App\Docs\Schemas\Tag\TagSchema;
 use App\Docs\Tags\TagsTag;
@@ -37,7 +38,9 @@ class StoreTagOperation extends Operation
             )
             ->responses(
                 Response::created()->content(
-                    MediaType::json()->schema(TagSchema::create())
+                    MediaType::json()->schema(
+                        ResourceSchema::create(null, TagSchema::create())
+                    )
                 )
             );
     }

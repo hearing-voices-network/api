@@ -6,6 +6,7 @@ namespace App\Docs\Operations\Contributions;
 
 use App\Docs\Schemas\Contribution\ContributionSchema;
 use App\Docs\Schemas\Contribution\StoreContributionSchema;
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Tags\ContributionsTag;
 use App\Docs\Utils;
 use App\Models\EndUser;
@@ -19,6 +20,7 @@ class StoreContributionOperation extends Operation
     /**
      * @param string|null $objectId
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @throws \ReflectionException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
     public static function create(string $objectId = null): Operation
@@ -37,7 +39,9 @@ class StoreContributionOperation extends Operation
             )
             ->responses(
                 Response::created()->content(
-                    MediaType::json()->schema(ContributionSchema::create())
+                    MediaType::json()->schema(
+                        ResourceSchema::create(null, ContributionSchema::create())
+                    )
                 )
             );
     }

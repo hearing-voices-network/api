@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Docs\Operations\Export;
 
 use App\Docs\Schemas\File\FileDownloadUrlSchema;
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Tags\ExportsTag;
 use App\Docs\Utils;
 use App\Models\Admin;
-use GoldSpecDigital\ObjectOrientedOAS\Objects\AllOf;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
@@ -42,10 +42,11 @@ class RequestExportOperation extends Operation
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(
-                        AllOf::create()->schemas(
-                            FileDownloadUrlSchema::create(),
-                            Schema::object()->properties(
-                                Schema::string('decryption_key')
+                        ResourceSchema::create(
+                            null,
+                            FileDownloadUrlSchema::create()->properties(
+                                Schema::string('decryption_key'),
+                                ...FileDownloadUrlSchema::object()->properties
                             )
                         )
                     )

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Docs\Operations\EndUser;
 
 use App\Docs\Schemas\EndUser\EndUserSchema;
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Tags\EndUsersTag;
 use App\Docs\Utils;
 use App\Models\Admin;
@@ -37,7 +38,9 @@ class ShowEndUserOperation extends Operation
             ->tags(EndUsersTag::create())
             ->responses(
                 Response::ok()->content(
-                    MediaType::json()->schema(EndUserSchema::create())
+                    MediaType::json()->schema(
+                        ResourceSchema::create(null, EndUserSchema::create())
+                    )
                 )
             );
     }

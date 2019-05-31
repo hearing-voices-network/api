@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Docs\Operations\Admins;
 
 use App\Docs\Schemas\Admin\AdminSchema;
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Tags\AdminsTag;
 use App\Docs\Utils;
 use App\Models\Admin;
@@ -30,7 +31,9 @@ class ShowAdminOperation extends Operation
             ->tags(AdminsTag::create())
             ->responses(
                 Response::ok()->content(
-                    MediaType::json()->schema(AdminSchema::create())
+                    MediaType::json()->schema(
+                        ResourceSchema::create(null, AdminSchema::create())
+                    )
                 )
             );
     }

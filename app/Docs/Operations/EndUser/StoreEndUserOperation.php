@@ -6,6 +6,7 @@ namespace App\Docs\Operations\EndUser;
 
 use App\Docs\Schemas\EndUser\EndUserSchema;
 use App\Docs\Schemas\EndUser\StoreEndUserSchema;
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Tags\EndUsersTag;
 use App\Docs\Utils;
 use App\Models\Admin;
@@ -39,7 +40,9 @@ class StoreEndUserOperation extends Operation
             )
             ->responses(
                 Response::created()->content(
-                    MediaType::json()->schema(EndUserSchema::create())
+                    MediaType::json()->schema(
+                        ResourceSchema::create(null, EndUserSchema::create())
+                    )
                 )
             );
     }

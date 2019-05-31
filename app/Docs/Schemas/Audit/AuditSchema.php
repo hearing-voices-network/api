@@ -22,10 +22,13 @@ class AuditSchema extends Schema
             ->properties(
                 Schema::string('id')
                     ->format(static::FORMAT_UUID),
-                Schema::string('user_id')
+                Schema::string('admin_id')
                     ->format(static::FORMAT_UUID)
                     ->nullable(),
-                Schema::integer('client_id')
+                Schema::string('end_user_id')
+                    ->format(static::FORMAT_UUID)
+                    ->nullable(),
+                Schema::string('client')
                     ->nullable(),
                 Schema::string('action')
                     ->enum(...(new Enum(Audit::class))->getValues('ACTION')),

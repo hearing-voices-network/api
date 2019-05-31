@@ -17,4 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
     Route::apiResource('admins', 'AdminController');
+
+    Route::apiResource('audits', 'AuditController')
+        ->only('index', 'show');
 });
