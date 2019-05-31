@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Tag extends BaseModel
 {
     use Mutators\TagMutators;
     use Relationships\TagRelationships;
     use Scopes\TagScopes;
+    use SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.

@@ -17,10 +17,13 @@ class TagIdsFilter implements Filter
      */
     public function __invoke(Builder $query, $tagIds, string $property): Builder
     {
-        $tags = explode(',', $tagIds);
+        // If untagged then only get contributions with no tag (excluding soft deleted tags).
+        if ($tagIds === 'untagged') {
+            return $query->whereDoesntHave('tags');
+        }
 
-        return $query->whereHas('tags', function (Builder $query) use ($tags): void {
-            $query->whereIn('tags.id', $tags);
+        return $query->whereHas('tags', function (Builder $query) use ($tagIds): void {
+            $query->whereIn('tags.id', explode(',', $tagIds));
         });
     }
 }

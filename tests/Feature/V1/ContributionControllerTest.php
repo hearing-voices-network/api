@@ -154,12 +154,31 @@ class ContributionControllerTest extends TestCase
         $contribution2->tags()->attach($tag2);
 
         Passport::actingAs(
-            factory(Admin::class)->create([
-                'name' => 'Test',
-            ])->user
+            factory(Admin::class)->create()->user
         );
 
         $response = $this->getJson('/v1/contributions', ['filter[tag_ids]' => $tag1->id]);
+
+        $response->assertJsonFragment(['id' => $contribution1->id]);
+        $response->assertJsonMissing(['id' => $contribution2->id]);
+    }
+
+    /** @test */
+    public function can_filter_by_untagged_for_index(): void
+    {
+        $contribution1 = factory(Contribution::class)->create();
+        $tag1 = factory(Tag::class)->create(['deleted_at' => now()]);
+        $contribution1->tags()->attach($tag1);
+
+        $contribution2 = factory(Contribution::class)->create();
+        $tag2 = factory(Tag::class)->create();
+        $contribution2->tags()->attach($tag2);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/contributions', ['filter[tag_ids]' => 'untagged']);
 
         $response->assertJsonFragment(['id' => $contribution1->id]);
         $response->assertJsonMissing(['id' => $contribution2->id]);
