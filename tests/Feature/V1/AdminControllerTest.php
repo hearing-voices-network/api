@@ -92,7 +92,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_filter_by_name_for_index()
+    public function can_filter_by_name_for_index(): void
     {
         $admin1 = factory(Admin::class)->create([
             'name' => 'John',
@@ -102,7 +102,9 @@ class AdminControllerTest extends TestCase
         ]);
 
         Passport::actingAs(
-            factory(Admin::class)->create()->user
+            factory(Admin::class)->create([
+                'name' => 'Test',
+            ])->user
         );
 
         $response = $this->getJson('/v1/admins', ['filter[name]' => 'John']);
@@ -112,7 +114,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_filter_by_email_for_index()
+    public function can_filter_by_email_for_index(): void
     {
         $admin1 = factory(Admin::class)->create([
             'user_id' => factory(User::class)->create([
@@ -126,7 +128,11 @@ class AdminControllerTest extends TestCase
         ]);
 
         Passport::actingAs(
-            factory(Admin::class)->create()->user
+            factory(Admin::class)->create([
+                'user_id' => factory(User::class)->create([
+                    'email' => 'test@example.com',
+                ])->id,
+            ])->user
         );
 
         $response = $this->getJson('/v1/admins', ['filter[email]' => 'john.doe@example.com']);
@@ -136,7 +142,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_filter_by_phone_for_index()
+    public function can_filter_by_phone_for_index(): void
     {
         $admin1 = factory(Admin::class)->create([
             'phone' => '07000000000',
@@ -146,7 +152,9 @@ class AdminControllerTest extends TestCase
         ]);
 
         Passport::actingAs(
-            factory(Admin::class)->create()->user
+            factory(Admin::class)->create([
+                'phone' => '00000000000',
+            ])->user
         );
 
         $response = $this->getJson('/v1/admins', ['filter[phone]' => '07000000000']);
@@ -156,7 +164,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_sort_by_name_for_index()
+    public function can_sort_by_name_for_index(): void
     {
         $admin1 = factory(Admin::class)->create([
             'name' => 'Borris',
@@ -166,7 +174,9 @@ class AdminControllerTest extends TestCase
         ]);
 
         Passport::actingAs(
-            factory(Admin::class)->create()->user
+            factory(Admin::class)->create([
+                'name' => 'Carl',
+            ])->user
         );
 
         $response = $this->getJson('/v1/admins', ['sort' => 'name']);
@@ -176,7 +186,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_sort_by_email_for_index()
+    public function can_sort_by_email_for_index(): void
     {
         $admin1 = factory(Admin::class)->create([
             'user_id' => factory(User::class)->create([
@@ -190,7 +200,11 @@ class AdminControllerTest extends TestCase
         ]);
 
         Passport::actingAs(
-            factory(Admin::class)->create()->user
+            factory(Admin::class)->create([
+                'user_id' => factory(User::class)->create([
+                    'email' => 'carl@example.com',
+                ])->id,
+            ])->user
         );
 
         $response = $this->getJson('/v1/admins', ['sort' => 'email']);
@@ -200,7 +214,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_sort_by_phone_for_index()
+    public function can_sort_by_phone_for_index(): void
     {
         $admin1 = factory(Admin::class)->create([
             'phone' => '07111111111',
@@ -226,7 +240,7 @@ class AdminControllerTest extends TestCase
      */
 
     /** @test */
-    public function guest_cannot_store()
+    public function guest_cannot_store(): void
     {
         $response = $this->postJson('/v1/admins');
 
@@ -234,7 +248,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function end_user_cannot_store()
+    public function end_user_cannot_store(): void
     {
         Passport::actingAs(
             factory(EndUser::class)->create()->user
@@ -246,7 +260,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_store()
+    public function admin_can_store(): void
     {
         Passport::actingAs(
             factory(Admin::class)->create()->user
@@ -263,7 +277,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function structure_correct_for_store()
+    public function structure_correct_for_store(): void
     {
         Passport::actingAs(
             factory(Admin::class)->create()->user
@@ -287,7 +301,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function values_correct_for_store()
+    public function values_correct_for_store(): void
     {
         Passport::actingAs(
             factory(Admin::class)->create()->user
@@ -308,7 +322,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function uk_mobile_required_for_store()
+    public function uk_mobile_required_for_store(): void
     {
         Passport::actingAs(
             factory(Admin::class)->create()->user
@@ -326,7 +340,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function secure_password_required_for_store()
+    public function secure_password_required_for_store(): void
     {
         Passport::actingAs(
             factory(Admin::class)->create()->user
@@ -348,7 +362,7 @@ class AdminControllerTest extends TestCase
      */
 
     /** @test */
-    public function guest_cannot_show()
+    public function guest_cannot_show(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -358,7 +372,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function end_user_cannot_show()
+    public function end_user_cannot_show(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -372,7 +386,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_show()
+    public function admin_can_show(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -426,7 +440,7 @@ class AdminControllerTest extends TestCase
      */
 
     /** @test */
-    public function guest_cannot_update()
+    public function guest_cannot_update(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -436,7 +450,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function end_user_cannot_update()
+    public function end_user_cannot_update(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -450,7 +464,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_update()
+    public function admin_can_update(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -469,7 +483,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function structure_correct_for_update()
+    public function structure_correct_for_update(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -495,7 +509,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function values_correct_for_update()
+    public function values_correct_for_update(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -519,7 +533,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function only_password_can_be_provided_for_update()
+    public function only_password_can_be_provided_for_update(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -544,7 +558,7 @@ class AdminControllerTest extends TestCase
      */
 
     /** @test */
-    public function guest_cannot_destroy()
+    public function guest_cannot_destroy(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -554,7 +568,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function end_user_cannot_destroy()
+    public function end_user_cannot_destroy(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -568,7 +582,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function admin_can_destroy()
+    public function admin_can_destroy(): void
     {
         $admin = factory(Admin::class)->create();
 
@@ -582,7 +596,7 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
-    public function database_records_and_relationships_deleted_for_destroy()
+    public function database_records_and_relationships_deleted_for_destroy(): void
     {
         $admin = factory(Admin::class)->create();
         $audit = factory(Audit::class)->create(['user_id' => $admin->user->id]);
