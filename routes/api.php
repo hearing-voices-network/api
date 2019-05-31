@@ -20,4 +20,6 @@ Route::prefix('v1')->group(function (): void {
 
     Route::apiResource('audits', 'AuditController')
         ->only('index', 'show');
+
+    Route::apiResource('contributions', 'ContributionController');
 });

@@ -35,4 +35,13 @@ trait TagRelationships
     {
         return $this->belongsToMany(Contribution::class, 'contribution_tag');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function publicContributions(): BelongsToMany
+    {
+        return $this->contributions()
+            ->where('contributions.status', '=', Contribution::STATUS_PUBLIC);
+    }
 }

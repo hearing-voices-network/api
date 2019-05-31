@@ -14,6 +14,7 @@ $factory->define(Contribution::class, function (Faker $faker) {
         },
         'content' => $faker->paragraph,
         'status' => Contribution::STATUS_PUBLIC,
+        'status_last_updated_at' => now(),
     ];
 });
 

@@ -14,12 +14,11 @@ class CreateContributionTagTable extends Migration
     public function up(): void
     {
         Schema::create('contribution_tag', function (Blueprint $table): void {
-            $table->uuid('id')->primary();
             $table->uuid('contribution_id');
             $table->foreign('contribution_id')->references('id')->on('contributions');
             $table->uuid('tag_id');
             $table->foreign('tag_id')->references('id')->on('tags');
-            $table->unique(['contribution_id', 'tag_id']);
+            $table->primary(['contribution_id', 'tag_id']);
         });
     }
 
