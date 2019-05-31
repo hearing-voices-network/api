@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Docs\Operations\Files;
 
 use App\Docs\Schemas\File\FileDownloadUrlSchema;
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Tags\FilesTag;
 use App\Docs\Utils;
 use App\Models\Admin;
@@ -39,7 +40,9 @@ class RequestFileOperation extends Operation
             ->tags(FilesTag::create())
             ->responses(
                 Response::ok()->content(
-                    MediaType::json()->schema(FileDownloadUrlSchema::create())
+                    MediaType::json()->schema(
+                        ResourceSchema::create(null, FileDownloadUrlSchema::create())
+                    )
                 )
             );
     }

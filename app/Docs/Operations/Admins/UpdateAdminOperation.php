@@ -6,6 +6,7 @@ namespace App\Docs\Operations\Admins;
 
 use App\Docs\Schemas\Admin\AdminSchema;
 use App\Docs\Schemas\Admin\UpdateAdminSchema;
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Tags\AdminsTag;
 use App\Docs\Utils;
 use App\Models\Admin;
@@ -37,7 +38,9 @@ class UpdateAdminOperation extends Operation
             )
             ->responses(
                 Response::ok()->content(
-                    MediaType::json()->schema(AdminSchema::create())
+                    MediaType::json()->schema(
+                        ResourceSchema::create(null, AdminSchema::create())
+                    )
                 )
             );
     }

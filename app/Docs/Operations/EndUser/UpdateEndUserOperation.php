@@ -6,6 +6,7 @@ namespace App\Docs\Operations\EndUser;
 
 use App\Docs\Schemas\EndUser\EndUserSchema;
 use App\Docs\Schemas\EndUser\UpdateEndUserSchema;
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Tags\EndUsersTag;
 use App\Docs\Utils;
 use App\Models\EndUser;
@@ -37,7 +38,9 @@ class UpdateEndUserOperation extends Operation
             )
             ->responses(
                 Response::ok()->content(
-                    MediaType::json()->schema(EndUserSchema::create())
+                    MediaType::json()->schema(
+                        ResourceSchema::create(null, EndUserSchema::create())
+                    )
                 )
             );
     }

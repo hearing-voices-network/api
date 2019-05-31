@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Settings;
 
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Schemas\Setting\SettingsSchema;
 use App\Docs\Tags\SettingsTag;
 use App\Docs\Utils;
@@ -30,7 +31,9 @@ class IndexSettingsOperation extends Operation
             ->tags(SettingsTag::create())
             ->responses(
                 Response::ok()->content(
-                    MediaType::json()->schema(SettingsSchema::create())
+                    MediaType::json()->schema(
+                        ResourceSchema::create(null, SettingsSchema::create())
+                    )
                 )
             );
     }

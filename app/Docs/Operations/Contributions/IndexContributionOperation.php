@@ -23,6 +23,7 @@ class IndexContributionOperation extends Operation
     /**
      * @param string|null $objectId
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @throws \ReflectionException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
     public static function create(string $objectId = null): Operation

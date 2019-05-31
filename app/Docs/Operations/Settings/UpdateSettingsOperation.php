@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Settings;
 
+use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Schemas\Setting\SettingsSchema;
 use App\Docs\Schemas\Setting\UpdateSettingsSchema;
 use App\Docs\Tags\SettingsTag;
@@ -37,7 +38,9 @@ class UpdateSettingsOperation extends Operation
             )
             ->responses(
                 Response::ok()->content(
-                    MediaType::json()->schema(SettingsSchema::create())
+                    MediaType::json()->schema(
+                        ResourceSchema::create(null, SettingsSchema::create())
+                    )
                 )
             );
     }
