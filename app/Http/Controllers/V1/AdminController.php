@@ -63,6 +63,7 @@ class AdminController extends Controller
                 'phone',
                 Sort::custom('email', EmailSort::class),
             ])
+            ->defaultSort('name')
             ->paginate($this->perPage);
 
         return AdminResource::collection($admins);

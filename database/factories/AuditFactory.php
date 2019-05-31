@@ -10,5 +10,6 @@ $factory->define(Audit::class, function (Faker $faker) {
     return [
         'action' => Audit::ACTION_READ,
         'ip_address' => $faker->ipv4,
+        'created_at' => now(),
     ];
 });

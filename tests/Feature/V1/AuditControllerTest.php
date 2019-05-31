@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\EndUser;
 use Illuminate\Http\Response;
+use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -62,7 +63,8 @@ class AuditControllerTest extends TestCase
 
         $response->assertCollectionDataStructure([
             'id',
-            'user_id',
+            'admin_id',
+            'end_user_id',
             'client',
             'action',
             'description',
@@ -75,19 +77,25 @@ class AuditControllerTest extends TestCase
     /** @test */
     public function values_correct_for_index(): void
     {
-        $audit = factory(Audit::class)->create();
+        $client = (new ClientRepository())
+            ->create(null, 'Test Client', 'https://example.com');
+
+        $audit = factory(Audit::class)->create([
+            'client_id' => $client->id,
+        ]);
 
         Passport::actingAs(
             factory(Admin::class)->create()->user
         );
 
-        $response = $this->getJson('/v1/admins');
+        $response = $this->getJson('/v1/audits');
 
         $response->assertJsonFragment([
             [
                 'id' => $audit->id,
-                'user_id' => $audit->user_id,
-                'client' => $audit->client->name,
+                'admin_id' => $audit->user_id,
+                'end_user_id' => null,
+                'client' => 'Test Client',
                 'action' => $audit->action,
                 'description' => $audit->description,
                 'ip_address' => $audit->ip_address,

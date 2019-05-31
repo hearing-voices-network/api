@@ -22,6 +22,7 @@ class IndexAuditOperation extends Operation
     /**
      * @param string|null $objectId
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @throws \ReflectionException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
     public static function create(string $objectId = null): Operation
@@ -30,7 +31,10 @@ class IndexAuditOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('List all audits')
             ->description(
-                Utils::operationDescription([Admin::class])
+                Utils::operationDescription(
+                    [Admin::class],
+                    'Audits are returned in descending order of the `created_at` field'
+                )
             )
             ->tags(AuditsTag::create())
             ->parameters(
