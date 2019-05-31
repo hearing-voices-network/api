@@ -56,7 +56,8 @@ class ContributionController extends Controller
                 // When end user, filter only public and all of own.
                 $query->where('contributions.status', '=', Contribution::STATUS_PUBLIC)
                     ->orWhere('contributions.end_user_id', '=', $endUser->id);
-            });
+            })
+            ->orderByDesc('created_at');
 
         $contributions = QueryBuilder::for($baseQuery)
             ->allowedFilters([
