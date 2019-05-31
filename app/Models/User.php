@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Foundation\Auth\User as Authenticatable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use Mutators\UserMutators;
     use Relationships\UserRelationships;
@@ -26,4 +25,20 @@ class User extends Authenticatable implements MustVerifyEmail
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->admin !== null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEndUser(): bool
+    {
+        return $this->endUser !== null;
+    }
 }
