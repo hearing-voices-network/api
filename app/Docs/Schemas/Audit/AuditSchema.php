@@ -25,7 +25,7 @@ class AuditSchema extends Schema
                 Schema::string('user_id')
                     ->format(static::FORMAT_UUID)
                     ->nullable(),
-                Schema::integer('client_id')
+                Schema::string('client')
                     ->nullable(),
                 Schema::string('action')
                     ->enum(...(new Enum(Audit::class))->getValues('ACTION')),
