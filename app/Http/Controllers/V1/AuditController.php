@@ -11,6 +11,7 @@ use App\Http\Resources\AuditResource;
 use App\Models\Audit;
 use App\Support\Pagination;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -37,6 +38,7 @@ class AuditController extends Controller
     public function index(): ResourceCollection
     {
         $baseQuery = Audit::query()
+            ->with('user.admin', 'user.endUser', 'client')
             ->orderByDesc('created_at');
 
         $audits = QueryBuilder::for($baseQuery)
@@ -47,5 +49,14 @@ class AuditController extends Controller
             ->paginate($this->perPage);
 
         return AuditResource::collection($audits);
+    }
+
+    /**
+     * @param \App\Models\Audit $audit
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     */
+    public function show(Audit $audit): JsonResource
+    {
+        return new AuditResource($audit);
     }
 }

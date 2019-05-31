@@ -154,4 +154,101 @@ class AuditControllerTest extends TestCase
         $response->assertJsonFragment(['id' => $audit1->id]);
         $response->assertJsonMissing(['id' => $audit2->id]);
     }
+
+    /*
+     * Show/
+     */
+
+    /** @test */
+    public function guest_cannot_show(): void
+    {
+        $audit = factory(Audit::class)->create();
+
+        $response = $this->getJson("/v1/audits/{$audit->id}");
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
+    public function end_user_cannot_show(): void
+    {
+        $audit = factory(Audit::class)->create();
+
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/audits/{$audit->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function admin_can_show(): void
+    {
+        $audit = factory(Audit::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/audits/{$audit->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function structure_correct_for_show(): void
+    {
+        $audit = factory(Audit::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/audits/{$audit->id}");
+
+        $response->assertResourceDataStructure([
+            'id',
+            'admin_id',
+            'end_user_id',
+            'client',
+            'action',
+            'description',
+            'ip_address',
+            'user_agent',
+            'created_at',
+        ]);
+    }
+
+    /** @test */
+    public function values_correct_for_show(): void
+    {
+        $client = (new ClientRepository())
+            ->create(null, 'Test Client', 'https://example.com');
+
+        $audit = factory(Audit::class)->create([
+            'client_id' => $client->id,
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/audits/{$audit->id}");
+
+        $response->assertJsonFragment([
+            [
+                'id' => $audit->id,
+                'admin_id' => $audit->user_id,
+                'end_user_id' => null,
+                'client' => 'Test Client',
+                'action' => $audit->action,
+                'description' => $audit->description,
+                'ip_address' => $audit->ip_address,
+                'user_agent' => $audit->user_agent,
+                'created_at' => $audit->created_at->toIso8601String(),
+            ],
+        ]);
+    }
 }

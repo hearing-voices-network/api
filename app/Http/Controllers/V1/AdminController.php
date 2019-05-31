@@ -50,7 +50,8 @@ class AdminController extends Controller
      */
     public function index(): ResourceCollection
     {
-        $baseQuery = Admin::query();
+        $baseQuery = Admin::query()
+            ->with('user');
 
         $admins = QueryBuilder::for($baseQuery)
             ->allowedFilters([
