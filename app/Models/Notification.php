@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-class Notification extends BaseModel
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+
+class Notification extends Model
 {
     use Mutators\NotificationMutators;
     use Relationships\NotificationRelationships;

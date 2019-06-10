@@ -4,11 +4,20 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-class Country extends BaseModel
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+
+class Country extends Model
 {
     use Mutators\CountryMutators;
     use Relationships\CountryRelationships;
     use Scopes\CountryScopes;
+
+    /**
+     * Indicates if the IDs are UUIDs.
+     *
+     * @var bool
+     */
+    protected $keyIsUuid = false;
 
     /**
      * Indicates if the model should be timestamped.

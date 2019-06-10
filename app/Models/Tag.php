@@ -4,23 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tag extends BaseModel
+class Tag extends Model
 {
     use Mutators\TagMutators;
     use Relationships\TagRelationships;
     use Scopes\TagScopes;
     use SoftDeletes;
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
-    ];
 }

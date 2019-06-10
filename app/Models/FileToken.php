@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-class FileToken extends BaseModel
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+
+class FileToken extends Model
 {
     use Mutators\FileTokenMutators;
     use Relationships\FileTokenRelationships;

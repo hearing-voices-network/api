@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-class Contribution extends BaseModel
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+
+class Contribution extends Model
 {
     use Mutators\ContributionMutators;
     use Relationships\ContributionRelationships;

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-class Admin extends BaseModel
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+
+class Admin extends Model
 {
     use Mutators\AdminMutators;
     use Relationships\AdminRelationships;
