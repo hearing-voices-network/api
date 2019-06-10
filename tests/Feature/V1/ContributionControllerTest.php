@@ -244,14 +244,16 @@ class ContributionControllerTest extends TestCase
      * Store.
      */
 
-    public function test_guest_cannot_store(): void
+    /** @test */
+    public function guest_cannot_store(): void
     {
         $response = $this->postJson('/v1/contributions');
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
-    public function test_end_user_can_store(): void
+    /** @test */
+    public function end_user_can_store(): void
     {
         Passport::actingAs(
             factory(EndUser::class)->create()->user
@@ -270,7 +272,8 @@ class ContributionControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_CREATED);
     }
 
-    public function test_admin_cannot_store(): void
+    /** @test */
+    public function admin_cannot_store(): void
     {
         Passport::actingAs(
             factory(Admin::class)->create()->user
@@ -281,7 +284,8 @@ class ContributionControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_structure_correct_for_store(): void
+    /** @test */
+    public function structure_correct_for_store(): void
     {
         Passport::actingAs(
             factory(EndUser::class)->create()->user
@@ -321,7 +325,8 @@ class ContributionControllerTest extends TestCase
         ]);
     }
 
-    public function test_values_correct_for_store(): void
+    /** @test */
+    public function values_correct_for_store(): void
     {
         $endUser = factory(EndUser::class)->create();
 
@@ -363,7 +368,8 @@ class ContributionControllerTest extends TestCase
         ]);
     }
 
-    public function test_content_markdown_is_sanitised(): void
+    /** @test */
+    public function content_markdown_is_sanitised(): void
     {
         $endUser = factory(EndUser::class)->create();
 
