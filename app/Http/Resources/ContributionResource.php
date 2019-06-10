@@ -6,6 +6,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property \App\Models\Contribution $resource
+ */
 class ContributionResource extends JsonResource
 {
     /**
@@ -21,22 +24,22 @@ class ContributionResource extends JsonResource
             && $this->resource->belongsToEndUser($request->user()->endUser);
 
         return [
-            'id' => $this->id,
-            'end_user_id' => $this->when($isAdmin || $isAuthor, $this->end_user_id),
-            'content' => $this->content,
+            'id' => $this->resource->id,
+            'end_user_id' => $this->when($isAdmin || $isAuthor, $this->resource->end_user_id),
+            'content' => $this->resource->content,
             'excerpt' => $this->resource->getExcerpt(),
-            'status' => $this->status,
+            'status' => $this->resource->status,
             'changes_requested' => $this->when(
                 $isAdmin || $isAuthor,
-                $this->changes_requested
+                $this->resource->changes_requested
             ),
             'status_last_updated_at' => $this->when(
                 $isAdmin || $isAuthor,
-                $this->status_last_updated_at->toIso8601String()
+                $this->resource->status_last_updated_at->toIso8601String()
             ),
-            'created_at' => $this->created_at->toIso8601String(),
-            'updated_at' => $this->updated_at->toIso8601String(),
-            'tags' => TagResource::collection($this->tags),
+            'created_at' => $this->resource->created_at->toIso8601String(),
+            'updated_at' => $this->resource->updated_at->toIso8601String(),
+            'tags' => TagResource::collection($this->resource->tags),
         ];
     }
 }

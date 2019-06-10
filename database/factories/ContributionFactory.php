@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Contribution;
 use App\Models\EndUser;
 use Faker\Generator as Faker;
+use Illuminate\Support\Facades\Date;
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Contribution::class, function (Faker $faker) {
@@ -14,7 +15,7 @@ $factory->define(Contribution::class, function (Faker $faker) {
         },
         'content' => $faker->paragraph,
         'status' => Contribution::STATUS_PUBLIC,
-        'status_last_updated_at' => now(),
+        'status_last_updated_at' => Date::now(),
     ];
 });
 

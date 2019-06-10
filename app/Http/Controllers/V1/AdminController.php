@@ -35,8 +35,11 @@ class AdminController extends Controller
      * @param \App\Support\Pagination $pagination
      * @param \App\Services\AdminService $adminService
      */
-    public function __construct(Request $request, Pagination $pagination, AdminService $adminService)
-    {
+    public function __construct(
+        Request $request,
+        Pagination $pagination,
+        AdminService $adminService
+    ) {
         parent::__construct($request, $pagination);
 
         $this->middleware('auth');
