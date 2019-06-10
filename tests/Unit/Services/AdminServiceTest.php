@@ -12,7 +12,8 @@ class AdminServiceTest extends TestCase
     /** @test */
     public function it_creates_a_user_and_admin_record(): void
     {
-        $adminService = new AdminService();
+        /** @var \App\Services\AdminService $adminService */
+        $adminService = resolve(AdminService::class);
 
         $admin = $adminService->create([
             'name' => 'John',
@@ -33,7 +34,8 @@ class AdminServiceTest extends TestCase
     {
         $this->expectException(\ErrorException::class);
 
-        $adminService = new AdminService();
+        /** @var \App\Services\AdminService $adminService */
+        $adminService = resolve(AdminService::class);
 
         $adminService->create([]);
     }

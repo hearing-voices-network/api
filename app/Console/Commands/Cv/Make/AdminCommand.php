@@ -6,6 +6,7 @@ namespace App\Console\Commands\Cv\Make;
 
 use App\Services\AdminService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class AdminCommand extends Command
 {
@@ -53,7 +54,7 @@ class AdminCommand extends Command
     {
         $password = $this->option('password') ?? 'secret';
 
-        db()->transaction(function () use ($password): void {
+        DB::transaction(function () use ($password): void {
             $this->adminService->create([
                 'name' => $this->argument('name'),
                 'phone' => $this->argument('phone'),

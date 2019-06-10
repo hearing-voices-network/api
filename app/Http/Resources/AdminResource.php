@@ -6,6 +6,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property \App\Models\Admin $resource
+ */
 class AdminResource extends JsonResource
 {
     /**
@@ -17,12 +20,12 @@ class AdminResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'phone' => $this->phone,
-            'email' => $this->user->email,
-            'created_at' => $this->user->created_at->toIso8601String(),
-            'updated_at' => $this->user->updated_at->toIso8601String(),
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
+            'phone' => $this->resource->phone,
+            'email' => $this->resource->user->email,
+            'created_at' => $this->resource->user->created_at->toIso8601String(),
+            'updated_at' => $this->resource->user->updated_at->toIso8601String(),
         ];
     }
 }

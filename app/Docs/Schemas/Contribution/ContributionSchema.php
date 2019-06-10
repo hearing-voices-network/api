@@ -21,6 +21,8 @@ class ContributionSchema extends Schema
         return parent::create($objectId)
             ->type(static::TYPE_OBJECT)
             ->properties(
+                Schema::string('id')
+                    ->format(static::FORMAT_UUID),
                 Schema::string('end_user_id')
                     ->format(static::FORMAT_UUID)
                     ->description('This is only provided when the requesting user is an admin or the same end user.'),

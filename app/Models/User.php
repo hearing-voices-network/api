@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Foundation\Auth\User as Authenticatable;
+use GoldSpecDigital\LaravelEloquentUUID\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
@@ -13,6 +14,7 @@ class User extends Authenticatable
     use Relationships\UserRelationships;
     use Scopes\UserScopes;
     use HasApiTokens;
+    use SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateContributionStatusesTable extends Migration
@@ -19,7 +20,7 @@ class CreateContributionStatusesTable extends Migration
 
         $contributionStatusesPath = realpath(dirname(__DIR__)) . '/storage/contribution_statuses.json';
 
-        db()->table('contribution_statuses')->insert(
+        DB::table('contribution_statuses')->insert(
             json_decode(file_get_contents($contributionStatusesPath), true)
         );
     }

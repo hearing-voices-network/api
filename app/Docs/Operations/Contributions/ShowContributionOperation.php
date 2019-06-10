@@ -31,9 +31,9 @@ class ShowContributionOperation extends Operation
                 Utils::operationDescription(
                     ['Public', Admin::class, EndUser::class],
                     <<<'EOT'
-                    * If accessed by the public, then only public contributions will be accessible
+                    * If accessed by the public, then only public contributions will be accessible.
                     * If access by an end user, then only public contributions and all of their own
-                    will be accessible
+                    will be accessible.
                     EOT
                 )
             )

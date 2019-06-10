@@ -89,6 +89,8 @@ class ModelCommand extends Command
         
         namespace App\Models;
         
+        use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+        
         class {$name} extends BaseModel
         {
             use Mutators\\{$name}Mutators;

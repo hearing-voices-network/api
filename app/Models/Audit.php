@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-class Audit extends BaseModel
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+
+class Audit extends Model
 {
     use Mutators\AuditMutators;
     use Relationships\AuditRelationships;

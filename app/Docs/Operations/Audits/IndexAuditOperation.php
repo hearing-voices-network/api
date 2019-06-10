@@ -33,7 +33,7 @@ class IndexAuditOperation extends Operation
             ->description(
                 Utils::operationDescription(
                     [Admin::class],
-                    'Audits are returned in descending order of the `created_at` field'
+                    'Audits are returned in descending order of the `created_at` field.'
                 )
             )
             ->tags(AuditsTag::create())

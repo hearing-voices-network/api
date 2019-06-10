@@ -31,7 +31,7 @@ class ShowEndUserOperation extends Operation
                     [Admin::class, EndUser::class],
                     <<<'EOT'
                     * If an end user is making the request, then they can only access their own
-                    end user resource  
+                    end user resource.
                     EOT
                 )
             )

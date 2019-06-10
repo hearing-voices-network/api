@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-class Contribution extends BaseModel
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+
+class Contribution extends Model
 {
     use Mutators\ContributionMutators;
     use Relationships\ContributionRelationships;
@@ -25,4 +27,54 @@ class Contribution extends BaseModel
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    /**
+     * @return bool
+     */
+    public function isPublic(): bool
+    {
+        return $this->status === static::STATUS_PUBLIC;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate(): bool
+    {
+        return $this->status === static::STATUS_PRIVATE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInReview(): bool
+    {
+        return $this->status === static::STATUS_IN_REVIEW;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isChangesRequested(): bool
+    {
+        return $this->status === static::STATUS_CHANGES_REQUESTED;
+    }
+
+    /**
+     * @param \App\Models\EndUser $endUser
+     * @return bool
+     */
+    public function belongsToEndUser(EndUser $endUser): bool
+    {
+        return $this->end_user_id === $endUser->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExcerpt(): string
+    {
+        // TODO: Apply better logic here.
+        return mb_substr($this->content, 0, 125);
+    }
 }

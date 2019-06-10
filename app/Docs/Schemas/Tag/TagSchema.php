@@ -23,7 +23,7 @@ class TagSchema extends Schema
                     ->format(static::FORMAT_UUID)
                     ->nullable(),
                 Schema::string('name'),
-                Schema::integer('public_submissions'),
+                Schema::integer('public_contributions'),
                 Schema::string('created_at')
                     ->format(static::FORMAT_DATE_TIME),
                 Schema::string('updated_at')

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Sorts\Admin;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\Sorts\Sort;
 
 class EmailSort implements Sort
@@ -19,9 +20,9 @@ class EmailSort implements Sort
     {
         $descending = $descending ? 'DESC' : 'ASC';
 
-        $subQuery = db()->table('users')
+        $subQuery = DB::table('users')
             ->select('users.email')
-            ->where('users.id', '=', db()->raw('`admins`.`user_id`'))
+            ->where('users.id', '=', DB::raw('`admins`.`user_id`'))
             ->take(1);
 
         return $query->orderByRaw("({$subQuery->toSql()}) $descending", $subQuery->getBindings());

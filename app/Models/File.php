@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
-class File extends BaseModel implements Responsable
+class File extends Model implements Responsable
 {
     use Mutators\FileMutators;
     use Relationships\FileRelationships;

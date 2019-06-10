@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-class EndUser extends BaseModel
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+
+class EndUser extends Model
 {
     use Mutators\EndUserMutators;
     use Relationships\EndUserRelationships;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateNotificationChannelsTable extends Migration
@@ -19,7 +20,7 @@ class CreateNotificationChannelsTable extends Migration
 
         $notificationChannelsPath = realpath(dirname(__DIR__)) . '/storage/notification_channels.json';
 
-        db()->table('notification_channels')->insert(
+        DB::table('notification_channels')->insert(
             json_decode(file_get_contents($notificationChannelsPath), true)
         );
     }
