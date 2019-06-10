@@ -40,7 +40,7 @@ class ContributionPolicy
             return true;
         }
 
-        if ($user->isEndUser() && $contribution->belongsToEndUser($user->endUser)) {
+        if (optional($user)->isEndUser() && $contribution->belongsToEndUser($user->endUser)) {
             return true;
         }
 

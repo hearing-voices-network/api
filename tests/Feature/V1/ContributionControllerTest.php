@@ -369,7 +369,7 @@ class ContributionControllerTest extends TestCase
     }
 
     /** @test */
-    public function content_markdown_is_sanitised(): void
+    public function content_markdown_is_sanitised_for_store(): void
     {
         $endUser = factory(EndUser::class)->create();
 
@@ -398,5 +398,155 @@ class ContributionControllerTest extends TestCase
                 This is a standard paragraph.
                 EOT,
         ]);
+    }
+
+    /*
+     * Show.
+     */
+
+    /** @test */
+    public function when_public_guest_can_show(): void
+    {
+        $contribution = factory(Contribution::class)->create();
+
+        $response = $this->getJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function when_public_end_user_can_show(): void
+    {
+        $contribution = factory(Contribution::class)->create();
+
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function when_public_admin_can_show(): void
+    {
+        $contribution = factory(Contribution::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function structure_correct_for_show(): void
+    {
+        /** @var \App\Models\Contribution $contribution */
+        $contribution = factory(Contribution::class)->create();
+        $contribution->tags()->sync([
+            factory(Tag::class)->create()->id,
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertResourceDataStructure([
+            'id',
+            'end_user_id',
+            'content',
+            'excerpt',
+            'status',
+            'changes_requested',
+            'status_last_updated_at',
+            'created_at',
+            'updated_at',
+            'tags' => [
+                '*' => [
+                    'id',
+                    'parent_tag_id',
+                    'name',
+                    'public_contributions',
+                    'created_at',
+                    'updated_at',
+                    'deleted_at',
+                ],
+            ],
+        ]);
+    }
+
+    /** @test */
+    public function values_correct_for_show(): void
+    {
+        /** @var \App\Models\Contribution $contribution */
+        $contribution = factory(Contribution::class)->create();
+
+        /** @var \App\Models\Tag $tag */
+        $tag = factory(Tag::class)->create();
+
+        $contribution->tags()->sync([$tag->id]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertJsonFragment([
+            'id' => $contribution->id,
+            'end_user_id' => $contribution->end_user_id,
+            'content' => $contribution->content,
+            'excerpt' => $contribution->getExcerpt(),
+            'status' => $contribution->status,
+            'changes_requested' => null,
+            'status_last_updated_at' => $contribution->status_last_updated_at->toIso8601String(),
+            'created_at' => $contribution->created_at->toIso8601String(),
+            'updated_at' => $contribution->updated_at->toIso8601String(),
+            'tags' => [
+                [
+                    'id' => $tag->id,
+                    'parent_tag_id' => $tag->parent_tag_id,
+                    'name' => $tag->name,
+                    'public_contributions' => $tag->publicContributions()->count(),
+                    'created_at' => $tag->created_at->toIso8601String(),
+                    'updated_at' => $tag->updated_at->toIso8601String(),
+                    'deleted_at' => null,
+                ],
+            ],
+        ]);
+    }
+
+    /** @test */
+    public function guest_cannot_only_view_private_for_show(): void
+    {
+        $privateContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_PRIVATE)
+            ->create();
+
+        $response = $this->getJson("/v1/contributions/{$privateContribution->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function end_user_can_view_their_own_for_show(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        $endUserPrivateContribution = $privateContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_PRIVATE)
+            ->create(['end_user_id' => $endUser->id]);
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->getJson("/v1/contributions/{$endUserPrivateContribution->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
     }
 }

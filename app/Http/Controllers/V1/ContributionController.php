@@ -12,7 +12,6 @@ use App\Models\Contribution;
 use App\Services\ContributionService;
 use App\Support\Pagination;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -58,12 +57,7 @@ class ContributionController extends Controller
         $endUser = $isEndUser ? $request->user()->endUser : null;
 
         $baseQuery = Contribution::query()
-            ->with([
-                // Append the public_contributions_count.
-                'tags' => function (BelongsToMany $query): void {
-                    $query->withCount('publicContributions');
-                },
-            ])
+            ->with('tags.publicContributions')
             ->when($isGuest, function (Builder $query): void {
                 // When guest, filter only public.
                 $query->where('contributions.status', '=', Contribution::STATUS_PUBLIC);
@@ -101,5 +95,16 @@ class ContributionController extends Controller
         });
 
         return new ContributionResource($contribution);
+    }
+
+    /**
+     * @param \App\Models\Contribution $contribution
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     */
+    public function show(Contribution $contribution): JsonResource
+    {
+        return new ContributionResource(
+            $contribution->load('tags.publicContributions')
+        );
     }
 }
