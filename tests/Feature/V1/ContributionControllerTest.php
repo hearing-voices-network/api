@@ -549,4 +549,70 @@ class ContributionControllerTest extends TestCase
 
         $response->assertStatus(Response::HTTP_OK);
     }
+
+    /*
+     * Update.
+     */
+
+    /** @test */
+    public function guest_cannot_update()
+    {
+        $contribution = factory(Contribution::class)->create();
+
+        $response = $this->putJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
+    public function end_user_cannot_use_someone_elses_to_update()
+    {
+        $contribution = factory(Contribution::class)->create();
+
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->putJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function end_user_can_use_their_own_to_update()
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        $contribution = factory(Contribution::class)->create([
+            'end_user_id' => $endUser->id,
+        ]);
+
+        $tag = factory(Tag::class)->create();
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->putJson("/v1/contributions/{$contribution->id}", [
+            'content' => 'Lorem ipsum',
+            'status' => Contribution::STATUS_IN_REVIEW,
+            'tags' => [
+                ['id' => $tag->id],
+            ],
+        ]);
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function admin_cannot_update()
+    {
+        $contribution = factory(Contribution::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->putJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
 }

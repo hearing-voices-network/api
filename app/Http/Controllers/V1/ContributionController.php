@@ -7,6 +7,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Contribution\TagIdsFilter;
 use App\Http\Requests\Contribution\StoreContributionRequest;
+use App\Http\Requests\Contribution\UpdateContributionRequest;
 use App\Http\Resources\ContributionResource;
 use App\Models\Contribution;
 use App\Services\ContributionService;
@@ -103,6 +104,28 @@ class ContributionController extends Controller
      */
     public function show(Contribution $contribution): JsonResource
     {
+        return new ContributionResource(
+            $contribution->load('tags.publicContributions')
+        );
+    }
+
+    /**
+     * @param \App\Http\Requests\Contribution\UpdateContributionRequest $request
+     * @param \App\Models\Contribution $contribution
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     */
+    public function update(
+        UpdateContributionRequest $request,
+        Contribution $contribution
+    ): JsonResource {
+        $contribution = DB::transaction(function () use ($request, $contribution): Contribution {
+            return $this->contributionService->update($contribution, [
+                'content' => $request->input('content'),
+                'status' => $request->status,
+                'tags' => $request->input('tags.*.id'),
+            ]);
+        });
+
         return new ContributionResource(
             $contribution->load('tags.publicContributions')
         );
