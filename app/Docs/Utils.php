@@ -39,7 +39,7 @@ class Utils
 
         // Format the accessible by into markdown.
         $accessibleBy = collect($accessibleBy)
-            ->map(function (string $accessor) {
+            ->map(function (string $accessor): string {
                 // If class names passed in then convert to meaningful names.
                 switch ($accessor) {
                     case Admin::class:

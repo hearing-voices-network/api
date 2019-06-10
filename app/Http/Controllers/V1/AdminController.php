@@ -17,6 +17,7 @@ use App\Support\Pagination;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\Sort;
@@ -80,7 +81,7 @@ class AdminController extends Controller
      */
     public function store(StoreAdminRequest $request): JsonResource
     {
-        $admin = db()->transaction(function () use ($request): Admin {
+        $admin = DB::transaction(function () use ($request): Admin {
             return $this->adminService->create([
                 'name' => $request->name,
                 'phone' => $request->phone,
@@ -109,7 +110,7 @@ class AdminController extends Controller
      */
     public function update(UpdateAdminRequest $request, Admin $admin): JsonResource
     {
-        $admin = db()->transaction(function () use ($request, $admin) {
+        $admin = DB::transaction(function () use ($request, $admin): Admin {
             return $this->adminService->update($admin, [
                 'name' => $request->name,
                 'phone' => $request->phone,
@@ -128,7 +129,7 @@ class AdminController extends Controller
      */
     public function destroy(Admin $admin): ResourceDeletedResponse
     {
-        db()->transaction(function () use ($admin) {
+        DB::transaction(function () use ($admin): void {
             $this->adminService->delete($admin);
         });
 

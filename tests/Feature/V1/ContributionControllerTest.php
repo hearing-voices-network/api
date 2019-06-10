@@ -615,4 +615,87 @@ class ContributionControllerTest extends TestCase
 
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
+
+    /*
+     * Destroy.
+     */
+
+    /** @test */
+    public function guest_cannot_destroy(): void
+    {
+        $contribution = factory(Contribution::class)->create();
+
+        $response = $this->deleteJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
+    public function end_user_using_someone_elses_cannot_destroy(): void
+    {
+        $contribution = factory(Contribution::class)->create();
+
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->deleteJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function end_user_using_their_own_can_destroy(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        $contribution = factory(Contribution::class)->create([
+            'end_user_id' => $endUser->id,
+        ]);
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->deleteJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function admin_can_destroy(): void
+    {
+        $contribution = factory(Contribution::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->deleteJson("/v1/contributions/{$contribution->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function database_records_and_relationships_deleted_for_destroy(): void
+    {
+        /** @var \App\Models\Contribution $contribution */
+        $contribution = factory(Contribution::class)->create();
+
+        /** @var \App\Models\Tag $tag */
+        $tag = factory(Tag::class)->create();
+
+        $contribution->tags()->sync($tag->id);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $this->deleteJson("/v1/contributions/{$contribution->id}");
+
+        $this->assertDatabaseMissing('contributions', ['id' => $contribution->id]);
+        $this->assertDatabaseMissing('contribution_tag', [
+            'contribution_id' => $contribution->id,
+            'tag_id' => $tag->id,
+        ]);
+        $this->assertDatabaseHas('tags', ['id' => $tag->id]);
+    }
 }

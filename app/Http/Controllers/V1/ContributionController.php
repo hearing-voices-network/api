@@ -9,6 +9,7 @@ use App\Http\Filters\Contribution\TagIdsFilter;
 use App\Http\Requests\Contribution\StoreContributionRequest;
 use App\Http\Requests\Contribution\UpdateContributionRequest;
 use App\Http\Resources\ContributionResource;
+use App\Http\Responses\ResourceDeletedResponse;
 use App\Models\Contribution;
 use App\Services\ContributionService;
 use App\Support\Pagination;
@@ -129,5 +130,18 @@ class ContributionController extends Controller
         return new ContributionResource(
             $contribution->load('tags.publicContributions')
         );
+    }
+
+    /**
+     * @param \App\Models\Contribution $contribution
+     * @return \App\Http\Responses\ResourceDeletedResponse
+     */
+    public function destroy(Contribution $contribution): ResourceDeletedResponse
+    {
+        DB::transaction(function () use ($contribution): void {
+            $this->contributionService->delete($contribution);
+        });
+
+        return new ResourceDeletedResponse('contribution');
     }
 }

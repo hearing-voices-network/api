@@ -80,4 +80,14 @@ class ContributionService
 
         return $contribution;
     }
+
+    /**
+     * @param \App\Models\Contribution $contribution
+     * @throws \Exception
+     */
+    public function delete(Contribution $contribution): void
+    {
+        $contribution->tags()->sync([]);
+        $contribution->delete();
+    }
 }
