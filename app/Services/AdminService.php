@@ -60,6 +60,6 @@ class AdminService
         $user->audits()->delete();
         $user->notifications()->delete();
         $user->fileToken()->delete();
-        $user->delete();
+        $user->forceDelete();
     }
 }

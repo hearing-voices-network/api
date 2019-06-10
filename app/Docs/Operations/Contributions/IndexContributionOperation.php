@@ -32,7 +32,14 @@ class IndexContributionOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('List all contributions')
             ->description(
-                Utils::operationDescription(['Public', Admin::class, EndUser::class])
+                Utils::operationDescription(
+                    ['Public', Admin::class, EndUser::class],
+                    <<<'EOT'
+                    * If accessed by the public, then only public contributions will be accessible.
+                    * If access by an end user, then only public contributions and all of their own 
+                    will be accessible.
+                    EOT
+                )
             )
             ->tags(ContributionsTag::create())
             ->noSecurity()
@@ -44,7 +51,7 @@ class IndexContributionOperation extends Operation
                         <<<'EOT'
                         The ID of an end user to filter by
 
-                        * Only usable by an admin
+                        * Only usable by an admin.
                         EOT
                     )
                     ->schema(Schema::string()->format(Schema::FORMAT_UUID)),
@@ -54,7 +61,7 @@ class IndexContributionOperation extends Operation
                         A comma separated list of tag IDs to filter by
                         
                         * Use `untagged` to search for contributions that have no tag (ignores soft 
-                        deleted tags)
+                        deleted tags).
                         EOT
                     )
                     ->schema(Schema::string())

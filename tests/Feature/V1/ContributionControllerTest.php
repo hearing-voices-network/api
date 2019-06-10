@@ -185,7 +185,7 @@ class ContributionControllerTest extends TestCase
     }
 
     /** @test */
-    public function guest_can_only_view_public_for_index()
+    public function guest_can_only_view_public_for_index(): void
     {
         $publicContribution = factory(Contribution::class)
             ->create();
@@ -208,7 +208,7 @@ class ContributionControllerTest extends TestCase
     }
 
     /** @test */
-    public function end_user_can_only_view_public_and_their_own_for_index()
+    public function end_user_can_only_view_public_and_their_own_for_index(): void
     {
         $endUser = factory(EndUser::class)->create();
 
