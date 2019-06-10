@@ -22,4 +22,6 @@ Route::prefix('v1')->group(function (): void {
         ->only('index', 'show');
 
     Route::apiResource('contributions', 'ContributionController');
+    Route::put('contributions/{contribution}/approve', 'Contribution\\ApproveController')
+        ->name('contributions.approve');
 });

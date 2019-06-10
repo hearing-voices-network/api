@@ -71,6 +71,7 @@ class ContributionService
         $contribution->update([
             'content' => $this->markdown->sanitise($data['content'] ?? $contribution->content),
             'status' => $status,
+            'changes_requested' => null,
             'status_last_updated_at' => Date::now(),
         ]);
 
@@ -89,5 +90,36 @@ class ContributionService
     {
         $contribution->tags()->sync([]);
         $contribution->delete();
+    }
+
+    /**
+     * @param \App\Models\Contribution $contribution
+     * @return \App\Models\Contribution
+     */
+    public function approve(Contribution $contribution): Contribution
+    {
+        $contribution->update([
+            'status' => Contribution::STATUS_PUBLIC,
+            'changes_requested' => null,
+            'status_last_updated_at' => Date::now(),
+        ]);
+
+        return $contribution;
+    }
+
+    /**
+     * @param \App\Models\Contribution $contribution
+     * @param string $changesRequested
+     * @return \App\Models\Contribution
+     */
+    public function reject(Contribution $contribution, string $changesRequested): Contribution
+    {
+        $contribution->update([
+            'status' => Contribution::STATUS_CHANGES_REQUESTED,
+            'changes_requested' => $changesRequested,
+            'status_last_updated_at' => Date::now(),
+        ]);
+
+        return $contribution;
     }
 }

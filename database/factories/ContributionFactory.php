@@ -19,6 +19,10 @@ $factory->define(Contribution::class, function (Faker $faker) {
     ];
 });
 
+$factory->state(Contribution::class, Contribution::STATUS_PUBLIC, [
+    'status' => Contribution::STATUS_PUBLIC,
+]);
+
 $factory->state(Contribution::class, Contribution::STATUS_PRIVATE, [
     'status' => Contribution::STATUS_PRIVATE,
 ]);

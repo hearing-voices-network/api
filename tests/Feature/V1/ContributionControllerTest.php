@@ -555,7 +555,7 @@ class ContributionControllerTest extends TestCase
      */
 
     /** @test */
-    public function guest_cannot_update()
+    public function guest_cannot_update(): void
     {
         $contribution = factory(Contribution::class)->create();
 
@@ -565,7 +565,7 @@ class ContributionControllerTest extends TestCase
     }
 
     /** @test */
-    public function end_user_cannot_use_someone_elses_to_update()
+    public function end_user_cannot_use_someone_elses_to_update(): void
     {
         $contribution = factory(Contribution::class)->create();
 
@@ -579,7 +579,7 @@ class ContributionControllerTest extends TestCase
     }
 
     /** @test */
-    public function end_user_can_use_their_own_to_update()
+    public function end_user_can_use_their_own_to_update(): void
     {
         $endUser = factory(EndUser::class)->create();
 
@@ -603,7 +603,7 @@ class ContributionControllerTest extends TestCase
     }
 
     /** @test */
-    public function admin_cannot_update()
+    public function admin_cannot_update(): void
     {
         $contribution = factory(Contribution::class)->create();
 

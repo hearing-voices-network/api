@@ -13,7 +13,7 @@ class ContributionPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can list admins.
+     * Determine whether the user can list contributions.
      *
      * @param \App\Models\User|null $user
      * @return bool
@@ -24,7 +24,7 @@ class ContributionPolicy
     }
 
     /**
-     * Determine whether the user can view the admin.
+     * Determine whether the user can view the contribution.
      *
      * @param \App\Models\User|null $user
      * @param \App\Models\Contribution $contribution
@@ -48,7 +48,7 @@ class ContributionPolicy
     }
 
     /**
-     * Determine whether the user can create admins.
+     * Determine whether the user can create contributions.
      *
      * @param \App\Models\User $user
      * @return bool
@@ -59,7 +59,7 @@ class ContributionPolicy
     }
 
     /**
-     * Determine whether the user can update the admin.
+     * Determine whether the user can update the contribution.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Contribution $contribution
@@ -71,7 +71,7 @@ class ContributionPolicy
     }
 
     /**
-     * Determine whether the user can delete the admin.
+     * Determine whether the user can delete the contribution.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Contribution $contribution
@@ -88,5 +88,29 @@ class ContributionPolicy
         }
 
         return false;
+    }
+
+    /**
+     * Determine whether the user can approve the contribution.
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Contribution $contribution
+     * @return bool
+     */
+    public function approve(User $user, Contribution $contribution): bool
+    {
+        return $user->isAdmin() && $contribution->isInReview();
+    }
+
+    /**
+     * Determine whether the user can reject the contribution.
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Contribution $contribution
+     * @return bool
+     */
+    public function reject(User $user, Contribution $contribution): bool
+    {
+        return $user->isAdmin() && $contribution->isInReview();
     }
 }
