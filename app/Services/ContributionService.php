@@ -69,7 +69,7 @@ class ContributionService
 
         /** @var \App\Models\Contribution $contribution */
         $contribution->update([
-            'content' => $this->markdown->sanitise($data['content']) ?? $contribution->content,
+            'content' => $this->markdown->sanitise($data['content'] ?? $contribution->content),
             'status' => $status,
             'status_last_updated_at' => Date::now(),
         ]);
