@@ -9,13 +9,17 @@ use App\Http\Filters\EndUser\EmailFilter;
 use App\Http\Filters\EndUser\EmailVerifiedFilter;
 use App\Http\Filters\NullFilter;
 use App\Http\Requests\EndUser\IndexEndUserRequest;
+use App\Http\Requests\EndUser\StoreEndUserRequest;
 use App\Http\Resources\EndUserResource;
 use App\Http\Sorts\EndUser\EmailSort;
 use App\Models\EndUser;
+use App\Services\EndUserService;
 use App\Support\Pagination;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\Sort;
@@ -23,17 +27,28 @@ use Spatie\QueryBuilder\Sort;
 class EndUserController extends Controller
 {
     /**
+     * @var \App\Services\EndUserService
+     */
+    protected $endUserService;
+
+    /**
      * EndUserController constructor.
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Support\Pagination $pagination
+     * @param \App\Services\EndUserService $endUserService
      */
-    public function __construct(Request $request, Pagination $pagination)
-    {
+    public function __construct(
+        Request $request,
+        Pagination $pagination,
+        EndUserService $endUserService
+    ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware('auth');
+        $this->middleware('auth')->except('store');
         $this->authorizeResource(EndUser::class);
+
+        $this->endUserService = $endUserService;
     }
 
     /**
@@ -69,5 +84,26 @@ class EndUserController extends Controller
             ->paginate($this->perPage);
 
         return EndUserResource::collection($endUsers);
+    }
+
+    /**
+     * @param \App\Http\Requests\EndUser\StoreEndUserRequest $request
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     */
+    public function store(StoreEndUserRequest $request): JsonResource
+    {
+        $endUser = DB::transaction(function () use ($request): EndUser {
+            return $this->endUserService->create([
+                'email' => $request->email,
+                'password' => $request->password,
+                'country' => $request->country,
+                'birth_year' => $request->birth_year,
+                'gender' => $request->gender,
+                'ethnicity' => $request->ethnicity,
+                'gdpr_consented_at' => $request->gdpr_consented_at,
+            ]);
+        });
+
+        return new EndUserResource($endUser);
     }
 }

@@ -232,6 +232,124 @@ class EndUserControllerTest extends TestCase
      * Store.
      */
 
+    /** @test */
+    public function guest_can_store(): void
+    {
+        $response = $this->postJson('/v1/end-users', [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        $response->assertStatus(Response::HTTP_CREATED);
+    }
+
+    /** @test */
+    public function end_user_cannot_store(): void
+    {
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->postJson('/v1/end-users');
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function admin_can_store(): void
+    {
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->postJson('/v1/end-users', [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        $response->assertStatus(Response::HTTP_CREATED);
+    }
+
+    /** @test */
+    public function structure_correct_for_store(): void
+    {
+        $response = $this->postJson('/v1/end-users', [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        $response->assertResourceDataStructure([
+            'id',
+            'email',
+            'country',
+            'birth_year',
+            'gender',
+            'ethnicity',
+            'gdpr_consented_at',
+            'email_verified_at',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ]);
+    }
+
+    /** @test */
+    public function values_correct_for_store(): void
+    {
+        $now = Date::now();
+        Date::setTestNow($now);
+
+        $response = $this->postJson('/v1/end-users', [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        $response->assertJsonFragment([
+            'email' => 'john.doe@example.com',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+            'gdpr_consented_at' => $now->toIso8601String(),
+            'email_verified_at' => null,
+            'created_at' => $now->toIso8601String(),
+            'updated_at' => $now->toIso8601String(),
+            'deleted_at' => null,
+        ]);
+    }
+
+    /** @test */
+    public function secure_password_required_for_store(): void
+    {
+        $response = $this->postJson('/v1/end-users', [
+            'email' => 'john.doe@example.com',
+            'password' => 'secret',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors('password');
+    }
+
     /*
      * Show.
      */

@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Hash;
 
 class AdminService
 {
@@ -21,7 +22,7 @@ class AdminService
             'phone' => $data['phone'],
             'user_id' => User::create([
                 'email' => $data['email'],
-                'password' => bcrypt($data['password']),
+                'password' => Hash::make($data['password']),
                 'email_verified_at' => Date::now(),
             ])->id,
         ]);
@@ -42,7 +43,7 @@ class AdminService
         $admin->user()->update([
             'email' => $data['email'] ?? $admin->user->email,
             'password' => $data['password'] !== null
-                ? bcrypt($data['password'])
+                ? Hash::make($data['password'])
                 : $admin->user->password,
         ]);
 

@@ -51,7 +51,7 @@ class EndUserPolicy
      */
     public function create(?User $user): bool
     {
-        return $user->isAdmin() || !$user->isEndUser();
+        return optional($user)->isAdmin() || !optional($user)->isEndUser();
     }
 
     /**

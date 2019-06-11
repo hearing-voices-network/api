@@ -27,19 +27,19 @@ trait EndUserMutators
 
     /**
      * @param string|null $birthYear
-     * @return string|null
+     * @return int|null
      */
-    public function getBirthYearAttribute(?string $birthYear): ?string
+    public function getBirthYearAttribute(?string $birthYear): ?int
     {
         return is_string($birthYear) ? decrypt($birthYear) : null;
     }
 
     /**
-     * @param string|null $birthYear
+     * @param int|null $birthYear
      */
-    public function setBirthYearAttribute(?string $birthYear): void
+    public function setBirthYearAttribute(?int $birthYear): void
     {
-        $this->attributes['birth_year'] = is_string($birthYear)
+        $this->attributes['birth_year'] = is_int($birthYear)
             ? encrypt($birthYear)
             : null;
     }
