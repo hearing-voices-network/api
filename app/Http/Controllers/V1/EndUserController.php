@@ -106,4 +106,13 @@ class EndUserController extends Controller
 
         return new EndUserResource($endUser);
     }
+
+    /**
+     * @param \App\Models\EndUser $endUser
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     */
+    public function show(EndUser $endUser): JsonResource
+    {
+        return new EndUserResource($endUser);
+    }
 }

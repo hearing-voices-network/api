@@ -354,6 +354,108 @@ class EndUserControllerTest extends TestCase
      * Show.
      */
 
+    /** @test */
+    public function guest_cannot_show(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        $response = $this->getJson("/v1/end-users/{$endUser->id}");
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
+    public function end_user_cannot_view_someone_else_for_show(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/end-users/{$endUser->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function end_user_can_view_them_self_for_show(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->getJson("/v1/end-users/{$endUser->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function admin_can_show(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/end-users/{$endUser->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function structure_correct_for_show(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/end-users/{$endUser->id}");
+
+        $response->assertResourceDataStructure([
+            'id',
+            'email',
+            'country',
+            'birth_year',
+            'gender',
+            'ethnicity',
+            'gdpr_consented_at',
+            'email_verified_at',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ]);
+    }
+
+    /** @test */
+    public function values_correct_for_show(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/end-users/{$endUser->id}");
+
+        $response->assertJsonFragment([
+            'id' => $endUser->id,
+            'email' => $endUser->user->email,
+            'country' => $endUser->country,
+            'birth_year' => $endUser->birth_year,
+            'gender' => $endUser->gender,
+            'ethnicity' => $endUser->ethnicity,
+            'gdpr_consented_at' => $endUser->gdpr_consented_at->toIso8601String(),
+            'email_verified_at' => null,
+            'created_at' => $endUser->user->created_at->toIso8601String(),
+            'updated_at' => $endUser->user->updated_at->toIso8601String(),
+            'deleted_at' => null,
+        ]);
+    }
+
     /*
      * Update.
      */
