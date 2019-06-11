@@ -12,11 +12,15 @@ class SortParameter extends Parameter
     /**
      * @param string|null $objectId
      * @param string[] $fields
+     * @param null $default
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter
      */
-    public static function create(string $objectId = null, array $fields = []): Parameter
-    {
-        $fields = '`' . implode($fields, '`,`') . '`';
+    public static function create(
+        string $objectId = null,
+        array $fields = [],
+        $default = null
+    ): Parameter {
+        $fields = empty($fields) ? '`n/a`' : '`' . implode($fields, '`,`') . '`';
 
         return parent::create($objectId)
             ->in(static::IN_QUERY)
@@ -30,6 +34,8 @@ class SortParameter extends Parameter
                 Supported fields: [{$fields}]
                 EOT
             )
-            ->schema(Schema::string());
+            ->schema(
+                Schema::string()->default($default)
+            );
     }
 }

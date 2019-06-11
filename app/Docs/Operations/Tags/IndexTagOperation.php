@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Operations\Tags;
 
+use App\Docs\Parameters\SortParameter;
 use App\Docs\Schemas\Tag\TagSchema;
 use App\Docs\Tags\TagsTag;
 use App\Docs\Utils;
@@ -32,6 +33,9 @@ class IndexTagOperation extends Operation
                 )
             )
             ->tags(TagsTag::create())
+            ->parameters(
+                SortParameter::create(null, [], 'name')
+            )
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(

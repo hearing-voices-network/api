@@ -7,6 +7,7 @@ namespace App\Docs\Operations\Contributions;
 use App\Docs\Parameters\FilterParameter;
 use App\Docs\Parameters\PageParameter;
 use App\Docs\Parameters\PerPageParameter;
+use App\Docs\Parameters\SortParameter;
 use App\Docs\Schemas\Contribution\ContributionSchema;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\ContributionsTag;
@@ -64,7 +65,8 @@ class IndexContributionOperation extends Operation
                         deleted tags).
                         EOT
                     )
-                    ->schema(Schema::string())
+                    ->schema(Schema::string()),
+                SortParameter::create(null, [], '-created_at')
             )
             ->responses(
                 Response::ok()->content(
