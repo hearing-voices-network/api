@@ -28,7 +28,12 @@ class UpdateEndUserOperation extends Operation
             ->action(static::ACTION_PUT)
             ->summary('Update a specific end user')
             ->description(
-                Utils::operationDescription([EndUser::class])
+                Utils::operationDescription(
+                    [EndUser::class],
+                    <<<'EOT'
+                    * End user can only update their own end user resource.
+                    EOT
+                )
             )
             ->tags(EndUsersTag::create())
             ->requestBody(

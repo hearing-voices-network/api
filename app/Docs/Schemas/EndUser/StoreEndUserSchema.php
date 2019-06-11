@@ -26,9 +26,7 @@ class StoreEndUserSchema extends Schema
                     ->maxLength(255),
                 Schema::string('password')
                     ->maxLength(255),
-                Schema::string('country')
-                    // TODO: Generate this from countries table
-                    ->enum('United Kingdom'),
+                Schema::string('country'),
                 Schema::integer('birth_year')
                     ->minimum(today()->year - config('connecting_voices.age_requirement.max'))
                     ->maximum(today()->year - config('connecting_voices.age_requirement.min')),

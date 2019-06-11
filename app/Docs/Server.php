@@ -15,8 +15,7 @@ class Server extends BaseServer
     public static function create(string $objectId = null): BaseServer
     {
         return parent::create($objectId)
-            // TODO: Use route()
-            ->url('/v1')
+            ->url(url('/v1'))
             ->description('The API server');
     }
 }

@@ -26,4 +26,6 @@ Route::prefix('v1')->group(function (): void {
         ->name('contributions.approve');
     Route::put('contributions/{contribution}/reject', 'Contribution\\RejectController')
         ->name('contributions.reject');
+
+    Route::apiResource('end-users', 'EndUserController');
 });
