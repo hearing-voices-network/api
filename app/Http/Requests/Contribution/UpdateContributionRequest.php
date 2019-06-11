@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Contribution;
 
-use App\Foundation\Http\FormRequest;
 use App\Models\Contribution;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateContributionRequest extends FormRequest

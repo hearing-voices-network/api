@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Contribution;
 
-use App\Foundation\Http\FormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
 class RejectContributionRequest extends FormRequest
 {

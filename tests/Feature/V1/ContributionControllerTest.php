@@ -214,7 +214,7 @@ class ContributionControllerTest extends TestCase
     {
         $endUser = factory(EndUser::class)->create();
 
-        $endUserContribution = $privateContribution = factory(Contribution::class)
+        $endUserContribution = factory(Contribution::class)
             ->state(Contribution::STATUS_PRIVATE)
             ->create(['end_user_id' => $endUser->id]);
         $publicContribution = factory(Contribution::class)

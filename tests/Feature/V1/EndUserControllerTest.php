@@ -6,7 +6,9 @@ namespace Tests\Feature\V1;
 
 use App\Models\Admin;
 use App\Models\EndUser;
+use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Date;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -102,19 +104,100 @@ class EndUserControllerTest extends TestCase
     /** @test */
     public function can_filter_by_email_for_index(): void
     {
-        $this->markTestIncomplete();
+        $endUser1 = factory(EndUser::class)->create([
+            'user_id' => factory(User::class)->create([
+                'email' => 'jonh.doe@example.com',
+            ])->id,
+        ]);
+        $endUser2 = factory(EndUser::class)->create([
+            'user_id' => factory(User::class)->create([
+                'email' => 'foo.bar@example.com',
+            ])->id,
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/end-users', [
+            'filter[email]' => 'jonh.doe@example.com',
+        ]);
+
+        $response->assertJsonFragment(['id' => $endUser1->id]);
+        $response->assertJsonMissing(['id' => $endUser2->id]);
     }
 
     /** @test */
     public function can_filter_by_email_verified_for_index(): void
     {
-        $this->markTestIncomplete('filter[email_verified]=true|false|all');
+        $endUser1 = factory(EndUser::class)->create([
+            'user_id' => factory(User::class)->create([
+                'email_verified_at' => Date::now(),
+            ])->id,
+        ]);
+        $endUser2 = factory(EndUser::class)->create([
+            'user_id' => factory(User::class)->create([
+                'email_verified_at' => null,
+            ])->id,
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        // Only verified emails.
+        $response = $this->getJson('/v1/end-users', [
+            'filter[email_verified]' => 'true',
+        ]);
+        $response->assertJsonFragment(['id' => $endUser1->id]);
+        $response->assertJsonMissing(['id' => $endUser2->id]);
+
+        // Only non-verified emails.
+        $response = $this->getJson('/v1/end-users', [
+            'filter[email_verified]' => 'false',
+        ]);
+        $response->assertJsonMissing(['id' => $endUser1->id]);
+        $response->assertJsonFragment(['id' => $endUser2->id]);
+
+        // All end users, regardless of email verification status.
+        $response = $this->getJson('/v1/end-users', [
+            'filter[email_verified]' => 'all',
+        ]);
+        $response->assertJsonFragment(['id' => $endUser1->id]);
+        $response->assertJsonFragment(['id' => $endUser2->id]);
     }
 
     /** @test */
     public function can_filter_by_with_soft_deletes_for_index(): void
     {
-        $this->markTestIncomplete('filter[with_soft_deletes]=true|false');
+        $endUser1 = factory(EndUser::class)->create([
+            'user_id' => factory(User::class)->create([
+                'deleted_at' => Date::now(),
+            ])->id,
+        ]);
+        $endUser2 = factory(EndUser::class)->create([
+            'user_id' => factory(User::class)->create([
+                'deleted_at' => null,
+            ])->id,
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        // Only soft deleted.
+        $response = $this->getJson('/v1/end-users', [
+            'filter[with_soft_deletes]' => 'true',
+        ]);
+        $response->assertJsonFragment(['id' => $endUser1->id]);
+        $response->assertJsonFragment(['id' => $endUser2->id]);
+
+        // Only active (default).
+        $response = $this->getJson('/v1/end-users', [
+            'filter[with_soft_deletes]' => 'false',
+        ]);
+        $response->assertJsonMissing(['id' => $endUser1->id]);
+        $response->assertJsonFragment(['id' => $endUser2->id]);
     }
 
     /*
