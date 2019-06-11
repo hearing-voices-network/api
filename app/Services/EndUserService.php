@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\EndUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class EndUserService
@@ -52,5 +53,35 @@ class EndUserService
         ]);
 
         return $endUser;
+    }
+
+    /**
+     * @param \App\Models\EndUser $endUser
+     * @throws \Exception
+     * @return \App\Models\EndUser
+     */
+    public function softDelete(EndUser $endUser): EndUser
+    {
+        $endUser->user->delete();
+
+        return $endUser;
+    }
+
+    /**
+     * @param \App\Models\EndUser $endUser
+     * @throws \Exception
+     */
+    public function forceDelete(EndUser $endUser): void
+    {
+        DB::table('contribution_tag')
+            ->whereIn('contribution_id', $endUser->contributions()->pluck('id'))
+            ->delete();
+        $endUser->contributions()->delete();
+        /** @var \App\Models\User $user */
+        $user = $endUser->user;
+        $user->audits()->delete();
+        $user->notifications()->delete();
+        $endUser->delete();
+        $user->forceDelete();
     }
 }

@@ -103,7 +103,9 @@ abstract class TestCase extends BaseTestCase
      */
     public function deleteJson($uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->json('DELETE', $uri, $data, $headers);
+        $query = http_build_query($data);
+
+        return $this->json('DELETE', "{$uri}?{$query}", [], $headers);
     }
 
     /**

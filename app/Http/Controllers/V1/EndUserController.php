@@ -8,10 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Filters\EndUser\EmailFilter;
 use App\Http\Filters\EndUser\EmailVerifiedFilter;
 use App\Http\Filters\NullFilter;
+use App\Http\Requests\EndUser\DestroyEndUserRequest;
 use App\Http\Requests\EndUser\IndexEndUserRequest;
 use App\Http\Requests\EndUser\StoreEndUserRequest;
 use App\Http\Requests\EndUser\UpdateEndUserRequest;
 use App\Http\Resources\EndUserResource;
+use App\Http\Responses\ResourceDeletedResponse;
 use App\Http\Sorts\EndUser\EmailSort;
 use App\Models\EndUser;
 use App\Services\EndUserService;
@@ -135,5 +137,21 @@ class EndUserController extends Controller
         });
 
         return new EndUserResource($endUser);
+    }
+
+    /**
+     * @param \App\Http\Requests\EndUser\DestroyEndUserRequest $request
+     * @param \App\Models\EndUser $endUser
+     * @return \App\Http\Responses\ResourceDeletedResponse
+     */
+    public function destroy(DestroyEndUserRequest $request, EndUser $endUser): ResourceDeletedResponse
+    {
+        DB::transaction(function () use ($request, $endUser): void {
+            $request->type === DestroyEndUserRequest::TYPE_FORCE_DELETE
+                ? $this->endUserService->forceDelete($endUser)
+                : $this->endUserService->softDelete($endUser);
+        });
+
+        return new ResourceDeletedResponse('end user');
     }
 }

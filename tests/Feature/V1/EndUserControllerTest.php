@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Tests\Feature\V1;
 
 use App\Models\Admin;
+use App\Models\Audit;
+use App\Models\Contribution;
 use App\Models\EndUser;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Date;
@@ -614,4 +617,96 @@ class EndUserControllerTest extends TestCase
     /*
      * Destroy.
      */
+
+    /** @test */
+    public function guest_cannot_destroy(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        $response = $this->deleteJson("/v1/end-users/{$endUser->id}");
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
+    public function end_user_for_someone_else_cannot_destroy(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->deleteJson("/v1/end-users/{$endUser->id}", ['type' => 'force_delete']);
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function end_user_for_them_self_can_destroy(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->deleteJson("/v1/end-users/{$endUser->id}", ['type' => 'force_delete']);
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function admin_can_destroy(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->deleteJson("/v1/end-users/{$endUser->id}", ['type' => 'force_delete']);
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function database_records_and_relationships_deleted_for_force_destroy(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+        $contribution = factory(Contribution::class)->create(['end_user_id' => $endUser->id]);
+        $audit = factory(Audit::class)->create(['user_id' => $endUser->user->id]);
+        $notification = factory(Notification::class)->create(['user_id' => $endUser->user->id]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $this->deleteJson("/v1/end-users/{$endUser->id}", ['type' => 'force_delete']);
+
+        $this->assertDatabaseMissing('end_users', ['id' => $endUser->id]);
+        $this->assertDatabaseMissing('users', ['id' => $endUser->user->id]);
+        $this->assertDatabaseMissing('contributions', ['id' => $contribution->id]);
+        $this->assertDatabaseMissing('audits', ['id' => $audit->id]);
+        $this->assertDatabaseMissing('notifications', ['id' => $notification->id]);
+    }
+
+    /** @test */
+    public function database_records_and_relationships_not_deleted_for_soft_destroy(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+        $contribution = factory(Contribution::class)->create(['end_user_id' => $endUser->id]);
+        $audit = factory(Audit::class)->create(['user_id' => $endUser->user->id]);
+        $notification = factory(Notification::class)->create(['user_id' => $endUser->user->id]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $this->deleteJson("/v1/end-users/{$endUser->id}", ['type' => 'soft_delete']);
+
+        $this->assertDatabaseHas('end_users', ['id' => $endUser->id]);
+        $this->assertSoftDeleted('users', ['id' => $endUser->user->id]);
+        $this->assertDatabaseHas('contributions', ['id' => $contribution->id]);
+        $this->assertDatabaseHas('audits', ['id' => $audit->id]);
+        $this->assertDatabaseHas('notifications', ['id' => $notification->id]);
+    }
 }
