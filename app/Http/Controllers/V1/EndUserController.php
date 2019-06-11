@@ -10,6 +10,7 @@ use App\Http\Filters\EndUser\EmailVerifiedFilter;
 use App\Http\Filters\NullFilter;
 use App\Http\Requests\EndUser\IndexEndUserRequest;
 use App\Http\Requests\EndUser\StoreEndUserRequest;
+use App\Http\Requests\EndUser\UpdateEndUserRequest;
 use App\Http\Resources\EndUserResource;
 use App\Http\Sorts\EndUser\EmailSort;
 use App\Models\EndUser;
@@ -100,7 +101,6 @@ class EndUserController extends Controller
                 'birth_year' => $request->birth_year,
                 'gender' => $request->gender,
                 'ethnicity' => $request->ethnicity,
-                'gdpr_consented_at' => $request->gdpr_consented_at,
             ]);
         });
 
@@ -113,6 +113,27 @@ class EndUserController extends Controller
      */
     public function show(EndUser $endUser): JsonResource
     {
+        return new EndUserResource($endUser);
+    }
+
+    /**
+     * @param \App\Http\Requests\EndUser\UpdateEndUserRequest $request
+     * @param \App\Models\EndUser $endUser
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     */
+    public function update(UpdateEndUserRequest $request, EndUser $endUser): JsonResource
+    {
+        $endUser = DB::transaction(function () use ($request, $endUser): EndUser {
+            return $this->endUserService->update($endUser, [
+                'email' => $request->email,
+                'password' => $request->password,
+                'country' => $request->country,
+                'birth_year' => $request->birth_year,
+                'gender' => $request->gender,
+                'ethnicity' => $request->ethnicity,
+            ]);
+        });
+
         return new EndUserResource($endUser);
     }
 }

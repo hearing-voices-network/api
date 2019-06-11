@@ -365,7 +365,7 @@ class EndUserControllerTest extends TestCase
     }
 
     /** @test */
-    public function end_user_cannot_view_someone_else_for_show(): void
+    public function end_user_for_someone_else_cannot_show(): void
     {
         $endUser = factory(EndUser::class)->create();
 
@@ -379,7 +379,7 @@ class EndUserControllerTest extends TestCase
     }
 
     /** @test */
-    public function end_user_can_view_them_self_for_show(): void
+    public function end_user_for_them_self_can_show(): void
     {
         $endUser = factory(EndUser::class)->create();
 
@@ -459,6 +459,157 @@ class EndUserControllerTest extends TestCase
     /*
      * Update.
      */
+
+    /** @test */
+    public function guest_cannot_update(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        $response = $this->putJson("/v1/end-users/{$endUser->id}");
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
+    public function end_user_for_someone_else_cannot_update(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->putJson("/v1/end-users/{$endUser->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function end_user_for_them_self_can_update(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->putJson("/v1/end-users/{$endUser->id}", [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function admin_cannot_update(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->putJson("/v1/end-users/{$endUser->id}");
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function structure_correct_for_update(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->putJson("/v1/end-users/{$endUser->id}", [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        $response->assertResourceDataStructure([
+            'id',
+            'email',
+            'country',
+            'birth_year',
+            'gender',
+            'ethnicity',
+            'gdpr_consented_at',
+            'email_verified_at',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ]);
+    }
+
+    /** @test */
+    public function values_correct_for_update(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        $now = Date::now();
+        Date::setTestNow($now);
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->putJson("/v1/end-users/{$endUser->id}", [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        $response->assertJsonFragment([
+            'id' => $endUser->id,
+            'email' => 'john.doe@example.com',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+            'gdpr_consented_at' => $endUser->gdpr_consented_at->toIso8601String(),
+            'email_verified_at' => null,
+            'created_at' => $endUser->user->created_at->toIso8601String(),
+            'updated_at' => $now->toIso8601String(),
+            'deleted_at' => null,
+        ]);
+    }
+
+    /** @test */
+    public function only_password_can_be_provided_for_update(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        $now = Date::now();
+        Date::setTestNow($now);
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->putJson("/v1/end-users/{$endUser->id}", [
+            'password' => 'P@55w0rD!',
+        ]);
+
+        $response->assertJsonFragment([
+            'id' => $endUser->id,
+            'email' => $endUser->user->email,
+            'country' => $endUser->country,
+            'birth_year' => $endUser->birth_year,
+            'gender' => $endUser->gender,
+            'ethnicity' => $endUser->ethnicity,
+            'gdpr_consented_at' => $endUser->gdpr_consented_at->toIso8601String(),
+            'email_verified_at' => null,
+            'created_at' => $endUser->user->created_at->toIso8601String(),
+            'updated_at' => $now->toIso8601String(),
+            'deleted_at' => null,
+        ]);
+    }
 
     /*
      * Destroy.

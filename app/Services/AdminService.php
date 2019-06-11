@@ -40,7 +40,7 @@ class AdminService
             'phone' => $data['phone'] ?? $admin->phone,
         ]);
 
-        $admin->user()->update([
+        $admin->user->update([
             'email' => $data['email'] ?? $admin->user->email,
             'password' => $data['password'] !== null
                 ? Hash::make($data['password'])
