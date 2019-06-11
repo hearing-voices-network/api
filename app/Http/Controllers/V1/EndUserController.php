@@ -56,8 +56,8 @@ class EndUserController extends Controller
             ->allowedFilters(
                 Filter::custom('email', EmailFilter::class),
                 Filter::custom('email_verified', EmailVerifiedFilter::class),
-                Filter::custom('with_soft_deletes', NullFilter::class),
-                )
+                Filter::custom('with_soft_deletes', NullFilter::class)
+            )
             ->paginate($this->perPage);
 
         return EndUserResource::collection($endUsers);
