@@ -10,6 +10,7 @@ use App\Http\Filters\EndUser\EmailVerifiedFilter;
 use App\Http\Filters\NullFilter;
 use App\Http\Requests\EndUser\IndexEndUserRequest;
 use App\Http\Resources\EndUserResource;
+use App\Http\Sorts\EndUser\EmailSort;
 use App\Models\EndUser;
 use App\Support\Pagination;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\Sort;
 
 class EndUserController extends Controller
 {
@@ -57,6 +59,12 @@ class EndUserController extends Controller
                 Filter::custom('email', EmailFilter::class),
                 Filter::custom('email_verified', EmailVerifiedFilter::class),
                 Filter::custom('with_soft_deletes', NullFilter::class)
+            )
+            ->allowedSorts([
+                Sort::custom('email', EmailSort::class),
+            ])
+            ->defaultSort(
+                Sort::custom('email', EmailSort::class)
             )
             ->paginate($this->perPage);
 

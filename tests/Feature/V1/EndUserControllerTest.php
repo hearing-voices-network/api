@@ -200,6 +200,34 @@ class EndUserControllerTest extends TestCase
         $response->assertJsonFragment(['id' => $endUser2->id]);
     }
 
+    /** @test */
+    public function can_sort_by_email_for_index(): void
+    {
+        $endUser1 = factory(EndUser::class)->create([
+            'user_id' => factory(User::class)->create([
+                'email' => 'borris@example.com',
+            ])->id,
+        ]);
+        $endUser2 = factory(EndUser::class)->create([
+            'user_id' => factory(User::class)->create([
+                'email' => 'andrew@example.com',
+            ])->id,
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create([
+                'user_id' => factory(User::class)->create([
+                    'email' => 'carl@example.com',
+                ])->id,
+            ])->user
+        );
+
+        $response = $this->getJson('/v1/end-users', ['sort' => '-email']);
+
+        $response->assertNthIdInCollection(0, $endUser1->id);
+        $response->assertNthIdInCollection(1, $endUser2->id);
+    }
+
     /*
      * Store.
      */

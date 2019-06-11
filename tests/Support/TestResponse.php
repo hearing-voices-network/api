@@ -52,7 +52,7 @@ class TestResponse extends BaseTestResponse
     {
         $data = json_decode($this->getContent(), true)['data'];
 
-        PHPUnit::assertGreaterThan($index + 1, count($data));
+        PHPUnit::assertGreaterThanOrEqual($index + 1, count($data));
         PHPUnit::assertEquals($id, $data[$index]['id']);
     }
 }
