@@ -10,7 +10,6 @@ use App\Docs\Schemas\ResourceSchema;
 use App\Docs\Tags\EndUsersTag;
 use App\Docs\Utils;
 use App\Models\Admin;
-use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\RequestBody;
@@ -29,7 +28,7 @@ class StoreEndUserOperation extends Operation
             ->action(static::ACTION_POST)
             ->summary('Create an end user')
             ->description(
-                Utils::operationDescription(['Public', Admin::class, EndUser::class])
+                Utils::operationDescription(['Public', Admin::class])
             )
             ->tags(EndUsersTag::create())
             ->noSecurity()

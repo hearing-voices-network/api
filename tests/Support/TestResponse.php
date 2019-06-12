@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Foundation\Testing;
+namespace Tests\Support;
 
 use Illuminate\Foundation\Testing\Assert as PHPUnit;
 use Illuminate\Foundation\Testing\TestResponse as BaseTestResponse;
@@ -52,7 +52,7 @@ class TestResponse extends BaseTestResponse
     {
         $data = json_decode($this->getContent(), true)['data'];
 
-        PHPUnit::assertGreaterThan($index + 1, count($data));
+        PHPUnit::assertGreaterThanOrEqual($index + 1, count($data));
         PHPUnit::assertEquals($id, $data[$index]['id']);
     }
 }

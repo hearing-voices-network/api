@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use App\Foundation\Testing\TestResponse;
 use App\Models\File;
 use App\Support\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tests\Support\TestResponse;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -32,7 +32,7 @@ abstract class TestCase extends BaseTestCase
      * Overridden from parent to provide custom TestResponse class.
      *
      * @param \Illuminate\Http\Response $response
-     * @return \App\Foundation\Testing\TestResponse
+     * @return \Tests\Support\TestResponse
      */
     protected function createTestResponse($response): TestResponse
     {
@@ -45,7 +45,7 @@ abstract class TestCase extends BaseTestCase
      * @param string $uri
      * @param array $data
      * @param array $headers
-     * @return \App\Foundation\Testing\TestResponse
+     * @return \Tests\Support\TestResponse
      */
     public function getJson($uri, array $data = [], array $headers = []): TestResponse
     {
@@ -60,7 +60,7 @@ abstract class TestCase extends BaseTestCase
      * @param string $uri
      * @param array $data
      * @param array $headers
-     * @return \App\Foundation\Testing\TestResponse
+     * @return \Tests\Support\TestResponse
      */
     public function postJson($uri, array $data = [], array $headers = []): TestResponse
     {
@@ -73,7 +73,7 @@ abstract class TestCase extends BaseTestCase
      * @param string $uri
      * @param array $data
      * @param array $headers
-     * @return \App\Foundation\Testing\TestResponse
+     * @return \Tests\Support\TestResponse
      */
     public function putJson($uri, array $data = [], array $headers = []): TestResponse
     {
@@ -86,7 +86,7 @@ abstract class TestCase extends BaseTestCase
      * @param string $uri
      * @param array $data
      * @param array $headers
-     * @return \App\Foundation\Testing\TestResponse
+     * @return \Tests\Support\TestResponse
      */
     public function patchJson($uri, array $data = [], array $headers = []): TestResponse
     {
@@ -99,11 +99,13 @@ abstract class TestCase extends BaseTestCase
      * @param string $uri
      * @param array $data
      * @param array $headers
-     * @return \App\Foundation\Testing\TestResponse
+     * @return \Tests\Support\TestResponse
      */
     public function deleteJson($uri, array $data = [], array $headers = []): TestResponse
     {
-        return $this->json('DELETE', $uri, $data, $headers);
+        $query = http_build_query($data);
+
+        return $this->json('DELETE', "{$uri}?{$query}", [], $headers);
     }
 
     /**
@@ -113,7 +115,7 @@ abstract class TestCase extends BaseTestCase
      * @param string $uri
      * @param array $data
      * @param array $headers
-     * @return \App\Foundation\Testing\TestResponse
+     * @return \Tests\Support\TestResponse
      */
     public function json($method, $uri, array $data = [], array $headers = []): TestResponse
     {

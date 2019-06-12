@@ -56,7 +56,7 @@ class ContributionController extends Controller
     {
         $isGuest = $request->user() === null;
         $isEndUser = optional($request->user())->isEndUser();
-        $endUser = $isEndUser ? $request->user()->endUser : null;
+        $endUser = optional($request->user())->endUser;
 
         $baseQuery = Contribution::query()
             ->with('tags.publicContributions')

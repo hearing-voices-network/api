@@ -26,7 +26,13 @@ class DestroyEndUserOperation extends Operation
             ->action(static::ACTION_DELETE)
             ->summary('Delete a specific end user')
             ->description(
-                Utils::operationDescription([Admin::class, EndUser::class])
+                Utils::operationDescription(
+                    [Admin::class, EndUser::class],
+                    <<<'EOT'
+                    * If an end user is making the request, then they can only delete their own
+                    end user resource.
+                    EOT
+                )
             )
             ->tags(EndUsersTag::create())
             ->parameters(

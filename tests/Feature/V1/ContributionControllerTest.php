@@ -8,7 +8,6 @@ use App\Models\Admin;
 use App\Models\Contribution;
 use App\Models\EndUser;
 use App\Models\Tag;
-use Carbon\CarbonImmutable;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Date;
 use Laravel\Passport\Passport;
@@ -214,7 +213,7 @@ class ContributionControllerTest extends TestCase
     {
         $endUser = factory(EndUser::class)->create();
 
-        $endUserContribution = $privateContribution = factory(Contribution::class)
+        $endUserContribution = factory(Contribution::class)
             ->state(Contribution::STATUS_PRIVATE)
             ->create(['end_user_id' => $endUser->id]);
         $publicContribution = factory(Contribution::class)
@@ -335,7 +334,7 @@ class ContributionControllerTest extends TestCase
         /** @var \App\Models\Tag $tag */
         $tag = factory(Tag::class)->create();
 
-        CarbonImmutable::setTestNow(Date::now());
+        Date::setTestNow(Date::now());
 
         $response = $this->postJson('/v1/contributions', [
             'content' => 'Lorem ipsum',

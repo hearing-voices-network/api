@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Filters\Admin;
+namespace App\Http\Filters\EndUser;
 
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\Filters\Filter;

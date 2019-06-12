@@ -21,8 +21,6 @@ class EndUserSchema extends Schema
                     ->format(static::FORMAT_UUID),
                 Schema::string('email'),
                 Schema::string('country')
-                    // TODO: Generate this from countries table
-                    ->enum('United Kingdom')
                     ->nullable(),
                 Schema::integer('birth_year')
                     ->nullable(),
@@ -38,6 +36,8 @@ class EndUserSchema extends Schema
                 Schema::string('created_at')
                     ->format(static::FORMAT_DATE_TIME),
                 Schema::string('updated_at')
+                    ->format(static::FORMAT_DATE_TIME),
+                Schema::string('deleted_at')
                     ->format(static::FORMAT_DATE_TIME)
             );
     }

@@ -46,7 +46,7 @@ class IndexAdminOperation extends Operation
                 FilterParameter::create(null, 'phone')
                     ->description('The phone of the Admin to filter by')
                     ->schema(Schema::string()),
-                SortParameter::create(null, ['name', 'email', 'phone'])
+                SortParameter::create(null, ['name', 'email', 'phone'], 'name')
             )
             ->responses(
                 Response::ok()->content(

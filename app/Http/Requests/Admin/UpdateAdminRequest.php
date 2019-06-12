@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
-use App\Foundation\Http\FormRequest;
 use App\Rules\Password;
 use App\Rules\UkPhoneNumber;
+use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAdminRequest extends FormRequest
 {

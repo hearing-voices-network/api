@@ -7,6 +7,7 @@ namespace App\Docs\Operations\Audits;
 use App\Docs\Parameters\FilterParameter;
 use App\Docs\Parameters\PageParameter;
 use App\Docs\Parameters\PerPageParameter;
+use App\Docs\Parameters\SortParameter;
 use App\Docs\Schemas\Audit\AuditSchema;
 use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\AuditsTag;
@@ -45,7 +46,8 @@ class IndexAuditOperation extends Operation
                     ->schema(Schema::string()->format(Schema::FORMAT_UUID)),
                 FilterParameter::create(null, 'end_user_id')
                     ->description('The ID of an end user to filter by')
-                    ->schema(Schema::string()->format(Schema::FORMAT_UUID))
+                    ->schema(Schema::string()->format(Schema::FORMAT_UUID)),
+                SortParameter::create(null, [], '-created_at')
             )
             ->responses(
                 Response::ok()->content(
