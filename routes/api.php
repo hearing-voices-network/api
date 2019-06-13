@@ -28,4 +28,6 @@ Route::prefix('v1')->group(function (): void {
         ->name('contributions.reject');
 
     Route::apiResource('end-users', 'EndUserController');
+
+    Route::post('exports/{export}/request', 'Export\\RequestController');
 });

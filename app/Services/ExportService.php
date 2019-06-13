@@ -26,12 +26,12 @@ class ExportService
             throw new ExporterNotFoundException($exportClass);
         }
 
-        /** @var \App\Exporters\BaseExporter $exporter */
-        $exporter = new $exportClass();
-
-        if ($exporter instanceof BaseExporter) {
+        if (!is_subclass_of($exportClass, BaseExporter::class)) {
             throw new ExporterNotFoundException($exportClass);
         }
+
+        /** @var \App\Exporters\BaseExporter $exporter */
+        $exporter = new $exportClass();
 
         return $exporter->exportFor($admin);
     }

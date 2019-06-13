@@ -20,7 +20,7 @@ class RequestControllerTest extends TestCase
     /** @test */
     public function guest_cannot_request(): void
     {
-        $response = $this->postJson('/exports/' . AllExporter::type() .'/request');
+        $response = $this->postJson('/v1/exports/' . AllExporter::type() .'/request');
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
@@ -32,9 +32,9 @@ class RequestControllerTest extends TestCase
             factory(EndUser::class)->create()->user
         );
 
-        $response = $this->postJson('/exports/' . AllExporter::type() .'/request');
+        $response = $this->postJson('/v1/exports/' . AllExporter::type() .'/request');
 
-        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     /** @test */
@@ -44,7 +44,7 @@ class RequestControllerTest extends TestCase
             factory(Admin::class)->create()->user
         );
 
-        $response = $this->postJson('/exports/' . AllExporter::type() .'/request');
+        $response = $this->postJson('/v1/exports/' . AllExporter::type() .'/request');
 
         $response->assertStatus(Response::HTTP_CREATED);
     }
@@ -56,7 +56,7 @@ class RequestControllerTest extends TestCase
             factory(Admin::class)->create()->user
         );
 
-        $response = $this->postJson('/exports/' . AllExporter::type() .'/request');
+        $response = $this->postJson('/v1/exports/' . AllExporter::type() .'/request');
 
         $response->assertResourceDataStructure([
             'decryption_key',
