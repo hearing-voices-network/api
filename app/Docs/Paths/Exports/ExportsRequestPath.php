@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Docs\Paths\Exports;
 
 use App\Docs\Operations\Export\RequestExportOperation;
+use App\Exporters\AllExporter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
@@ -24,8 +25,9 @@ class ExportsRequestPath extends PathItem
                 Parameter::path()
                     ->name('export')
                     ->description('The type of export you want')
-                    // TODO: Use class constants for this.
-                    ->schema(Schema::string()->enum('all'))
+                    ->schema(
+                        Schema::string()->enum(AllExporter::type())
+                    )
                     ->required()
             )
             ->operations(
