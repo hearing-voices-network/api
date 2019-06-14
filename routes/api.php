@@ -36,4 +36,7 @@ Route::prefix('v1')->group(function (): void {
         ->name('files.download');
     Route::post('files/{file}/request', 'File\\RequestController')
         ->name('files.request');
+
+    Route::apiResource('notifications', 'NotificationController')
+        ->only('index', 'show');
 });
