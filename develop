@@ -21,7 +21,7 @@ if [[ $# -gt 0  ]]; then
                 php artisan "$@"
             ;;
 
-        c|composer )
+        c|com|composer )
             shift 1
             ${COMPOSE} run --rm \
                 api \
