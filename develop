@@ -14,21 +14,21 @@ COMPOSE="docker-compose -f docker-compose.yml"
 if [[ $# -gt 0  ]]; then
     case "$1" in
 
-        art|artisan )
+        a|art|artisan )
             shift 1
             ${COMPOSE} run --rm \
                 api \
                 php artisan "$@"
             ;;
 
-        composer )
+        c|composer )
             shift 1
             ${COMPOSE} run --rm \
                 api \
                 composer "$@"
             ;;
 
-        npm )
+        n|npm )
             shift 1
             ${COMPOSE} run --rm \
                 node \
