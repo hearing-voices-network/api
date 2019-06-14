@@ -29,5 +29,11 @@ Route::prefix('v1')->group(function (): void {
 
     Route::apiResource('end-users', 'EndUserController');
 
-    Route::post('exports/{export}/request', 'Export\\RequestController');
+    Route::post('exports/{export}/request', 'Export\\RequestController')
+        ->name('exports.request');
+
+    Route::get('files/{file}/download', 'File\\DownloadController')
+        ->name('files.download');
+    Route::post('files/{file}/request', 'File\\RequestController')
+        ->name('files.request');
 });
