@@ -28,13 +28,6 @@ if [[ $# -gt 0  ]]; then
                 composer "$@"
             ;;
 
-        phpunit )
-            shift 1
-            ${COMPOSE} run --rm \
-                api \
-                php vendor/bin/phpunit "$@"
-            ;;
-
         npm )
             shift 1
             ${COMPOSE} run --rm \
