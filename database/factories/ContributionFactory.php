@@ -8,9 +8,9 @@ use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Date;
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(Contribution::class, function (Faker $faker) {
+$factory->define(Contribution::class, function (Faker $faker): array {
     return [
-        'end_user_id' => function () {
+        'end_user_id' => function (): string {
             return factory(EndUser::class)->create()->id;
         },
         'content' => $faker->paragraph,
@@ -31,9 +31,13 @@ $factory->state(Contribution::class, Contribution::STATUS_IN_REVIEW, [
     'status' => Contribution::STATUS_IN_REVIEW,
 ]);
 
-$factory->state(Contribution::class, Contribution::STATUS_CHANGES_REQUESTED, function (Faker $faker) {
-    return [
-        'status' => Contribution::STATUS_CHANGES_REQUESTED,
-        'changes_requested' => $faker->paragraph,
-    ];
-});
+$factory->state(
+    Contribution::class,
+    Contribution::STATUS_CHANGES_REQUESTED,
+    function (Faker $faker): array {
+        return [
+            'status' => Contribution::STATUS_CHANGES_REQUESTED,
+            'changes_requested' => $faker->paragraph,
+        ];
+    }
+);

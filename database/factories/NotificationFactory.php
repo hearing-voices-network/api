@@ -6,7 +6,7 @@ use App\Models\Notification;
 use Faker\Generator as Faker;
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(Notification::class, function (Faker $faker) {
+$factory->define(Notification::class, function (Faker $faker): array {
     return [
         'channel' => Notification::CHANNEL_EMAIL,
         'recipient' => $faker->safeEmail,

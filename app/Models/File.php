@@ -17,6 +17,7 @@ class File extends Model implements Responsable
 
     const MIME_TYPE_PNG = 'image/png';
     const MIME_TYPE_JPEG = 'image/jpeg';
+    const MIME_TYPE_TXT = 'text/plain';
 
     /**
      * Create an HTTP response that represents the object.
