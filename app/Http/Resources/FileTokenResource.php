@@ -19,9 +19,12 @@ class FileTokenResource extends JsonResource
      */
     public function toArray($request): array
     {
+        $fileTokenId = $this->resource->id;
+        $fileId = $this->resource->file_id;
+
         return [
             'token' => $this->resource->id,
-            'download_url' => '', // TODO
+            'download_url' => route('files.download', $fileId) . "?token={$fileTokenId}",
             'expires_at' => $this->resource->created_at->addSeconds(
                 config('connecting_voices.file_tokens.expiry_time')
             )->toIso8601String(),
