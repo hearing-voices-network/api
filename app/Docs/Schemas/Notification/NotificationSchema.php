@@ -12,6 +12,7 @@ class NotificationSchema extends Schema
 {
     /**
      * @param string|null $objectId
+     * @throws \ReflectionException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
     public static function create(string $objectId = null): Schema
@@ -21,7 +22,10 @@ class NotificationSchema extends Schema
             ->properties(
                 Schema::string('id')
                     ->format(static::FORMAT_UUID),
-                Schema::string('user_id')
+                Schema::string('admin_id')
+                    ->format(static::FORMAT_UUID)
+                    ->nullable(),
+                Schema::string('end_user_id')
                     ->format(static::FORMAT_UUID)
                     ->nullable(),
                 Schema::string('channel')
