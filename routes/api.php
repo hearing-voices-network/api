@@ -39,4 +39,7 @@ Route::prefix('v1')->group(function (): void {
 
     Route::apiResource('notifications', 'NotificationController')
         ->only('index', 'show');
+
+    Route::get('settings', 'SettingController@index')
+        ->name('settings.index');
 });
