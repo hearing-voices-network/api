@@ -42,4 +42,6 @@ Route::prefix('v1')->group(function (): void {
 
     Route::get('settings', 'SettingController@index')
         ->name('settings.index');
+    Route::put('settings', 'SettingController@update')
+        ->name('settings.update');
 });

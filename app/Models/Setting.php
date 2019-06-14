@@ -13,6 +13,9 @@ class Setting extends Model
     use Relationships\SettingRelationships;
     use Scopes\SettingScopes;
 
+    const WITH_PRIVATE = true;
+    const WITHOUT_PRIVATE = false;
+
     /**
      * Indicates if the IDs are UUIDs.
      *

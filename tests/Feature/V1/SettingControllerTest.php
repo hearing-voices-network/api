@@ -171,4 +171,284 @@ class SettingControllerTest extends TestCase
     /*
      * Update.
      */
+
+    /** @test */
+    public function guest_cannot_update(): void
+    {
+        $response = $this->putJson('/v1/settings');
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
+    public function end_user_cannot_update(): void
+    {
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->putJson('/v1/settings');
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function admin_can_update(): void
+    {
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->putJson('/v1/settings', [
+            'frontend_content' => [
+                'home_page' => [
+                    'title' => 'frontend_content/home_page/title',
+                ],
+            ],
+            'email_content' => [
+                'admin' => [
+                    'new_contribution' => [
+                        'subject' => 'email_content/admin/new_contribution/subject',
+                        'body' => 'email_content/admin/new_contribution/body',
+                    ],
+                    'updated_contribution' => [
+                        'subject' => 'email_content/admin/updated_contribution/subject',
+                        'body' => 'email_content/admin/updated_contribution/body',
+                    ],
+                    'new_end_user' => [
+                        'subject' => 'email_content/admin/new_end_user/subject',
+                        'body' => 'email_content/admin/new_end_user/body',
+                    ],
+                    'password_reset' => [
+                        'subject' => 'email_content/admin/password_reset/subject',
+                        'body' => 'email_content/admin/password_reset/body',
+                    ],
+                ],
+                'end_user' => [
+                    'email_confirmation' => [
+                        'subject' => 'email_content/end_user/email_confirmation/subject',
+                        'body' => 'email_content/end_user/email_confirmation/body',
+                    ],
+                    'password_reset' => [
+                        'subject' => 'email_content/end_user/password_reset/subject',
+                        'body' => 'email_content/end_user/password_reset/body',
+                    ],
+                    'contribution_approved' => [
+                        'subject' => 'email_content/end_user/contribution_approved/subject',
+                        'body' => 'email_content/end_user/contribution_approved/body',
+                    ],
+                    'contribution_rejected' => [
+                        'subject' => 'email_content/end_user/contribution_rejected/subject',
+                        'body' => 'email_content/end_user/contribution_rejected/body',
+                    ],
+                ],
+            ],
+        ]);
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function structure_correct_for_update(): void
+    {
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->putJson('/v1/settings', [
+            'frontend_content' => [
+                'home_page' => [
+                    'title' => 'frontend_content/home_page/title',
+                ],
+            ],
+            'email_content' => [
+                'admin' => [
+                    'new_contribution' => [
+                        'subject' => 'email_content/admin/new_contribution/subject',
+                        'body' => 'email_content/admin/new_contribution/body',
+                    ],
+                    'updated_contribution' => [
+                        'subject' => 'email_content/admin/updated_contribution/subject',
+                        'body' => 'email_content/admin/updated_contribution/body',
+                    ],
+                    'new_end_user' => [
+                        'subject' => 'email_content/admin/new_end_user/subject',
+                        'body' => 'email_content/admin/new_end_user/body',
+                    ],
+                    'password_reset' => [
+                        'subject' => 'email_content/admin/password_reset/subject',
+                        'body' => 'email_content/admin/password_reset/body',
+                    ],
+                ],
+                'end_user' => [
+                    'email_confirmation' => [
+                        'subject' => 'email_content/end_user/email_confirmation/subject',
+                        'body' => 'email_content/end_user/email_confirmation/body',
+                    ],
+                    'password_reset' => [
+                        'subject' => 'email_content/end_user/password_reset/subject',
+                        'body' => 'email_content/end_user/password_reset/body',
+                    ],
+                    'contribution_approved' => [
+                        'subject' => 'email_content/end_user/contribution_approved/subject',
+                        'body' => 'email_content/end_user/contribution_approved/body',
+                    ],
+                    'contribution_rejected' => [
+                        'subject' => 'email_content/end_user/contribution_rejected/subject',
+                        'body' => 'email_content/end_user/contribution_rejected/body',
+                    ],
+                ],
+            ],
+        ]);
+
+        $response->assertJsonStructure([
+            'data' => [
+                'frontend_content' => [
+                    'home_page' => [
+                        'title',
+                    ],
+                ],
+                'email_content' => [
+                    'admin' => [
+                        'new_contribution' => [
+                            'subject',
+                            'body',
+                        ],
+                        'updated_contribution' => [
+                            'subject',
+                            'body',
+                        ],
+                        'new_end_user' => [
+                            'subject',
+                            'body',
+                        ],
+                        'password_reset' => [
+                            'subject',
+                            'body',
+                        ],
+                    ],
+                    'end_user' => [
+                        'email_confirmation' => [
+                            'subject',
+                            'body',
+                        ],
+                        'password_reset' => [
+                            'subject',
+                            'body',
+                        ],
+                        'contribution_approved' => [
+                            'subject',
+                            'body',
+                        ],
+                        'contribution_rejected' => [
+                            'subject',
+                            'body',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /** @test */
+    public function values_correct_for_update(): void
+    {
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->putJson('/v1/settings', [
+            'frontend_content' => [
+                'home_page' => [
+                    'title' => 'frontend_content/home_page/title',
+                ],
+            ],
+            'email_content' => [
+                'admin' => [
+                    'new_contribution' => [
+                        'subject' => 'email_content/admin/new_contribution/subject',
+                        'body' => 'email_content/admin/new_contribution/body',
+                    ],
+                    'updated_contribution' => [
+                        'subject' => 'email_content/admin/updated_contribution/subject',
+                        'body' => 'email_content/admin/updated_contribution/body',
+                    ],
+                    'new_end_user' => [
+                        'subject' => 'email_content/admin/new_end_user/subject',
+                        'body' => 'email_content/admin/new_end_user/body',
+                    ],
+                    'password_reset' => [
+                        'subject' => 'email_content/admin/password_reset/subject',
+                        'body' => 'email_content/admin/password_reset/body',
+                    ],
+                ],
+                'end_user' => [
+                    'email_confirmation' => [
+                        'subject' => 'email_content/end_user/email_confirmation/subject',
+                        'body' => 'email_content/end_user/email_confirmation/body',
+                    ],
+                    'password_reset' => [
+                        'subject' => 'email_content/end_user/password_reset/subject',
+                        'body' => 'email_content/end_user/password_reset/body',
+                    ],
+                    'contribution_approved' => [
+                        'subject' => 'email_content/end_user/contribution_approved/subject',
+                        'body' => 'email_content/end_user/contribution_approved/body',
+                    ],
+                    'contribution_rejected' => [
+                        'subject' => 'email_content/end_user/contribution_rejected/subject',
+                        'body' => 'email_content/end_user/contribution_rejected/body',
+                    ],
+                ],
+            ],
+        ]);
+
+        $response->assertJson([
+            'data' => [
+                'frontend_content' => [
+                    'home_page' => [
+                        'title' => 'frontend_content/home_page/title',
+                    ],
+                ],
+                'email_content' => [
+                    'admin' => [
+                        'new_contribution' => [
+                            'subject' => 'email_content/admin/new_contribution/subject',
+                            'body' => 'email_content/admin/new_contribution/body',
+                        ],
+                        'updated_contribution' => [
+                            'subject' => 'email_content/admin/updated_contribution/subject',
+                            'body' => 'email_content/admin/updated_contribution/body',
+                        ],
+                        'new_end_user' => [
+                            'subject' => 'email_content/admin/new_end_user/subject',
+                            'body' => 'email_content/admin/new_end_user/body',
+                        ],
+                        'password_reset' => [
+                            'subject' => 'email_content/admin/password_reset/subject',
+                            'body' => 'email_content/admin/password_reset/body',
+                        ],
+                    ],
+                    'end_user' => [
+                        'email_confirmation' => [
+                            'subject' => 'email_content/end_user/email_confirmation/subject',
+                            'body' => 'email_content/end_user/email_confirmation/body',
+                        ],
+                        'password_reset' => [
+                            'subject' => 'email_content/end_user/password_reset/subject',
+                            'body' => 'email_content/end_user/password_reset/body',
+                        ],
+                        'contribution_approved' => [
+                            'subject' => 'email_content/end_user/contribution_approved/subject',
+                            'body' => 'email_content/end_user/contribution_approved/body',
+                        ],
+                        'contribution_rejected' => [
+                            'subject' => 'email_content/end_user/contribution_rejected/subject',
+                            'body' => 'email_content/end_user/contribution_rejected/body',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }
