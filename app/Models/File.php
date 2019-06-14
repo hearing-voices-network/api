@@ -20,6 +20,18 @@ class File extends Model implements Responsable
     const MIME_TYPE_TXT = 'text/plain';
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_private' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
+    /**
      * Create an HTTP response that represents the object.
      *
      * @param \Illuminate\Http\Request $request
@@ -96,5 +108,21 @@ class File extends Model implements Responsable
     public function deleteFromDisk(): void
     {
         Storage::cloud()->delete($this->path());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate(): bool
+    {
+        return $this->is_private;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublic(): bool
+    {
+        return !$this->isPrivate();
     }
 }

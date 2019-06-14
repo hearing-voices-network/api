@@ -23,4 +23,24 @@ class FilePolicy
     {
         return $user->isAdmin();
     }
+
+    /**
+     * Determine whether the user can download the file.
+     *
+     * @param \App\Models\User|null $user
+     * @param \App\Models\File $file
+     * @return bool
+     */
+    public function download(?User $user, File $file): bool
+    {
+        if ($file->isPublic()) {
+            return true;
+        }
+
+        if (optional($user)->isAdmin()) {
+            return true;
+        }
+
+        return false;
+    }
 }
