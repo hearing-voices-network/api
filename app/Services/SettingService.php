@@ -22,16 +22,16 @@ class SettingService
         /** @var \App\Models\Setting $emailContent */
         $emailContent = Setting::findOrFail('email_content');
 
-        $contentValue = function (string $key, Setting $content) use ($data) {
-            return Arr::get($data, $key, Arr::get($content->value, $key));
+        $contentValue = function (string $setting, string $key, Setting $content) use ($data) {
+            return Arr::get($data, "{$setting}.{$key}") ?? Arr::get($content->value, $key);
         };
 
         $frontendContentValue = function (string $key) use ($contentValue, $frontendContent) {
-            return $contentValue("frontend_content.{$key}", $frontendContent);
+            return $contentValue('frontend_content', $key, $frontendContent);
         };
 
         $emailContentValue = function (string $key) use ($contentValue, $emailContent) {
-            return $contentValue("email_content.{$key}", $emailContent);
+            return $contentValue('email_content', $key, $emailContent);
         };
 
         $frontendContent->value = [
