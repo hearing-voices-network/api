@@ -5,7 +5,8 @@
       "home_page": {
         "title": "string"
       }
-    }
+    },
+    "is_private": false
   },
   {
     "key": "email_content",
@@ -46,6 +47,7 @@
           "body": "string"
         }
       }
-    }
+    },
+    "is_private": true
   }
 ]

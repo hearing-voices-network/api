@@ -9,6 +9,7 @@ use App\Docs\Schemas\Setting\SettingsSchema;
 use App\Docs\Tags\SettingsTag;
 use App\Docs\Utils;
 use App\Models\Admin;
+use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
@@ -26,9 +27,13 @@ class IndexSettingsOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('List all settings')
             ->description(
-                Utils::operationDescription([Admin::class])
+                Utils::operationDescription(
+                    ['Public', Admin::class, EndUser::class],
+                    'Private settings will only be return for admins.'
+                )
             )
             ->tags(SettingsTag::create())
+            ->noSecurity()
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(

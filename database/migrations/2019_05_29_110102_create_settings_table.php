@@ -17,6 +17,7 @@ class CreateSettingsTable extends Migration
         Schema::create('settings', function (Blueprint $table): void {
             $table->string('key');
             $table->json('value');
+            $table->boolean('is_private');
         });
 
         $settingsPath = realpath(dirname(__DIR__)) . '/storage/settings.json';
