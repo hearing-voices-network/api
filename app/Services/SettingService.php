@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\Setting;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 
 class SettingService
 {
@@ -21,10 +22,21 @@ class SettingService
         /** @var \App\Models\Setting $emailContent */
         $emailContent = Setting::findOrFail('email_content');
 
+        $contentValue = function (string $key, Setting $content) use ($data) {
+            return Arr::get($data, $key, Arr::get($content->value, $key));
+        };
+
+        $frontendContentValue = function (string $key) use ($contentValue, $frontendContent) {
+            return $contentValue("frontend_content.{$key}", $frontendContent);
+        };
+
+        $emailContentValue = function (string $key) use ($contentValue, $emailContent) {
+            return $contentValue("email_content.{$key}", $emailContent);
+        };
+
         $frontendContent->value = [
             'home_page' => [
-                'title' => $data['frontend_content']['home_page']['title']
-                    ?? $frontendContent->value['home_page']['title'],
+                'title' => $frontendContentValue('home_page.title'),
             ],
         ];
         $frontendContent->save();
@@ -32,54 +44,38 @@ class SettingService
         $emailContent->value = [
             'admin' => [
                 'new_contribution' => [
-                    'subject' => $data['email_content']['admin']['new_contribution']['subject']
-                        ?? $emailContent->value['admin']['new_contribution']['subject'],
-                    'body' => $data['email_content']['admin']['new_contribution']['body']
-                        ?? $emailContent->value['admin']['new_contribution']['body'],
+                    'subject' => $emailContentValue('admin.new_contribution.subject'),
+                    'body' => $emailContentValue('admin.new_contribution.body'),
                 ],
                 'updated_contribution' => [
-                    'subject' => $data['email_content']['admin']['updated_contribution']['subject']
-                        ?? $emailContent->value['admin']['updated_contribution']['subject'],
-                    'body' => $data['email_content']['admin']['updated_contribution']['body']
-                        ?? $emailContent->value['admin']['updated_contribution']['body'],
+                    'subject' => $emailContentValue('admin.updated_contribution.subject'),
+                    'body' => $emailContentValue('admin.updated_contribution.body'),
                 ],
                 'new_end_user' => [
-                    'subject' => $data['email_content']['admin']['new_end_user']['subject']
-                        ?? $emailContent->value['admin']['new_end_user']['subject'],
-                    'body' => $data['email_content']['admin']['new_end_user']['body']
-                        ?? $emailContent->value['admin']['new_end_user']['body'],
+                    'subject' => $emailContentValue('admin.new_end_user.subject'),
+                    'body' => $emailContentValue('admin.new_end_user.body'),
                 ],
                 'password_reset' => [
-                    'subject' => $data['email_content']['admin']['password_reset']['subject']
-                        ?? $emailContent->value['admin']['password_reset']['subject'],
-                    'body' => $data['email_content']['admin']['password_reset']['body']
-                        ?? $emailContent->value['admin']['password_reset']['body'],
+                    'subject' => $emailContentValue('admin.password_reset.subject'),
+                    'body' => $emailContentValue('admin.password_reset.body'),
                 ],
             ],
             'end_user' => [
                 'email_confirmation' => [
-                    'subject' => $data['email_content']['end_user']['email_confirmation']['subject']
-                        ?? $emailContent->value['end_user']['email_confirmation']['subject'],
-                    'body' => $data['email_content']['end_user']['email_confirmation']['body']
-                        ?? $emailContent->value['end_user']['email_confirmation']['body'],
+                    'subject' => $emailContentValue('end_user.email_confirmation.subject'),
+                    'body' => $emailContentValue('end_user.email_confirmation.body'),
                 ],
                 'password_reset' => [
-                    'subject' => $data['email_content']['end_user']['password_reset']['subject']
-                        ?? $emailContent->value['end_user']['password_reset']['subject'],
-                    'body' => $data['email_content']['end_user']['password_reset']['body']
-                        ?? $emailContent->value['end_user']['password_reset']['body'],
+                    'subject' => $emailContentValue('end_user.password_reset.subject'),
+                    'body' => $emailContentValue('end_user.password_reset.body'),
                 ],
                 'contribution_approved' => [
-                    'subject' => $data['email_content']['end_user']['contribution_approved']['subject']
-                        ?? $emailContent->value['end_user']['contribution_approved']['subject'],
-                    'body' => $data['email_content']['end_user']['contribution_approved']['body']
-                        ?? $emailContent->value['end_user']['contribution_approved']['body'],
+                    'subject' => $emailContentValue('end_user.contribution_approved.subject'),
+                    'body' => $emailContentValue('end_user.contribution_approved.body'),
                 ],
                 'contribution_rejected' => [
-                    'subject' => $data['email_content']['end_user']['contribution_rejected']['subject']
-                        ?? $emailContent->value['end_user']['contribution_rejected']['subject'],
-                    'body' => $data['email_content']['end_user']['contribution_rejected']['body']
-                        ?? $emailContent->value['end_user']['contribution_rejected']['body'],
+                    'subject' => $emailContentValue('end_user.contribution_rejected.subject'),
+                    'body' => $emailContentValue('end_user.contribution_rejected.body'),
                 ],
             ],
         ];
