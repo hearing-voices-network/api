@@ -44,4 +44,7 @@ Route::prefix('v1')->group(function (): void {
         ->name('settings.index');
     Route::put('settings', 'SettingController@update')
         ->name('settings.update');
+
+    Route::apiResource('tags', 'TagController')
+        ->only('index', 'store', 'show', 'destroy');
 });
