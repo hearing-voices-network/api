@@ -7,6 +7,7 @@ namespace App\Docs;
 use GoldSpecDigital\ObjectOrientedOAS\OpenApi as BaseOpenApi;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class OpenApi extends BaseOpenApi implements Responsable
 {
@@ -65,6 +66,9 @@ class OpenApi extends BaseOpenApi implements Responsable
      */
     public function toResponse($request): JsonResponse
     {
-        return response()->json($this->toArray());
+        return response()->json($this->toArray(), Response::HTTP_OK, [
+            'Content-Disposition' => 'inline; filename="openapi.json"',
+            'Content-Type' => 'application/json; charset=utf-8',
+        ]);
     }
 }
