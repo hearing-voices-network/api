@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Admin;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -28,10 +27,10 @@ class TagPolicy
      * Determine whether the user can view the tag.
      *
      * @param \App\Models\User|null $user
-     * @param \App\Models\Admin $admin
+     * @param \App\Models\Tag $tag
      * @return bool
      */
-    public function view(?User $user, Admin $admin): bool
+    public function view(?User $user, Tag $tag): bool
     {
         return true;
     }

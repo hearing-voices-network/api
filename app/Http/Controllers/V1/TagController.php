@@ -63,4 +63,13 @@ class TagController extends Controller
 
         return new TagResource($tag);
     }
+
+    /**
+     * @param \App\Models\Tag $tag
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     */
+    public function show(Tag $tag): JsonResource
+    {
+        return new TagResource($tag);
+    }
 }

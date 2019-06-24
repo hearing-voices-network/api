@@ -229,6 +229,85 @@ class TagControllerTest extends TestCase
      * Show.
      */
 
+    /** @test */
+    public function guest_can_show(): void
+    {
+        $tag = factory(Tag::class)->create();
+
+        $response = $this->getJson("/v1/tags/{$tag->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function end_user_can_show(): void
+    {
+        $tag = factory(Tag::class)->create();
+
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/tags/{$tag->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function admin_can_show(): void
+    {
+        $tag = factory(Tag::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson("/v1/tags/{$tag->id}");
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function structure_correct_for_show(): void
+    {
+        $tag = factory(Tag::class)->create();
+
+        $response = $this->getJson("/v1/tags/{$tag->id}");
+
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'parent_tag_id',
+                'name',
+                'public_contributions',
+                'created_at',
+                'updated_at',
+                'deleted_at',
+            ],
+        ]);
+    }
+
+    /** @test */
+    public function values_correct_for_show(): void
+    {
+        /** @var \App\Models\Tag $tag */
+        $tag = factory(Tag::class)->create();
+
+        $response = $this->getJson("/v1/tags/{$tag->id}");
+
+        $response->assertJson([
+            'data' => [
+                'id' => $tag->id,
+                'parent_tag_id' => $tag->parent_tag_id,
+                'name' => $tag->name,
+                'public_contributions' => $tag->publicContributions()->count(),
+                'created_at' => $tag->created_at->toIso8601String(),
+                'updated_at' => $tag->updated_at->toIso8601String(),
+                'deleted_at' => null,
+            ],
+        ]);
+    }
+
     /*
      * Destroy.
      */
