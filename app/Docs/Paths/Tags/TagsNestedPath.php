@@ -6,6 +6,7 @@ namespace App\Docs\Paths\Tags;
 
 use App\Docs\Operations\Tags\DestroyTagOperation;
 use App\Docs\Operations\Tags\ShowTagOperation;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
@@ -17,7 +18,7 @@ class TagsNestedPath extends PathItem
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public static function create(string $objectId = null): PathItem
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->route('/tags/{tag}')

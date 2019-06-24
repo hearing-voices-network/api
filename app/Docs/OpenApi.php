@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs;
 
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\OpenApi as BaseOpenApi;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\JsonResponse;
@@ -16,7 +17,7 @@ class OpenApi extends BaseOpenApi implements Responsable
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      * @return \GoldSpecDigital\ObjectOrientedOAS\OpenApi
      */
-    public static function create(string $objectId = null): BaseOpenApi
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->openapi(static::OPENAPI_3_0_2)

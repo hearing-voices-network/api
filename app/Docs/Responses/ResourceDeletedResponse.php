@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Responses;
 
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
@@ -15,7 +16,7 @@ class ResourceDeletedResponse extends Response
      * @param string|null $resource
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Response
      */
-    public static function create(string $objectId = null, string $resource = null): Response
+    public static function create(string $objectId = null, string $resource = null): BaseObject
     {
         return parent::create($objectId)
             ->statusCode(200)

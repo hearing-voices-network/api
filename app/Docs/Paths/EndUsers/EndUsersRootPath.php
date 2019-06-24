@@ -6,6 +6,7 @@ namespace App\Docs\Paths\EndUsers;
 
 use App\Docs\Operations\EndUser\IndexEndUserOperation;
 use App\Docs\Operations\EndUser\StoreEndUserOperation;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 
 class EndUsersRootPath extends PathItem
@@ -15,7 +16,7 @@ class EndUsersRootPath extends PathItem
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public static function create(string $objectId = null): PathItem
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->route('/end-users')

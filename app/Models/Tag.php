@@ -13,4 +13,12 @@ class Tag extends Model
     use Relationships\TagRelationships;
     use Scopes\TagScopes;
     use SoftDeletes;
+
+    /**
+     * @return bool
+     */
+    public function isTopLevel(): bool
+    {
+        return $this->parent_tag_id === null;
+    }
 }

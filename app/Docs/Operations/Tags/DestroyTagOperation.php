@@ -8,6 +8,7 @@ use App\Docs\Responses\ResourceDeletedResponse;
 use App\Docs\Tags\TagsTag;
 use App\Docs\Utils;
 use App\Models\Admin;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
@@ -19,7 +20,7 @@ class DestroyTagOperation extends Operation
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public static function create(string $objectId = null): Operation
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->action(static::ACTION_DELETE)

@@ -13,6 +13,7 @@ use App\Docs\Schemas\PaginationSchema;
 use App\Docs\Tags\AuditsTag;
 use App\Docs\Utils;
 use App\Models\Admin;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
@@ -26,7 +27,7 @@ class IndexAuditOperation extends Operation
      * @throws \ReflectionException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Operation
      */
-    public static function create(string $objectId = null): Operation
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->action(static::ACTION_GET)
