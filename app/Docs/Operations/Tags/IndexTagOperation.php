@@ -9,6 +9,7 @@ use App\Docs\Schemas\Tag\TagSchema;
 use App\Docs\Tags\TagsTag;
 use App\Docs\Utils;
 use App\Models\Admin;
+use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
@@ -28,11 +29,12 @@ class IndexTagOperation extends Operation
             ->summary('List all tags')
             ->description(
                 Utils::operationDescription(
-                    [Admin::class],
+                    ['Public', Admin::class, EndUser::class],
                     'This endpoint does not return a paginated set, but instead all tags at once.'
                 )
             )
             ->tags(TagsTag::create())
+            ->noSecurity()
             ->parameters(
                 SortParameter::create(null, [], 'name')
             )

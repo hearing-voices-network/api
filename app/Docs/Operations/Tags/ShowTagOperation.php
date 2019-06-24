@@ -9,6 +9,7 @@ use App\Docs\Schemas\Tag\TagSchema;
 use App\Docs\Tags\TagsTag;
 use App\Docs\Utils;
 use App\Models\Admin;
+use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
@@ -26,9 +27,10 @@ class ShowTagOperation extends Operation
             ->action(static::ACTION_GET)
             ->summary('Get a specific tag')
             ->description(
-                Utils::operationDescription([Admin::class])
+                Utils::operationDescription(['Public', Admin::class, EndUser::class])
             )
             ->tags(TagsTag::create())
+            ->noSecurity()
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(
