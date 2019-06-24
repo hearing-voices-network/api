@@ -40,9 +40,9 @@ class TagResource extends JsonResource
     protected function getPublicContributionsCount(): int
     {
         return $this->public_contributions_count ?? (int)$this->whenLoaded(
-                'publicContributions',
-                count($this->resource->publicContributions),
-                $this->resource->publicContributions()->count()
-            );
+            'publicContributions',
+            count($this->resource->publicContributions),
+            $this->resource->publicContributions()->count()
+        );
     }
 }
