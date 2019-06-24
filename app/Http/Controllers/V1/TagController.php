@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tag\DestroyTagRequest;
 use App\Http\Requests\Tag\StoreTagRequest;
 use App\Http\Resources\TagResource;
+use App\Http\Responses\ResourceDeletedResponse;
 use App\Models\Tag;
 use App\Services\TagService;
 use App\Support\Pagination;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\DB;
 
 class TagController extends Controller
 {
@@ -71,5 +74,21 @@ class TagController extends Controller
     public function show(Tag $tag): JsonResource
     {
         return new TagResource($tag);
+    }
+
+    /**
+     * @param \App\Http\Requests\Tag\DestroyTagRequest $request
+     * @param \App\Models\Tag $tag
+     * @return \App\Http\Responses\ResourceDeletedResponse
+     */
+    public function destroy(DestroyTagRequest $request, Tag $tag): ResourceDeletedResponse
+    {
+        DB::transaction(function () use ($request, $tag): void {
+            $request->type === DestroyTagRequest::TYPE_FORCE_DELETE
+                ? $this->tagService->forceDelete($tag)
+                : $this->tagService->softDelete($tag);
+        });
+
+        return new ResourceDeletedResponse('tag');
     }
 }

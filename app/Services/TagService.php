@@ -19,4 +19,26 @@ class TagService
             'name' => $data['name'],
         ]);
     }
+
+    /**
+     * @param \App\Models\Tag $tag
+     * @throws \Exception
+     * @return \App\Models\Tag
+     */
+    public function softDelete(Tag $tag): Tag
+    {
+        $tag->delete();
+
+        return $tag;
+    }
+
+    /**
+     * @param \App\Models\Tag $tag
+     * @throws \Exception
+     */
+    public function forceDelete(Tag $tag): void
+    {
+        $tag->contributions()->sync([]);
+        $tag->forceDelete();
+    }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\V1;
 
 use App\Models\Admin;
+use App\Models\Contribution;
 use App\Models\EndUser;
 use App\Models\Tag;
 use Illuminate\Http\Response;
@@ -311,4 +312,92 @@ class TagControllerTest extends TestCase
     /*
      * Destroy.
      */
+
+    /** @test */
+    public function guest_cannot_destroy(): void
+    {
+        $tag = factory(Tag::class)->create();
+
+        $response = $this->deleteJson("/v1/tags/{$tag->id}", ['type' => 'force_delete']);
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
+
+    /** @test */
+    public function end_user_cannot_destroy(): void
+    {
+        $tag = factory(Tag::class)->create();
+
+        Passport::actingAs(
+            factory(EndUser::class)->create()->user
+        );
+
+        $response = $this->deleteJson("/v1/tags/{$tag->id}", ['type' => 'force_delete']);
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function admin_can_destroy(): void
+    {
+        $tag = factory(Tag::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->deleteJson("/v1/tags/{$tag->id}", ['type' => 'force_delete']);
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /** @test */
+    public function database_records_and_relationships_deleted_for_force_destroy(): void
+    {
+        /** @var \App\Models\Tag $tag */
+        $tag = factory(Tag::class)->create();
+
+        /** @var \App\Models\Contribution $contribution */
+        $contribution = factory(Contribution::class)->create();
+
+        $contribution->tags()->sync([$tag->id]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $this->deleteJson("/v1/tags/{$tag->id}", ['type' => 'force_delete']);
+
+        $this->assertDatabaseMissing('tags', ['id' => $tag->id]);
+        $this->assertDatabaseMissing('contribution_tag', [
+            'contribution_id' => $contribution->id,
+            'tag_id' => $tag->id,
+        ]);
+        $this->assertDatabaseHas('contributions', ['id' => $contribution->id]);
+    }
+
+    /** @test */
+    public function database_records_and_relationships_not_deleted_for_soft_destroy(): void
+    {
+        /** @var \App\Models\Tag $tag */
+        $tag = factory(Tag::class)->create();
+
+        /** @var \App\Models\Contribution $contribution */
+        $contribution = factory(Contribution::class)->create();
+
+        $contribution->tags()->sync([$tag->id]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $this->deleteJson("/v1/tags/{$tag->id}", ['type' => 'soft_delete']);
+
+        $this->assertSoftDeleted('tags', ['id' => $tag->id]);
+        $this->assertDatabaseHas('contribution_tag', [
+            'contribution_id' => $contribution->id,
+            'tag_id' => $tag->id,
+        ]);
+        $this->assertDatabaseHas('contributions', ['id' => $contribution->id]);
+    }
 }
