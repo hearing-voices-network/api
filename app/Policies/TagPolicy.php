@@ -37,13 +37,13 @@ class TagPolicy
     }
 
     /**
-     * Determine whether the user can update the tag.
+     * Determine whether the user can create the tag.
      *
      * @param \App\Models\User $user
-     * @param \App\Models\Tag $tag
+     *
      * @return bool
      */
-    public function update(User $user, Tag $tag): bool
+    public function create(User $user): bool
     {
         return $user->isAdmin();
     }
