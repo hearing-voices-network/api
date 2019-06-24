@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Parameters;
 
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
@@ -19,7 +20,7 @@ class SortParameter extends Parameter
         string $objectId = null,
         array $fields = [],
         $default = null
-    ): Parameter {
+    ): BaseObject {
         $fields = empty($fields) ? '`n/a`' : '`' . implode($fields, '`,`') . '`';
 
         return parent::create($objectId)

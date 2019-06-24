@@ -6,6 +6,7 @@ namespace App\Docs\Schemas\Audit;
 
 use App\Models\Audit;
 use App\Support\Enum;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class AuditSchema extends Schema
@@ -15,7 +16,7 @@ class AuditSchema extends Schema
      * @throws \ReflectionException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
-    public static function create(string $objectId = null): Schema
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->type(static::TYPE_OBJECT)

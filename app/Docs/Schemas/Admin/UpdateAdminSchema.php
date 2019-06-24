@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Schemas\Admin;
 
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class UpdateAdminSchema extends Schema
@@ -12,7 +13,7 @@ class UpdateAdminSchema extends Schema
      * @param string|null $objectId
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
-    public static function create(string $objectId = null): Schema
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->type(static::TYPE_OBJECT)

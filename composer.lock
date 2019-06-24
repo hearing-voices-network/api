@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d1fc7a264f02420ca5307442a2130979",
+    "content-hash": "c0bc9aa7e63e3f00020df0af140529f0",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -615,16 +615,16 @@
         },
         {
             "name": "goldspecdigital/oooas",
-            "version": "v2.1.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goldspecdigital/oooas.git",
-                "reference": "473ae1ad108fd7e2dbbbbc5ec677f8b24cf9077a"
+                "reference": "0936344dc1f5dd6961f7b9376020a73fccd2944d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goldspecdigital/oooas/zipball/473ae1ad108fd7e2dbbbbc5ec677f8b24cf9077a",
-                "reference": "473ae1ad108fd7e2dbbbbc5ec677f8b24cf9077a",
+                "url": "https://api.github.com/repos/goldspecdigital/oooas/zipball/0936344dc1f5dd6961f7b9376020a73fccd2944d",
+                "reference": "0936344dc1f5dd6961f7b9376020a73fccd2944d",
                 "shasum": ""
             },
             "require": {
@@ -638,8 +638,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "GoldSpecDigital\\ObjectOrientedOAS\\": "src/",
-                    "GoldSpecDigital\\ObjectOrientedOAS\\Tests\\": "tests/"
+                    "GoldSpecDigital\\ObjectOrientedOAS\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -652,7 +651,7 @@
                     "email": "matt@goldspecdigital.com"
                 }
             ],
-            "description": "An object oriented implementation for generating OpenAPI docs.",
+            "description": "An object oriented approach to generating OpenAPI specs, implemented in PHP.",
             "homepage": "https://github.com/goldspecdigital/oooas",
             "keywords": [
                 "oas",
@@ -660,7 +659,7 @@
                 "php",
                 "swagger"
             ],
-            "time": "2019-05-21T15:38:58+00:00"
+            "time": "2019-06-24T09:07:19+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -6242,7 +6241,8 @@
     "platform": {
         "php": "^7.3.0",
         "ext-json": "*",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-zip": "*"
     },
     "platform-dev": []
 }

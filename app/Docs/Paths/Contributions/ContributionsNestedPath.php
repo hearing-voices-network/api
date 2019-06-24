@@ -7,6 +7,7 @@ namespace App\Docs\Paths\Contributions;
 use App\Docs\Operations\Contributions\DestroyContributionOperation;
 use App\Docs\Operations\Contributions\ShowContributionOperation;
 use App\Docs\Operations\Contributions\UpdateContributionOperation;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
@@ -16,9 +17,10 @@ class ContributionsNestedPath extends PathItem
     /**
      * @param string|null $objectId
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
+     * @throws \ReflectionException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public static function create(string $objectId = null): PathItem
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->route('/contributions/{contribution}')

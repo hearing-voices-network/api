@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Docs\Schemas\Contribution;
 
 use App\Models\Contribution;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class StoreContributionSchema extends Schema
@@ -14,7 +15,7 @@ class StoreContributionSchema extends Schema
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
-    public static function create(string $objectId = null): Schema
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->type(static::TYPE_OBJECT)

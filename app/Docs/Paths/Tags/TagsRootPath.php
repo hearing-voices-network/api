@@ -6,6 +6,7 @@ namespace App\Docs\Paths\Tags;
 
 use App\Docs\Operations\Tags\IndexTagOperation;
 use App\Docs\Operations\Tags\StoreTagOperation;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem;
 
 class TagsRootPath extends PathItem
@@ -15,7 +16,7 @@ class TagsRootPath extends PathItem
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\PathItem
      */
-    public static function create(string $objectId = null): PathItem
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->route('/tags')

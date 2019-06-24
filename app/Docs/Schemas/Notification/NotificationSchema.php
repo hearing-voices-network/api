@@ -6,6 +6,7 @@ namespace App\Docs\Schemas\Notification;
 
 use App\Models\Notification;
 use App\Support\Enum;
+use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 
 class NotificationSchema extends Schema
@@ -15,7 +16,7 @@ class NotificationSchema extends Schema
      * @throws \ReflectionException
      * @return \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema
      */
-    public static function create(string $objectId = null): Schema
+    public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
             ->type(static::TYPE_OBJECT)
