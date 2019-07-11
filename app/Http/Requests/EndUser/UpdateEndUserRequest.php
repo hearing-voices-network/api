@@ -6,6 +6,7 @@ namespace App\Http\Requests\EndUser;
 
 use App\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Validation\Rule;
 
 class UpdateEndUserRequest extends FormRequest
@@ -24,8 +25,8 @@ class UpdateEndUserRequest extends FormRequest
             'birth_year' => [
                 'bail',
                 'integer',
-                Rule::min(today()->year - config('connecting_voices.age_requirement.max')),
-                Rule::max(today()->year - config('connecting_voices.age_requirement.min')),
+                Rule::min(Date::today()->year - config('connecting_voices.age_requirement.max')),
+                Rule::max(Date::today()->year - config('connecting_voices.age_requirement.min')),
             ],
             'gender' => ['bail', 'string', 'max:255'],
             'ethnicity' => ['bail', 'string', 'max:255'],
