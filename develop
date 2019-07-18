@@ -8,36 +8,43 @@ export DB_NAME=${DB_NAME:-connecting_voices}
 export DB_USER=${DB_USER:-connecting_voices}
 export DB_PASS=${DB_PASS:-secret}
 
-COMPOSE="docker-compose -f docker-compose.yml"
+# Disable pseudo-TTY allocation for CI. The -T flag removes interaction.
+TTY=""
+
+# Travis CI provides a CI environment variable which can be used to check if
+# this is running in a CI environment.
+if [[ ${CI:-false} == "true" ]]; then
+    TTY="-T"
+fi
 
 # Pass arguments to docker-compose, or default to docker-compose ps.
 if [[ $# -gt 0  ]]; then
     case "$1" in
 
-        a|art|artisan )
+        art|artisan )
             shift 1
-            ${COMPOSE} run --rm \
+            docker-compose run --rm ${TTY} \
                 api \
                 php artisan "$@"
             ;;
 
-        c|com|composer )
+        composer )
             shift 1
-            ${COMPOSE} run --rm \
+            docker-compose run --rm ${TTY} \
                 api \
                 composer "$@"
             ;;
 
-        n|npm )
+        npm )
             shift 1
-            ${COMPOSE} run --rm \
+            docker-compose run --rm ${TTY} \
                 node \
                 npm "$@"
             ;;
 
-        * ) ${COMPOSE} "$@"; ;;
+        * ) docker-compose "$@"; ;;
 
     esac
 else
-    ${COMPOSE} ps
+    docker-compose ps
 fi
