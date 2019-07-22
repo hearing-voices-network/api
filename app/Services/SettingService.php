@@ -82,7 +82,8 @@ class SettingService
      * @param string $nestedKey
      * @return string
      */
-    protected function contentValue(array $data, string $settingKey, string $nestedKey): string {
+    protected function contentValue(array $data, string $settingKey, string $nestedKey): string
+    {
         $setting = Setting::findOrFail($settingKey);
 
         return Arr::get($data, "{$settingKey}.{$nestedKey}") ?? Arr::get($setting->value, $nestedKey);
