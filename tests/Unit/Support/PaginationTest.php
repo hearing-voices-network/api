@@ -10,7 +10,7 @@ use Tests\TestCase;
 class PaginationTest extends TestCase
 {
     /** @test */
-    public function ten_returns_10(): void
+    public function ten_returns_ten(): void
     {
         $pagination = new Pagination();
 
