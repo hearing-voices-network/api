@@ -22,65 +22,89 @@ class SettingService
         /** @var \App\Models\Setting $emailContent */
         $emailContent = Setting::findOrFail('email_content');
 
-        $contentValue = function (string $setting, string $key, Setting $content) use ($data) {
-            return Arr::get($data, "{$setting}.{$key}") ?? Arr::get($content->value, $key);
-        };
-
-        $frontendContentValue = function (string $key) use ($contentValue, $frontendContent) {
-            return $contentValue('frontend_content', $key, $frontendContent);
-        };
-
-        $emailContentValue = function (string $key) use ($contentValue, $emailContent) {
-            return $contentValue('email_content', $key, $emailContent);
-        };
-
+        // Update the frontend content settings.
         $frontendContent->value = [
             'home_page' => [
-                'title' => $frontendContentValue('home_page.title'),
+                'title' => $this->frontendContentValue($data, 'home_page.title'),
             ],
         ];
         $frontendContent->save();
 
+        // Update the email content settings.
         $emailContent->value = [
             'admin' => [
                 'new_contribution' => [
-                    'subject' => $emailContentValue('admin.new_contribution.subject'),
-                    'body' => $emailContentValue('admin.new_contribution.body'),
+                    'subject' => $this->emailContentValue($data, 'admin.new_contribution.subject'),
+                    'body' => $this->emailContentValue($data, 'admin.new_contribution.body'),
                 ],
                 'updated_contribution' => [
-                    'subject' => $emailContentValue('admin.updated_contribution.subject'),
-                    'body' => $emailContentValue('admin.updated_contribution.body'),
+                    'subject' => $this->emailContentValue($data, 'admin.updated_contribution.subject'),
+                    'body' => $this->emailContentValue($data, 'admin.updated_contribution.body'),
                 ],
                 'new_end_user' => [
-                    'subject' => $emailContentValue('admin.new_end_user.subject'),
-                    'body' => $emailContentValue('admin.new_end_user.body'),
+                    'subject' => $this->emailContentValue($data, 'admin.new_end_user.subject'),
+                    'body' => $this->emailContentValue($data, 'admin.new_end_user.body'),
                 ],
                 'password_reset' => [
-                    'subject' => $emailContentValue('admin.password_reset.subject'),
-                    'body' => $emailContentValue('admin.password_reset.body'),
+                    'subject' => $this->emailContentValue($data, 'admin.password_reset.subject'),
+                    'body' => $this->emailContentValue($data, 'admin.password_reset.body'),
                 ],
             ],
             'end_user' => [
                 'email_confirmation' => [
-                    'subject' => $emailContentValue('end_user.email_confirmation.subject'),
-                    'body' => $emailContentValue('end_user.email_confirmation.body'),
+                    'subject' => $this->emailContentValue($data, 'end_user.email_confirmation.subject'),
+                    'body' => $this->emailContentValue($data, 'end_user.email_confirmation.body'),
                 ],
                 'password_reset' => [
-                    'subject' => $emailContentValue('end_user.password_reset.subject'),
-                    'body' => $emailContentValue('end_user.password_reset.body'),
+                    'subject' => $this->emailContentValue($data, 'end_user.password_reset.subject'),
+                    'body' => $this->emailContentValue($data, 'end_user.password_reset.body'),
                 ],
                 'contribution_approved' => [
-                    'subject' => $emailContentValue('end_user.contribution_approved.subject'),
-                    'body' => $emailContentValue('end_user.contribution_approved.body'),
+                    'subject' => $this->emailContentValue($data, 'end_user.contribution_approved.subject'),
+                    'body' => $this->emailContentValue($data, 'end_user.contribution_approved.body'),
                 ],
                 'contribution_rejected' => [
-                    'subject' => $emailContentValue('end_user.contribution_rejected.subject'),
-                    'body' => $emailContentValue('end_user.contribution_rejected.body'),
+                    'subject' => $this->emailContentValue($data, 'end_user.contribution_rejected.subject'),
+                    'body' => $this->emailContentValue($data, 'end_user.contribution_rejected.body'),
                 ],
             ],
         ];
         $emailContent->save();
 
         return Setting::all();
+    }
+
+    /**
+     * Helper function for getting the value of content settings.
+     *
+     * @param array $data
+     * @param string $settingKey
+     * @param string $nestedKey
+     * @return string
+     */
+    protected function contentValue(array $data, string $settingKey, string $nestedKey): string {
+        $setting = Setting::findOrFail($settingKey);
+
+        return Arr::get($data, "{$settingKey}.{$nestedKey}") ?? Arr::get($setting->value, $nestedKey);
+    }
+
+    /**
+     * @param array $data
+     * @param string $key
+     * @return string
+     */
+    protected function frontendContentValue(array $data, string $key): string
+    {
+        return $this->contentValue($data, 'frontend_content', $key);
+    }
+
+    /**
+     * @param array $data
+     * @param string $key
+     * @return string
+     */
+    protected function emailContentValue(array $data, string $key): string
+    {
+        return $this->contentValue($data, 'email_content', $key);
     }
 }
