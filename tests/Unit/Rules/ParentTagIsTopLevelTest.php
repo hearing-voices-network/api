@@ -11,7 +11,7 @@ use Tests\TestCase;
 class ParentTagIsTopLevelTest extends TestCase
 {
     /** @test */
-    public function it_works_for_top_level_tag(): void
+    public function it_passes_for_top_level_tag(): void
     {
         $tag = factory(Tag::class)->create();
         $rule = new ParentTagIsTopLevel();
@@ -22,7 +22,7 @@ class ParentTagIsTopLevelTest extends TestCase
     }
 
     /** @test */
-    public function it_works_for_child_level_tag(): void
+    public function it_fails_for_child_level_tag(): void
     {
         $tag = factory(Tag::class)->create([
             'parent_tag_id' => factory(Tag::class)->create()->id,
