@@ -19,7 +19,7 @@ ENV LC_ALL en_GB.UTF-8
 RUN apt-add-repository -y ppa:ondrej/php \
     && apt-get update \
     && apt-get install -y php7.3-fpm php7.3-cli php7.3-gd php7.3-mysql php7.3-redis \
-       php7.3-imap php7.3-mbstring php7.3-xml php7.3-curl php7.3-zip \
+       php7.3-imap php7.3-mbstring php7.3-xml php7.3-curl php7.3-zip php-xdebug \
     && php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
     && mkdir /run/php \
     && apt-get remove -y --purge software-properties-common \

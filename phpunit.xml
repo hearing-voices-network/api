@@ -26,6 +26,10 @@
     </whitelist>
   </filter>
 
+  <logging>
+    <log type="coverage-html" target="tests/Coverage"/>
+  </logging>
+
   <php>
     <server name="APP_ENV" value="testing" />
     <server name="BCRYPT_ROUNDS" value="4" />
