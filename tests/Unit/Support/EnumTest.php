@@ -14,7 +14,7 @@ class EnumTest extends TestCase
     const DIFFERENT_THREE = 'three';
 
     /** @test */
-    public function class_with_no_constants()
+    public function class_with_no_constants(): void
     {
         $noConstants = new class {};
 
@@ -25,7 +25,7 @@ class EnumTest extends TestCase
     }
 
     /** @test */
-    public function fully_qualified_class_name_works()
+    public function fully_qualified_class_name_works(): void
     {
         $enum = new Enum(static::class);
         $constants = $enum->get('TEST');
@@ -38,7 +38,7 @@ class EnumTest extends TestCase
     }
 
     /** @test */
-    public function instance_works()
+    public function instance_works(): void
     {
         $enum = new Enum($this);
         $constants = $enum->get('TEST');
@@ -51,7 +51,7 @@ class EnumTest extends TestCase
     }
 
     /** @test */
-    public function get_values_works()
+    public function get_values_works(): void
     {
         $enum = new Enum($this);
         $constants = $enum->getValues('TEST');
@@ -61,7 +61,7 @@ class EnumTest extends TestCase
     }
 
     /** @test */
-    public function get_keys_works()
+    public function get_keys_works(): void
     {
         $enum = new Enum($this);
         $constants = $enum->getkeys('TEST');

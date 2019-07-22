@@ -10,7 +10,7 @@ use Tests\TestCase;
 class PaginationTest extends TestCase
 {
     /** @test */
-    public function ten_returns_10()
+    public function ten_returns_10(): void
     {
         $pagination = new Pagination();
 
@@ -21,7 +21,7 @@ class PaginationTest extends TestCase
     }
 
     /** @test */
-    public function one_returns_one()
+    public function one_returns_one(): void
     {
         $pagination = new Pagination();
 
@@ -32,7 +32,7 @@ class PaginationTest extends TestCase
     }
 
     /** @test */
-    public function max_returns_max()
+    public function max_returns_max(): void
     {
         $pagination = new Pagination();
 
@@ -43,7 +43,7 @@ class PaginationTest extends TestCase
     }
 
     /** @test */
-    public function zero_returns_one()
+    public function zero_returns_one(): void
     {
         $pagination = new Pagination();
 
@@ -54,7 +54,7 @@ class PaginationTest extends TestCase
     }
 
     /** @test */
-    public function one_more_than_max_returns_max()
+    public function one_more_than_max_returns_max(): void
     {
         $pagination = new Pagination();
 
