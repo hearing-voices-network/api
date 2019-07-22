@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Support;
 
+use App\Exceptions\RiskyPathException;
 use Illuminate\Support\Str;
-use RuntimeException;
 
 class Filesystem
 {
@@ -17,7 +17,7 @@ class Filesystem
     {
         // Safety precaution to ensure that only directories within the app can be cleared.
         if (!Str::startsWith($dir, storage_path())) {
-            throw new RuntimeException('Only files within the storage path can be cleared');
+            throw new RiskyPathException($dir);
         }
 
         // Don't do anything if the directory doesn't exist.
@@ -32,7 +32,7 @@ class Filesystem
 
         foreach ($files as $file) {
             $filePath = sprintf('%s/%s', $dir, $file);
-            is_dir($filePath) ? $this->clearDir($filePath) : unlink($filePath);
+            is_dir($filePath) ? $this->clearDir($filePath, $excludes) : unlink($filePath);
         }
     }
 }
