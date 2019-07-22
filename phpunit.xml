@@ -23,11 +23,15 @@
   <filter>
     <whitelist processUncoveredFilesFromWhitelist="true">
       <directory suffix=".php">./app</directory>
+      <exclude>
+        <directory suffix=".php">./app/Docs</directory>
+        <directory suffix=".php">./app/Http/Middleware</directory>
+      </exclude>
     </whitelist>
   </filter>
 
   <logging>
-    <log type="coverage-html" target="tests/Coverage"/>
+    <log type="coverage-html" target="./tests/Coverage"/>
   </logging>
 
   <php>

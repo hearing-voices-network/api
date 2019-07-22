@@ -10,6 +10,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Tests\Support\TestResponse;
 
+/**
+ * @method TestResponse postJson(string $uri, array $data = [], array $headers = [])
+ * @method TestResponse putJson(string $uri, array $data = [], array $headers = [])
+ * @method TestResponse patchJson(string $uri, array $data = [], array $headers = [])
+ * @method TestResponse json(string $method, string $uri, array $data = [], array $headers = [])
+ */
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
@@ -22,8 +28,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function tearDown(): void
     {
-        (new Filesystem())->clearDir(storage_path('testing/cloud/files/public'));
-        (new Filesystem())->clearDir(storage_path('testing/cloud/files/private'));
+        (new Filesystem())->clearDir(storage_path('testing'), ['.gitignore']);
 
         parent::tearDown();
     }
@@ -51,46 +56,7 @@ abstract class TestCase extends BaseTestCase
     {
         $query = http_build_query($data);
 
-        return $this->json('GET', "{$uri}?{$query}", [], $headers);
-    }
-
-    /**
-     * Visit the given URI with a POST request, expecting a JSON response.
-     *
-     * @param string $uri
-     * @param array $data
-     * @param array $headers
-     * @return \Tests\Support\TestResponse
-     */
-    public function postJson($uri, array $data = [], array $headers = []): TestResponse
-    {
-        return $this->json('POST', $uri, $data, $headers);
-    }
-
-    /**
-     * Visit the given URI with a PUT request, expecting a JSON response.
-     *
-     * @param string $uri
-     * @param array $data
-     * @param array $headers
-     * @return \Tests\Support\TestResponse
-     */
-    public function putJson($uri, array $data = [], array $headers = []): TestResponse
-    {
-        return $this->json('PUT', $uri, $data, $headers);
-    }
-
-    /**
-     * Visit the given URI with a PATCH request, expecting a JSON response.
-     *
-     * @param string $uri
-     * @param array $data
-     * @param array $headers
-     * @return \Tests\Support\TestResponse
-     */
-    public function patchJson($uri, array $data = [], array $headers = []): TestResponse
-    {
-        return $this->json('PATCH', $uri, $data, $headers);
+        return parent::getJson("{$uri}?{$query}", [], $headers);
     }
 
     /**
@@ -105,21 +71,7 @@ abstract class TestCase extends BaseTestCase
     {
         $query = http_build_query($data);
 
-        return $this->json('DELETE', "{$uri}?{$query}", [], $headers);
-    }
-
-    /**
-     * Overridden from parent to type hint return of custom TestResponse class.
-     *
-     * @param string $method
-     * @param string $uri
-     * @param array $data
-     * @param array $headers
-     * @return \Tests\Support\TestResponse
-     */
-    public function json($method, $uri, array $data = [], array $headers = []): TestResponse
-    {
-        return parent::json($method, $uri, $data, $headers);
+        return parent::deleteJson("{$uri}?{$query}", [], $headers);
     }
 
     /**
