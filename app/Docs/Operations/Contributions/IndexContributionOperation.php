@@ -67,7 +67,7 @@ class IndexContributionOperation extends Operation
                         EOT
                     )
                     ->schema(Schema::string()),
-                SortParameter::create(null, [], '-created_at')
+                SortParameter::create(null, ['created_at'], '-created_at')
             )
             ->responses(
                 Response::ok()->content(

@@ -37,7 +37,7 @@ class IndexTagOperation extends Operation
             ->tags(TagsTag::create())
             ->noSecurity()
             ->parameters(
-                SortParameter::create(null, [], 'name')
+                SortParameter::create(null, ['name'], 'name')
             )
             ->responses(
                 Response::ok()->content(

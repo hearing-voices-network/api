@@ -45,7 +45,7 @@ class IndexNotificationOperation extends Operation
                 FilterParameter::create(null, 'end_user_id')
                     ->description('The ID of an end user to filter by')
                     ->schema(Schema::string()->format(Schema::FORMAT_UUID)),
-                SortParameter::create(null, [], '-created_at')
+                SortParameter::create(null, ['created_at'], '-created_at')
             )
             ->responses(
                 Response::ok()->content(

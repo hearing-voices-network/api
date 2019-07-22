@@ -38,14 +38,17 @@ class AuditController extends Controller
     public function index(): ResourceCollection
     {
         $baseQuery = Audit::query()
-            ->with('user.admin', 'user.endUser', 'client')
-            ->orderByDesc('created_at');
+            ->with('user.admin', 'user.endUser', 'client');
 
         $audits = QueryBuilder::for($baseQuery)
             ->allowedFilters([
                 Filter::custom('admin_id', AdminIdFilter::class),
                 Filter::custom('end_user_id', EndUserIdFilter::class),
             ])
+            ->allowedSorts([
+                'created_at',
+            ])
+            ->defaultSort('-created_at')
             ->paginate($this->perPage);
 
         return AuditResource::collection($audits);

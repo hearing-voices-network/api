@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TagController extends Controller
 {
@@ -46,8 +47,14 @@ class TagController extends Controller
      */
     public function index(): ResourceCollection
     {
-        $tags = Tag::query()
-            ->withCount('publicContributions')
+        $baseQuery = Tag::query()
+            ->withCount('publicContributions');
+
+        $tags = QueryBuilder::for($baseQuery)
+            ->allowedSorts([
+                'name',
+            ])
+            ->defaultSort('name')
             ->get();
 
         return TagResource::collection($tags);
