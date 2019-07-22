@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
+use App\Exporters\BaseExporter;
 use RuntimeException;
 
-class ExporterNotFoundException extends RuntimeException
+class InvalidExporterException extends RuntimeException
 {
     /**
      * ExporterNotFoundException constructor.
@@ -15,6 +16,8 @@ class ExporterNotFoundException extends RuntimeException
      */
     public function __construct(string $exporterClass)
     {
-        parent::__construct("Exporter class [{$exporterClass}] not found.");
+        $baseExporterClass = BaseExporter::class;
+
+        parent::__construct("Exporter class [{$exporterClass}] must be an instance of [{$baseExporterClass}].");
     }
 }

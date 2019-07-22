@@ -28,6 +28,9 @@ class TagService
     public function softDelete(Tag $tag): Tag
     {
         $tag->delete();
+        $tag->childTags()->each(function (Tag $tag): void {
+            $tag->delete();
+        });
 
         return $tag;
     }
@@ -39,6 +42,10 @@ class TagService
     public function forceDelete(Tag $tag): void
     {
         $tag->contributions()->sync([]);
+        $tag->childTags()->each(function (Tag $tag): void {
+            $tag->contributions()->sync([]);
+            $tag->forceDelete();
+        });
         $tag->forceDelete();
     }
 }
