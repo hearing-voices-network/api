@@ -734,11 +734,11 @@ class AdminControllerTest extends TestCase
     {
         Event::fake([EndpointInvoked::class]);
 
-        /** @var \App\Models\User $user */
-        $user = factory(Admin::class)->create()->user;
-
         /** @var \App\Models\Admin $admin */
         $admin = factory(Admin::class)->create();
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
 
         Passport::actingAs($user);
 
@@ -746,7 +746,7 @@ class AdminControllerTest extends TestCase
 
         Event::assertDispatched(
             EndpointInvoked::class,
-            function (EndpointInvoked $event) use ($user, $admin): bool {
+            function (EndpointInvoked $event) use ($admin, $user): bool {
                 return $event->getUser()->is($user)
                     && $event->getClient() === null
                     && $event->getAction() === Audit::ACTION_DELETE
