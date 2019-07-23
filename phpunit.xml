@@ -25,6 +25,7 @@
       <directory suffix=".php">./app</directory>
       <exclude>
         <directory suffix=".php">./app/Console/Commands/Cv/Make</directory>
+        <directory suffix=".php">./app/Console/Commands/Cv/Schedule</directory>
         <directory suffix=".php">./app/Docs</directory>
         <directory suffix=".php">./app/Http/Middleware</directory>
         <directory suffix=".php">./app/Providers</directory>
