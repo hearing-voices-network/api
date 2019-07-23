@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Contribution\TagIdsFilter;
 use App\Http\Requests\Contribution\StoreContributionRequest;
@@ -81,6 +82,8 @@ class ContributionController extends Controller
             ->defaultSort('-created_at')
             ->paginate($this->perPage);
 
+        event(EndpointInvoked::onRead($request, 'Viewed all contributions.'));
+
         return ContributionResource::collection($contributions);
     }
 
@@ -99,15 +102,20 @@ class ContributionController extends Controller
             ]);
         });
 
+        event(EndpointInvoked::onCreate($request, "Created contribution [{$contribution->id}]."));
+
         return new ContributionResource($contribution);
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\Contribution $contribution
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function show(Contribution $contribution): JsonResource
+    public function show(Request $request, Contribution $contribution): JsonResource
     {
+        event(EndpointInvoked::onRead($request, "Viewed contribution [{$contribution->id}]."));
+
         return new ContributionResource(
             $contribution->load('tags.publicContributions')
         );
@@ -130,20 +138,25 @@ class ContributionController extends Controller
             ]);
         });
 
+        event(EndpointInvoked::onUpdate($request, "Updated contribution [{$contribution->id}]."));
+
         return new ContributionResource(
             $contribution->load('tags.publicContributions')
         );
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\Contribution $contribution
      * @return \App\Http\Responses\ResourceDeletedResponse
      */
-    public function destroy(Contribution $contribution): ResourceDeletedResponse
+    public function destroy(Request $request, Contribution $contribution): ResourceDeletedResponse
     {
         DB::transaction(function () use ($contribution): void {
             $this->contributionService->delete($contribution);
         });
+
+        event(EndpointInvoked::onDelete($request, "Deleted contribution [{$contribution->id}]."));
 
         return new ResourceDeletedResponse('contribution');
     }
