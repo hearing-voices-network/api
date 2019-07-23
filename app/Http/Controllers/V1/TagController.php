@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tag\DestroyTagRequest;
 use App\Http\Requests\Tag\StoreTagRequest;
@@ -43,9 +44,10 @@ class TagController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Resources\Json\ResourceCollection
      */
-    public function index(): ResourceCollection
+    public function index(Request $request): ResourceCollection
     {
         $baseQuery = Tag::query()
             ->withCount('publicContributions');
@@ -56,6 +58,8 @@ class TagController extends Controller
             ])
             ->defaultSort('name')
             ->get();
+
+        event(EndpointInvoked::onRead($request, 'Viewed all tags.'));
 
         return TagResource::collection($tags);
     }
@@ -71,15 +75,20 @@ class TagController extends Controller
             'name' => $request->name,
         ]);
 
+        event(EndpointInvoked::onCreate($request, "Created tag [{$tag->id}]."));
+
         return new TagResource($tag);
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\Tag $tag
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function show(Tag $tag): JsonResource
+    public function show(Request $request, Tag $tag): JsonResource
     {
+        event(EndpointInvoked::onRead($request, "Viewed tag [{$tag->id}]."));
+
         return new TagResource($tag);
     }
 
@@ -95,6 +104,10 @@ class TagController extends Controller
                 ? $this->tagService->forceDelete($tag)
                 : $this->tagService->softDelete($tag);
         });
+
+        $request->type === DestroyTagRequest::TYPE_FORCE_DELETE
+            ? event(EndpointInvoked::onDelete($request, "Force deleted tag [{$tag->id}]."))
+            : event(EndpointInvoked::onDelete($request, "Soft deleted tag [{$tag->id}]."));
 
         return new ResourceDeletedResponse('tag');
     }

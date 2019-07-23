@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Feature\V1;
 
+use App\Events\EndpointInvoked;
 use App\Models\Admin;
+use App\Models\Audit;
 use App\Models\Contribution;
 use App\Models\EndUser;
 use App\Models\Tag;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -112,6 +115,31 @@ class TagControllerTest extends TestCase
 
         $response->assertNthIdInCollection(1, $tag1->id);
         $response->assertNthIdInCollection(0, $tag2->id);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_index(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->getJson('/v1/tags');
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === 'Viewed all tags.'
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 
     /*
@@ -248,6 +276,36 @@ class TagControllerTest extends TestCase
         $response->assertJsonValidationErrors('parent_tag_id');
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_store(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $response = $this->postJson('/v1/tags', [
+            'parent_tag_id' => null,
+            'name' => 'Child tag',
+        ]);
+
+        $tag = Tag::findOrFail($response->getId());
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($tag, $user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_CREATE
+                    && $event->getDescription() === "Created tag [{$tag->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Show.
      */
@@ -329,6 +387,34 @@ class TagControllerTest extends TestCase
                 'deleted_at' => null,
             ],
         ]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_show(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        /** @var \App\Models\Tag $tag */
+        $tag = factory(Tag::class)->create();
+
+        Passport::actingAs($user);
+
+        $this->getJson("/v1/tags/{$tag->id}");
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user, $tag): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === "Viewed tag [{$tag->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 
     /*
@@ -421,5 +507,61 @@ class TagControllerTest extends TestCase
             'tag_id' => $tag->id,
         ]);
         $this->assertDatabaseHas('contributions', ['id' => $contribution->id]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_force_destroy(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        /** @var \App\Models\Tag $tag */
+        $tag = factory(Tag::class)->create();
+
+        Passport::actingAs($user);
+
+        $this->deleteJson("/v1/tags/{$tag->id}", ['type' => 'force_delete']);
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user, $tag): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_DELETE
+                    && $event->getDescription() === "Force deleted tag [{$tag->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_soft_destroy(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        /** @var \App\Models\Tag $tag */
+        $tag = factory(Tag::class)->create();
+
+        Passport::actingAs($user);
+
+        $this->deleteJson("/v1/tags/{$tag->id}", ['type' => 'soft_delete']);
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user, $tag): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_DELETE
+                    && $event->getDescription() === "Soft deleted tag [{$tag->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 }
