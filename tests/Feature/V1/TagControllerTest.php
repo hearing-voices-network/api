@@ -92,6 +92,28 @@ class TagControllerTest extends TestCase
         ]);
     }
 
+    /** @test */
+    public function can_sort_by_name_for_index(): void
+    {
+        $this->truncateTables('tags');
+
+        $tag1 = factory(Tag::class)->create([
+            'name' => 'Alpha',
+        ]);
+        $tag2 = factory(Tag::class)->create([
+            'name' => 'Bravo',
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/tags', ['sort' => '-name']);
+
+        $response->assertNthIdInCollection(1, $tag1->id);
+        $response->assertNthIdInCollection(0, $tag2->id);
+    }
+
     /*
      * Store.
      */

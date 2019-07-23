@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\EndUser;
 use App\Models\Notification;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Date;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -147,6 +148,26 @@ class NotificationControllerTest extends TestCase
 
         $response->assertJsonFragment(['id' => $notification1->id]);
         $response->assertJsonMissing(['id' => $notification2->id]);
+    }
+
+    /** @test */
+    public function can_sort_by_created_at_for_index(): void
+    {
+        $notification1 = factory(Notification::class)->create([
+            'created_at' => Date::now(),
+        ]);
+        $notification2 = factory(Notification::class)->create([
+            'created_at' => Date::now()->addHour(),
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/notifications', ['sort' => '-created_at']);
+
+        $response->assertNthIdInCollection(1, $notification1->id);
+        $response->assertNthIdInCollection(0, $notification2->id);
     }
 
     /*

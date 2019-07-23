@@ -186,6 +186,26 @@ class ContributionControllerTest extends TestCase
     }
 
     /** @test */
+    public function can_sort_by_created_at_for_index(): void
+    {
+        $contribution1 = factory(Contribution::class)->create([
+            'created_at' => Date::now(),
+        ]);
+        $contribution2 = factory(Contribution::class)->create([
+            'created_at' => Date::now()->addHour(),
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/contributions', ['sort' => '-created_at']);
+
+        $response->assertNthIdInCollection(1, $contribution1->id);
+        $response->assertNthIdInCollection(0, $contribution2->id);
+    }
+
+    /** @test */
     public function guest_can_only_view_public_for_index(): void
     {
         $publicContribution = factory(Contribution::class)

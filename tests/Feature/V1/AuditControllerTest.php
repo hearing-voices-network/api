@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\EndUser;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Date;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -153,6 +154,26 @@ class AuditControllerTest extends TestCase
 
         $response->assertJsonFragment(['id' => $audit1->id]);
         $response->assertJsonMissing(['id' => $audit2->id]);
+    }
+
+    /** @test */
+    public function can_sort_by_created_at_for_index(): void
+    {
+        $audit1 = factory(Audit::class)->create([
+            'created_at' => Date::now(),
+        ]);
+        $audit2 = factory(Audit::class)->create([
+            'created_at' => Date::now()->addHour(),
+        ]);
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/audits', ['sort' => '-created_at']);
+
+        $response->assertNthIdInCollection(1, $audit1->id);
+        $response->assertNthIdInCollection(0, $audit2->id);
     }
 
     /*
