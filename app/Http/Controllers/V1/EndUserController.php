@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\EndUser\EmailFilter;
 use App\Http\Filters\EndUser\EmailVerifiedFilter;
@@ -86,6 +87,8 @@ class EndUserController extends Controller
             )
             ->paginate($this->perPage);
 
+        event(EndpointInvoked::onRead($request, 'Viewed all end users.'));
+
         return EndUserResource::collection($endUsers);
     }
 
@@ -106,15 +109,20 @@ class EndUserController extends Controller
             ]);
         });
 
+        event(EndpointInvoked::onCreate($request, "Created end user [{$endUser->id}]."));
+
         return new EndUserResource($endUser);
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\EndUser $endUser
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function show(EndUser $endUser): JsonResource
+    public function show(Request $request, EndUser $endUser): JsonResource
     {
+        event(EndpointInvoked::onRead($request, "Viewed end user [{$endUser->id}]."));
+
         return new EndUserResource($endUser);
     }
 
@@ -136,6 +144,8 @@ class EndUserController extends Controller
             ]);
         });
 
+        event(EndpointInvoked::onUpdate($request, "Updated end user [{$endUser->id}]."));
+
         return new EndUserResource($endUser);
     }
 
@@ -144,13 +154,19 @@ class EndUserController extends Controller
      * @param \App\Models\EndUser $endUser
      * @return \App\Http\Responses\ResourceDeletedResponse
      */
-    public function destroy(DestroyEndUserRequest $request, EndUser $endUser): ResourceDeletedResponse
-    {
+    public function destroy(
+        DestroyEndUserRequest $request,
+        EndUser $endUser
+    ): ResourceDeletedResponse {
         DB::transaction(function () use ($request, $endUser): void {
             $request->type === DestroyEndUserRequest::TYPE_FORCE_DELETE
                 ? $this->endUserService->forceDelete($endUser)
                 : $this->endUserService->softDelete($endUser);
         });
+
+        $request->type === DestroyEndUserRequest::TYPE_FORCE_DELETE
+            ? event(EndpointInvoked::onDelete($request, "Force deleted end user [{$endUser->id}]."))
+            : event(EndpointInvoked::onDelete($request, "Soft deleted end user [{$endUser->id}]."));
 
         return new ResourceDeletedResponse('end user');
     }

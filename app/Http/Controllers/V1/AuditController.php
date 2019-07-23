@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Audit\AdminIdFilter;
 use App\Http\Filters\Audit\EndUserIdFilter;
@@ -33,9 +34,10 @@ class AuditController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Resources\Json\ResourceCollection
      */
-    public function index(): ResourceCollection
+    public function index(Request $request): ResourceCollection
     {
         $baseQuery = Audit::query()
             ->with('user.admin', 'user.endUser', 'client');
@@ -51,15 +53,20 @@ class AuditController extends Controller
             ->defaultSort('-created_at')
             ->paginate($this->perPage);
 
+        event(EndpointInvoked::onRead($request, 'Viewed all audits.'));
+
         return AuditResource::collection($audits);
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\Audit $audit
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function show(Audit $audit): JsonResource
+    public function show(Request $request, Audit $audit): JsonResource
     {
+        event(EndpointInvoked::onRead($request, "Viewed audit [{$audit->id}]."));
+
         return new AuditResource($audit);
     }
 }

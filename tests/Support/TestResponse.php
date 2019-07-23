@@ -50,9 +50,25 @@ class TestResponse extends BaseTestResponse
      */
     public function assertNthIdInCollection(int $index, string $id): void
     {
-        $data = json_decode($this->getContent(), true)['data'];
+        $data = $this->getData();
 
         PHPUnit::assertGreaterThanOrEqual($index + 1, count($data));
         PHPUnit::assertEquals($id, $data[$index]['id']);
+    }
+
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        return json_decode($this->getContent(), true)['data'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->getData()['id'];
     }
 }

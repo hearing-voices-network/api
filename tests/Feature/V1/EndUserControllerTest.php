@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\V1;
 
+use App\Events\EndpointInvoked;
 use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\Contribution;
@@ -12,6 +13,7 @@ use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -231,6 +233,31 @@ class EndUserControllerTest extends TestCase
         $response->assertNthIdInCollection(1, $endUser2->id);
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_index(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->getJson('/v1/end-users');
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === 'Viewed all end users.'
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Store.
      */
@@ -353,6 +380,40 @@ class EndUserControllerTest extends TestCase
         $response->assertJsonValidationErrors('password');
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_store(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $response = $this->postJson('/v1/end-users', [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        $endUser = EndUser::findOrFail($response->getId());
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user, $endUser): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_CREATE
+                    && $event->getDescription() === "Created end user [{$endUser->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Show.
      */
@@ -457,6 +518,34 @@ class EndUserControllerTest extends TestCase
             'updated_at' => $endUser->user->updated_at->toIso8601String(),
             'deleted_at' => null,
         ]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_show(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        /** @var \App\Models\EndUser $endUser */
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs($user);
+
+        $this->getJson("/v1/end-users/{$endUser->id}");
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user, $endUser): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === "Viewed end user [{$endUser->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 
     /*
@@ -614,6 +703,38 @@ class EndUserControllerTest extends TestCase
         ]);
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_update(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\EndUser $endUser */
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs($endUser->user);
+
+        $this->putJson("/v1/end-users/{$endUser->id}", [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($endUser): bool {
+                return $event->getUser()->is($endUser->user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_UPDATE
+                    && $event->getDescription() === "Updated end user [{$endUser->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Destroy.
      */
@@ -708,5 +829,55 @@ class EndUserControllerTest extends TestCase
         $this->assertDatabaseHas('contributions', ['id' => $contribution->id]);
         $this->assertDatabaseHas('audits', ['id' => $audit->id]);
         $this->assertDatabaseHas('notifications', ['id' => $notification->id]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_force_destroy(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\EndUser $endUser */
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs($endUser->user);
+
+        $this->deleteJson("/v1/end-users/{$endUser->id}", ['type' => 'force_delete']);
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($endUser): bool {
+                return $event->getUser()->is($endUser->user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_DELETE
+                    && $event->getDescription() === "Force deleted end user [{$endUser->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_soft_destroy(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\EndUser $endUser */
+        $endUser = factory(EndUser::class)->create();
+
+        Passport::actingAs($endUser->user);
+
+        $this->deleteJson("/v1/end-users/{$endUser->id}", ['type' => 'soft_delete']);
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($endUser): bool {
+                return $event->getUser()->is($endUser->user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_DELETE
+                    && $event->getDescription() === "Soft deleted end user [{$endUser->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 }

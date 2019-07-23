@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1\File;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FileTokenResource;
 use App\Models\File;
@@ -50,6 +51,8 @@ class RequestController extends Controller
         $fileToken = DB::transaction(function () use ($request, $file): FileToken {
             return $this->fileService->request($file, $request->user()->admin);
         });
+
+        event(EndpointInvoked::onCreate($request, "Requested file [{$file->id}]."));
 
         return new FileTokenResource($fileToken);
     }

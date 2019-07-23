@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Feature\V1;
 
+use App\Events\EndpointInvoked;
 use App\Models\Admin;
+use App\Models\Audit;
 use App\Models\Contribution;
 use App\Models\EndUser;
 use App\Models\Tag;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -259,6 +262,31 @@ class ContributionControllerTest extends TestCase
         $response->assertJsonMissing(['id' => $changesRequestedContribution->id]);
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_index(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->getJson('/v1/contributions');
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === 'Viewed all contributions.'
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Store.
      */
@@ -419,6 +447,37 @@ class ContributionControllerTest extends TestCase
         ]);
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_store(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(EndUser::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $response = $this->postJson('/v1/contributions', [
+            'content' => 'Lorem ipsum',
+            'status' => Contribution::STATUS_PRIVATE,
+            'tags' => [],
+        ]);
+
+        $contribution = Contribution::findOrFail($response->getId());
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($contribution, $user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_CREATE
+                    && $event->getDescription() === "Created contribution [{$contribution->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Show.
      */
@@ -569,6 +628,34 @@ class ContributionControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_show(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\Contribution $contribution*/
+        $contribution = factory(Contribution::class)->create();
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->getJson("/v1/contributions/{$contribution->id}");
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($contribution, $user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === "Viewed contribution [{$contribution->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Update.
      */
@@ -633,6 +720,40 @@ class ContributionControllerTest extends TestCase
         $response = $this->putJson("/v1/contributions/{$contribution->id}");
 
         $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_update(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $endUser */
+        $endUser = factory(EndUser::class)->create();
+
+        /** @var \App\Models\Contribution $contribution*/
+        $contribution = factory(Contribution::class)->create([
+            'end_user_id' => $endUser->id,
+        ]);
+
+        Passport::actingAs($endUser->user);
+
+        $this->putJson("/v1/contributions/{$contribution->id}", [
+            'content' => 'Lorem ipsum',
+            'status' => Contribution::STATUS_IN_REVIEW,
+            'tags' => [],
+        ]);
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($contribution, $endUser): bool {
+                return $event->getUser()->is($endUser->user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_UPDATE
+                    && $event->getDescription() === "Updated contribution [{$contribution->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 
     /*
@@ -716,5 +837,35 @@ class ContributionControllerTest extends TestCase
             'tag_id' => $tag->id,
         ]);
         $this->assertDatabaseHas('tags', ['id' => $tag->id]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_destroy(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $endUser */
+        $endUser = factory(EndUser::class)->create();
+
+        /** @var \App\Models\Contribution $contribution*/
+        $contribution = factory(Contribution::class)->create([
+            'end_user_id' => $endUser->id,
+        ]);
+
+        Passport::actingAs($endUser->user);
+
+        $this->deleteJson("/v1/contributions/{$contribution->id}");
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($contribution, $endUser): bool {
+                return $event->getUser()->is($endUser->user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_DELETE
+                    && $event->getDescription() === "Deleted contribution [{$contribution->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 }

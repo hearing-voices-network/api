@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\V1;
 
+use App\Events\EndpointInvoked;
 use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\EndUser;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -176,6 +178,31 @@ class AuditControllerTest extends TestCase
         $response->assertNthIdInCollection(0, $audit2->id);
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_index(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->getJson('/v1/audits');
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === 'Viewed all audits.'
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Show/
      */
@@ -271,5 +298,33 @@ class AuditControllerTest extends TestCase
                 'created_at' => $audit->created_at->toIso8601String(),
             ],
         ]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_show(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\Audit $audit */
+        $audit = factory(Audit::class)->create();
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->getJson("/v1/audits/{$audit->id}");
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($audit, $user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === "Viewed audit [{$audit->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 }

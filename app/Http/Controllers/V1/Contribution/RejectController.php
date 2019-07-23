@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1\Contribution;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contribution\RejectContributionRequest;
 use App\Http\Resources\ContributionResource;
@@ -48,6 +49,8 @@ class RejectController extends Controller
                 return $contributionService->reject($contribution, $request->changes_requested);
             }
         );
+
+        event(EndpointInvoked::onUpdate($request, "Rejected contribution [{$contribution->id}]."));
 
         return new ContributionResource($contribution);
     }

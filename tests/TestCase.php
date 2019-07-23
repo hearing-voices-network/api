@@ -8,6 +8,7 @@ use App\Models\File;
 use App\Support\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Tests\Support\TestResponse;
 
@@ -21,6 +22,7 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
     use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Clean up the testing environment before the next test.

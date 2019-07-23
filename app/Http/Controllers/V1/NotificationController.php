@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Notification\AdminIdFilter;
 use App\Http\Filters\Notification\EndUserIdFilter;
@@ -33,9 +34,10 @@ class NotificationController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Resources\Json\ResourceCollection
      */
-    public function index(): ResourceCollection
+    public function index(Request $request): ResourceCollection
     {
         $baseQuery = Notification::query()
             ->with('user.admin', 'user.endUser');
@@ -51,15 +53,20 @@ class NotificationController extends Controller
             ->defaultSort('-created_at')
             ->paginate($this->perPage);
 
+        event(EndpointInvoked::onRead($request, 'Viewed all notifications.'));
+
         return NotificationResource::collection($notifications);
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\Notification $notification
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function show(Notification $notification): JsonResource
+    public function show(Request $request, Notification $notification): JsonResource
     {
+        event(EndpointInvoked::onRead($request, "Viewed notification [{$notification->id}]."));
+
         return new NotificationResource($notification);
     }
 }

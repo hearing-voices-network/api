@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\V1;
 
+use App\Events\EndpointInvoked;
 use App\Models\Admin;
+use App\Models\Audit;
 use App\Models\EndUser;
 use App\Models\Setting;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Event;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -166,6 +169,31 @@ class SettingControllerTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_index(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->getJson('/v1/settings');
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === 'Viewed settings.'
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 
     /*
@@ -450,5 +478,30 @@ class SettingControllerTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_update(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->putJson('/v1/settings');
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_UPDATE
+                    && $event->getDescription() === 'Updated settings.'
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 }
