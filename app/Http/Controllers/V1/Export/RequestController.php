@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1\Export;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Export\RequestExportRequest;
 use App\Http\Resources\ExportResource;
@@ -43,17 +44,19 @@ class RequestController extends Controller
 
     /**
      * @param \App\Http\Requests\Export\RequestExportRequest $request
-     * @param string $export
+     * @param string $type
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @return \Illuminate\Http\JsonResponse
      */
-    public function __invoke(RequestExportRequest $request, string $export): JsonResponse
+    public function __invoke(RequestExportRequest $request, string $type): JsonResponse
     {
-        $this->authorize('request', [Export::class, $export]);
+        $this->authorize('request', [Export::class, $type]);
 
-        $export = DB::transaction(function () use ($request, $export): Export {
-            return $this->exportService->create($export, $request->user()->admin);
+        $export = DB::transaction(function () use ($request, $type): Export {
+            return $this->exportService->create($type, $request->user()->admin);
         });
+
+        event(EndpointInvoked::onCreate($request, "Requested export [{$type}]."));
 
         return (new ExportResource($export))
             ->toResponse($request)

@@ -21,10 +21,10 @@ class ExportsRequestPath extends PathItem
     public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
-            ->route('/exports/{export}/request')
+            ->route('/exports/{type}/request')
             ->parameters(
                 Parameter::path()
-                    ->name('export')
+                    ->name('type')
                     ->description('The type of export you want')
                     ->schema(
                         Schema::string()->enum(AllExporter::type())
