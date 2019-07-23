@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Setting\UpdateSettingRequest;
 use App\Models\Setting;
@@ -47,6 +48,8 @@ class SettingController extends Controller
     public function index(Request $request): JsonResponse
     {
         $this->authorize('list', Setting::class);
+
+        event(EndpointInvoked::onRead($request, 'Viewed settings.'));
 
         return Setting::toResponse(
             optional($request->user())->isAdmin() ?? false
@@ -109,6 +112,8 @@ class SettingController extends Controller
                 ],
             ]);
         });
+
+        event(EndpointInvoked::onUpdate($request, 'Updated settings.'));
 
         return Setting::toResponse(Setting::WITH_PRIVATE);
     }
