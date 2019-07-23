@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Auth\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Support\Pagination;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -30,10 +32,15 @@ class LoginController extends Controller
     protected $redirectTo = '/home';
 
     /**
-     * Create a new controller instance.
+     * LoginController constructor.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Support\Pagination $pagination
      */
-    public function __construct()
+    public function __construct(Request $request, Pagination $pagination)
     {
+        parent::__construct($request, $pagination);
+
         $this->middleware('guest')->except('logout');
     }
 }

@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Auth\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Support\Pagination;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Http\Request;
 
 class ForgotPasswordController extends Controller
 {
@@ -23,10 +25,15 @@ class ForgotPasswordController extends Controller
     use SendsPasswordResetEmails;
 
     /**
-     * Create a new controller instance.
+     * ForgotPasswordController constructor.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Support\Pagination $pagination
      */
-    public function __construct()
+    public function __construct(Request $request, Pagination $pagination)
     {
+        parent::__construct($request, $pagination);
+
         $this->middleware('guest');
     }
 }
