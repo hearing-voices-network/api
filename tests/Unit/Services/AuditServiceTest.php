@@ -14,7 +14,7 @@ class AuditServiceTest extends TestCase
     /** @test */
     public function it_creates_an_audit_record(): void
     {
-        /** @var \App\Service\AuditService $auditService */
+        /** @var \App\Services\AuditService $auditService */
         $auditService = resolve(AuditService::class);
 
         $ipAddress = $this->faker->ipv4;
