@@ -42,18 +42,26 @@ class ValidFileToken implements Rule
      */
     public function passes($attribute, $token): bool
     {
+        // Don't bother checking for public files.
         if ($this->file->isPublic()) {
             return true;
         }
 
-        /** @var \App\Models\FileToken $token */
-        $token = FileToken::findOrFail($token);
-
-        if ($this->admin && $token->isValid($this->admin)) {
-            return true;
+        // If the user is not an admin then fail.
+        if ($this->admin === null) {
+            return false;
         }
 
-        return false;
+        /** @var \App\Models\FileToken $token */
+        $token = FileToken::find($token);
+
+        // If the file token is invalid, then fail.
+        if ($token === null) {
+            return false;
+        }
+
+        // Pass if the token is valid for the admin.
+        return $token->isValid($this->admin);
     }
 
     /**
