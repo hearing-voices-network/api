@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Date;
 $factory->define(Audit::class, function (Faker $faker): array {
     return [
         'action' => Audit::ACTION_READ,
+        'description' => $faker->paragraph,
         'ip_address' => $faker->ipv4,
         'created_at' => Date::now(),
     ];

@@ -33,8 +33,7 @@ class AuditSchema extends Schema
                     ->nullable(),
                 Schema::string('action')
                     ->enum(...(new Enum(Audit::class))->getValues('ACTION')),
-                Schema::string('description')
-                    ->nullable(),
+                Schema::string('description'),
                 Schema::string('ip_address'),
                 Schema::string('user_agent')
                     ->nullable(),

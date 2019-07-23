@@ -21,7 +21,7 @@ class CreateAuditsTable extends Migration
             $table->foreign('client_id')->references('id')->on('oauth_clients');
             $table->string('action');
             $table->foreign('action')->references('action')->on('audit_actions');
-            $table->text('description')->nullable();
+            $table->text('description');
             $table->string('ip_address', 45);
             $table->text('user_agent')->nullable();
             $table->timestamp('created_at')->useCurrent();

@@ -5,7 +5,6 @@ namespace App\Events;
 use App\Models\Audit;
 use App\Models\User;
 use Carbon\CarbonImmutable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
@@ -33,7 +32,7 @@ class EndpointInvoked
     protected $action;
 
     /**
-     * @var string|null
+     * @var string
      */
     protected $description;
 
@@ -48,11 +47,6 @@ class EndpointInvoked
     protected $userAgent;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model
-     */
-    protected $model;
-
-    /**
      * @var \Carbon\CarbonImmutable
      */
     protected $createdAt;
@@ -62,107 +56,77 @@ class EndpointInvoked
      *
      * @param \Illuminate\Http\Request $request
      * @param string $action
-     * @param string|null $description
-     * @param \Illuminate\Database\Eloquent\Model|null $model
+     * @param string $description
      */
-    protected function __construct(
-        Request $request,
-        string $action,
-        string $description = null,
-        Model $model = null
-    ) {
+    protected function __construct(Request $request, string $action, string $description)
+    {
         $this->user = $request->user();
         $this->client = optional($this->user)->token()->client ?? null;
         $this->action = $action;
         $this->description = $description;
         $this->ipAddress = $request->ip();
         $this->userAgent = $request->userAgent() ?: null;
-        $this->model = $model;
         $this->createdAt = Date::now();
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param string|null $description
-     * @param \Illuminate\Database\Eloquent\Model|null $model
+     * @param string $description
      * @return \App\Events\EndpointInvoked
      */
-    public static function onLogin(
-        Request $request,
-        string $description = null,
-        Model $model = null
-    ): self {
-        return new static($request, Audit::ACTION_LOGIN, $description, $model);
+    public static function onLogin(Request $request, string $description): self
+    {
+        return new static($request, Audit::ACTION_LOGIN, $description);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param string|null $description
-     * @param \Illuminate\Database\Eloquent\Model|null $model
+     * @param string $description
      * @return \App\Events\EndpointInvoked
      */
-    public static function onLogout(
-        Request $request,
-        string $description = null,
-        Model $model = null
-    ): self {
-        return new static($request, Audit::ACTION_LOGOUT, $description, $model);
+    public static function onLogout(Request $request, string $description): self
+    {
+        return new static($request, Audit::ACTION_LOGOUT, $description);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param string|null $description
-     * @param \Illuminate\Database\Eloquent\Model|null $model
+     * @param string $description
      * @return \App\Events\EndpointInvoked
      */
-    public static function onCreate(
-        Request $request,
-        string $description = null,
-        Model $model = null
-    ): self {
-        return new static($request, Audit::ACTION_CREATE, $description, $model);
+    public static function onCreate(Request $request, string $description): self
+    {
+        return new static($request, Audit::ACTION_CREATE, $description);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param string|null $description
-     * @param \Illuminate\Database\Eloquent\Model|null $model
+     * @param string $description
      * @return \App\Events\EndpointInvoked
      */
-    public static function onRead(
-        Request $request,
-        string $description = null,
-        Model $model = null
-    ): self {
-        return new static($request, Audit::ACTION_READ, $description, $model);
+    public static function onRead(Request $request, string $description): self
+    {
+        return new static($request, Audit::ACTION_READ, $description);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param string|null $description
-     * @param \Illuminate\Database\Eloquent\Model|null $model
+     * @param string $description
      * @return \App\Events\EndpointInvoked
      */
-    public static function onUpdate(
-        Request $request,
-        string $description = null,
-        Model $model = null
-    ): self {
-        return new static($request, Audit::ACTION_UPDATE, $description, $model);
+    public static function onUpdate(Request $request, string $description): self
+    {
+        return new static($request, Audit::ACTION_UPDATE, $description);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param string|null $description
-     * @param \Illuminate\Database\Eloquent\Model|null $model
+     * @param string $description
      * @return \App\Events\EndpointInvoked
      */
-    public static function onDelete(
-        Request $request,
-        string $description = null,
-        Model $model = null
-    ): self {
-        return new static($request, Audit::ACTION_DELETE, $description, $model);
+    public static function onDelete(Request $request, string $description): self
+    {
+        return new static($request, Audit::ACTION_DELETE, $description);
     }
 
     /**
@@ -190,9 +154,9 @@ class EndpointInvoked
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -211,14 +175,6 @@ class EndpointInvoked
     public function getUserAgent(): ?string
     {
         return $this->userAgent;
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function getModel(): ?Model
-    {
-        return $this->model;
     }
 
     /**

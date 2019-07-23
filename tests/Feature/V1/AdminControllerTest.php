@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature\V1;
 
+use App\Events\EndpointInvoked;
 use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\EndUser;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Event;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -235,6 +237,30 @@ class AdminControllerTest extends TestCase
         $response->assertNthIdInCollection(0, $admin2->id);
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_index(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->getJson('/v1/admins');
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === 'Viewed all admins.'
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Store.
      */
@@ -357,6 +383,38 @@ class AdminControllerTest extends TestCase
         $response->assertJsonValidationErrors('password');
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_store(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $response = $this->postJson('/v1/admins', [
+            'name' => 'John',
+            'phone' => '07000000000',
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+        ]);
+
+        /** @var \App\Models\Admin $admin */
+        $admin = Admin::findOrFail($response->getId());
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user, $admin): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_CREATE
+                    && $event->getDescription() === "Created admin [{$admin->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Show.
      */
@@ -433,6 +491,31 @@ class AdminControllerTest extends TestCase
             'created_at' => $admin->user->created_at->toIso8601String(),
             'updated_at' => $admin->user->updated_at->toIso8601String(),
         ]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_show(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\Admin $admin */
+        $admin = factory(Admin::class)->create();
+
+        Passport::actingAs($admin->user);
+
+        $this->getJson("/v1/admins/{$admin->id}");
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($admin): bool {
+                return $event->getUser()->is($admin->user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === "Viewed admin [{$admin->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 
     /*
@@ -553,6 +636,36 @@ class AdminControllerTest extends TestCase
         ]);
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_update(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\Admin $admin */
+        $admin = factory(Admin::class)->create();
+
+        Passport::actingAs($admin->user);
+
+        $this->putJson("/v1/admins/{$admin->id}", [
+            'name' => 'John',
+            'phone' => '07000000000',
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+        ]);
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($admin): bool {
+                return $event->getUser()->is($admin->user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_UPDATE
+                    && $event->getDescription() === "Updated admin [{$admin->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Destroy.
      */
@@ -614,5 +727,33 @@ class AdminControllerTest extends TestCase
         $this->assertDatabaseMissing('audits', ['id' => $audit->id]);
         $this->assertDatabaseMissing('notifications', ['id' => $notification->id]);
         $this->assertDatabaseMissing('file_tokens', ['id' => $fileToken->id]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_destroy(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        /** @var \App\Models\Admin $admin */
+        $admin = factory(Admin::class)->create();
+
+        Passport::actingAs($user);
+
+        $this->deleteJson("/v1/admins/{$admin->id}");
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user, $admin): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_DELETE
+                    && $event->getDescription() === "Deleted admin [{$admin->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 }

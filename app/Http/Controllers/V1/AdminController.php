@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Admin\EmailFilter;
 use App\Http\Requests\Admin\StoreAdminRequest;
@@ -50,9 +51,10 @@ class AdminController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Resources\Json\ResourceCollection
      */
-    public function index(): ResourceCollection
+    public function index(Request $request): ResourceCollection
     {
         $baseQuery = Admin::query()
             ->with('user');
@@ -70,6 +72,8 @@ class AdminController extends Controller
             ])
             ->defaultSort('name')
             ->paginate($this->perPage);
+
+        event(EndpointInvoked::onRead($request, 'Viewed all admins.'));
 
         return AdminResource::collection($admins);
     }
@@ -90,15 +94,20 @@ class AdminController extends Controller
             ]);
         });
 
+        event(EndpointInvoked::onCreate($request, "Created admin [{$admin->id}]."));
+
         return new AdminResource($admin);
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\Admin $admin
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function show(Admin $admin): JsonResource
+    public function show(Request $request, Admin $admin): JsonResource
     {
+        event(EndpointInvoked::onRead($request, "Viewed admin [{$admin->id}]."));
+
         return new AdminResource($admin);
     }
 
@@ -119,19 +128,23 @@ class AdminController extends Controller
             ]);
         });
 
+        event(EndpointInvoked::onUpdate($request, "Updated admin [{$admin->id}]."));
+
         return new AdminResource($admin);
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\Admin $admin
-     * @throws \Throwable
      * @return \App\Http\Responses\ResourceDeletedResponse
      */
-    public function destroy(Admin $admin): ResourceDeletedResponse
+    public function destroy(Request $request, Admin $admin): ResourceDeletedResponse
     {
         DB::transaction(function () use ($admin): void {
             $this->adminService->delete($admin);
         });
+
+        event(EndpointInvoked::onDelete($request, "Deleted admin [{$admin->id}]."));
 
         return new ResourceDeletedResponse('admin');
     }
