@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1\Contribution;
 
+use App\Events\EndpointInvoked;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ContributionResource;
 use App\Models\Contribution;
@@ -29,12 +30,14 @@ class ApproveController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
      * @param \App\Services\ContributionService $contributionService
      * @param \App\Models\Contribution $contribution
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
     public function __invoke(
+        Request $request,
         ContributionService $contributionService,
         Contribution $contribution
     ): JsonResource {
@@ -45,6 +48,8 @@ class ApproveController extends Controller
                 return $contributionService->approve($contribution);
             }
         );
+
+        event(EndpointInvoked::onUpdate($request, "Approved contribution [{$contribution->id}]."));
 
         return new ContributionResource($contribution);
     }
