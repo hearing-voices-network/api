@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature\V1;
 
+use App\Events\EndpointInvoked;
 use App\Models\Admin;
+use App\Models\Audit;
 use App\Models\EndUser;
 use App\Models\Notification;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -170,6 +173,31 @@ class NotificationControllerTest extends TestCase
         $response->assertNthIdInCollection(0, $notification2->id);
     }
 
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_index(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->getJson('/v1/notifications');
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === 'Viewed all notifications.'
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
     /*
      * Show/
      */
@@ -260,5 +288,33 @@ class NotificationControllerTest extends TestCase
                 'updated_at' => $notification->updated_at->toIso8601String(),
             ],
         ]);
+    }
+
+    /** @test */
+    public function endpoint_invoked_event_dispatched_for_show(): void
+    {
+        Event::fake([EndpointInvoked::class]);
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        /** @var \App\Models\Notification $notifcation */
+        $notification = factory(Notification::class)->create();
+
+        Passport::actingAs($user);
+
+        $this->getJson("/v1/notifications/{$notification->id}");
+
+        Event::assertDispatched(
+            EndpointInvoked::class,
+            function (EndpointInvoked $event) use ($user, $notification): bool {
+                return $event->getUser()->is($user)
+                    && $event->getClient() === null
+                    && $event->getAction() === Audit::ACTION_READ
+                    && $event->getDescription() === "Viewed notification [{$notification->id}]."
+                    && $event->getIpAddress() === '127.0.0.1'
+                    && $event->getUserAgent() === 'Symfony';
+            }
+        );
     }
 }
