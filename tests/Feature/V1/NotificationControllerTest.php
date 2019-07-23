@@ -153,7 +153,6 @@ class NotificationControllerTest extends TestCase
     /** @test */
     public function can_sort_by_created_at_for_index(): void
     {
-
         $notification1 = factory(Notification::class)->create([
             'created_at' => Date::now(),
         ]);

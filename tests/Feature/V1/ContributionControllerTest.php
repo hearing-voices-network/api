@@ -188,7 +188,6 @@ class ContributionControllerTest extends TestCase
     /** @test */
     public function can_sort_by_created_at_for_index(): void
     {
-
         $contribution1 = factory(Contribution::class)->create([
             'created_at' => Date::now(),
         ]);
