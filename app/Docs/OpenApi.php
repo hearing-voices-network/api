@@ -15,7 +15,8 @@ class OpenApi extends BaseOpenApi implements Responsable
     /**
      * @param string|null $objectId
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
-     * @return \GoldSpecDigital\ObjectOrientedOAS\OpenApi
+     * @throws \ReflectionException
+     * @return static
      */
     public static function create(string $objectId = null): BaseObject
     {

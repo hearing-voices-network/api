@@ -15,6 +15,65 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/openapi.json', function () {
-    return App\Docs\OpenApi::create();
-});
+Route::get('/', 'LandingController')
+    ->name('landing');
+
+Route::prefix('docs')
+    ->group(function (): void {
+        Route::get('/', 'DocsController@index')
+            ->name('docs.index');
+        Route::get('/openapi.json', 'DocsController@openApi')
+            ->name('docs.openapi');
+    }
+);
+
+Route::prefix('auth/admin')
+    ->as('auth.admin.')
+    ->namespace('Auth')
+    ->group(function (): void {
+        Route::get('login', 'LoginController@showLoginForm')
+            ->name('login');
+        Route::post('login', 'LoginController@login');
+        Route::post('logout', 'LoginController@logout')
+            ->name('logout');
+
+        Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')
+            ->name('password.request');
+        Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')
+            ->name('password.email');
+
+        Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')
+            ->name('password.reset');
+        Route::post('password/reset', 'ResetPasswordController@reset')
+            ->name('password.update');
+    }
+);
+
+Route::prefix('auth/end-user')
+    ->as('auth.end-user.')
+    ->namespace('Auth')
+    ->group(function (): void {
+        Route::get('login', 'LoginController@showLoginForm')
+            ->name('login');
+        Route::post('login', 'LoginController@login');
+        Route::post('logout', 'LoginController@logout')
+            ->name('logout');
+
+        Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')
+            ->name('password.request');
+        Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')
+            ->name('password.email');
+
+        Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')
+            ->name('password.reset');
+        Route::post('password/reset', 'ResetPasswordController@reset')
+            ->name('password.update');
+
+        Route::get('email/verify', 'VerificationController@show')
+            ->name('verification.notice');
+        Route::get('email/verify/{id}', 'VerificationController@verify')
+            ->name('verification.verify');
+        Route::get('email/resend', 'VerificationController@resend')
+            ->name('verification.resend');
+    }
+);
