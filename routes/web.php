@@ -29,7 +29,7 @@ Route::prefix('docs')
 
 Route::prefix('auth/admin')
     ->as('auth.admin.')
-    ->namespace('Auth')
+    ->namespace('Auth\\Admin')
     ->group(function (): void {
         Route::get('login', 'LoginController@showLoginForm')
             ->name('login');
@@ -51,7 +51,7 @@ Route::prefix('auth/admin')
 
 Route::prefix('auth/end-user')
     ->as('auth.end-user.')
-    ->namespace('Auth')
+    ->namespace('Auth\\EndUser')
     ->group(function (): void {
         Route::get('login', 'LoginController@showLoginForm')
             ->name('login');
