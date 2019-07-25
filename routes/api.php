@@ -16,37 +16,38 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')
-    ->group(function (): void {
-        Route::apiResource('admins', 'AdminController');
+    ->group(
+        function (): void {
+            Route::apiResource('admins', 'AdminController');
 
-        Route::apiResource('audits', 'AuditController')
-            ->only('index', 'show');
+            Route::apiResource('audits', 'AuditController')
+                ->only('index', 'show');
 
-        Route::apiResource('contributions', 'ContributionController');
-        Route::put('contributions/{contribution}/approve', 'Contribution\\ApproveController')
-            ->name('contributions.approve');
-        Route::put('contributions/{contribution}/reject', 'Contribution\\RejectController')
-            ->name('contributions.reject');
+            Route::apiResource('contributions', 'ContributionController');
+            Route::put('contributions/{contribution}/approve', 'Contribution\\ApproveController')
+                ->name('contributions.approve');
+            Route::put('contributions/{contribution}/reject', 'Contribution\\RejectController')
+                ->name('contributions.reject');
 
-        Route::apiResource('end-users', 'EndUserController');
+            Route::apiResource('end-users', 'EndUserController');
 
-        Route::post('exports/{type}/request', 'Export\\RequestController')
-            ->name('exports.request');
+            Route::post('exports/{type}/request', 'Export\\RequestController')
+                ->name('exports.request');
 
-        Route::get('files/{file}/download', 'File\\DownloadController')
-            ->name('files.download');
-        Route::post('files/{file}/request', 'File\\RequestController')
-            ->name('files.request');
+            Route::get('files/{file}/download', 'File\\DownloadController')
+                ->name('files.download');
+            Route::post('files/{file}/request', 'File\\RequestController')
+                ->name('files.request');
 
-        Route::apiResource('notifications', 'NotificationController')
-            ->only('index', 'show');
+            Route::apiResource('notifications', 'NotificationController')
+                ->only('index', 'show');
 
-        Route::get('settings', 'SettingController@index')
-            ->name('settings.index');
-        Route::put('settings', 'SettingController@update')
-            ->name('settings.update');
+            Route::get('settings', 'SettingController@index')
+                ->name('settings.index');
+            Route::put('settings', 'SettingController@update')
+                ->name('settings.update');
 
-        Route::apiResource('tags', 'TagController')
-            ->only('index', 'store', 'show', 'destroy');
-    }
-);
+            Route::apiResource('tags', 'TagController')
+                ->only('index', 'store', 'show', 'destroy');
+        }
+    );

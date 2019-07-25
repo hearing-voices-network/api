@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\VariableSubstitution\Email\Admin;
 
-use App\Models\Contribution;
 use App\Models\EndUser;
 use App\VariableSubstitution\BaseVariableSubstituter;
 
