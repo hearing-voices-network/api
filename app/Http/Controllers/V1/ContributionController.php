@@ -43,7 +43,7 @@ class ContributionController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware('auth')->except('index', 'show');
+        $this->middleware(['auth', 'verified'])->except('index', 'show');
         $this->authorizeResource(Contribution::class);
 
         $this->contributionService = $contributionService;
