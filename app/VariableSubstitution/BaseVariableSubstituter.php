@@ -54,7 +54,11 @@ abstract class BaseVariableSubstituter implements VariableSubstituter
      */
     protected function extractAllVariables(string $content): array
     {
-        // TODO: Regex for capital letters and underscores within double braces.
+        $matches = [];
+
+        preg_match_all('/\(\(([A-Z_]+)\)\)/', $content, $matches);
+
+        return $matches[1];
     }
 
     /**
