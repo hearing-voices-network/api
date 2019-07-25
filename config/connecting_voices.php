@@ -23,4 +23,8 @@ return [
 
     'admin_email' => 'info+connecting-voices@ayup.agency', // TODO: Change this once confirmed by client.
 
+    'date_format' => 'd/m/Y',
+
+    'datetime_format' => 'd/m/Y H:i:s',
+
 ];

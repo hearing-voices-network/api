@@ -29,6 +29,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $subscribe = [
         \App\Listeners\ContributionEventSubscriber::class,
+        \App\Listeners\EndUserEventSubscriber::class,
     ];
 
     /**

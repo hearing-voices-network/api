@@ -69,13 +69,13 @@ abstract class BaseVariableSubstituter implements VariableSubstituter
     {
         $supportedVariables = [];
 
-        foreach ($variables as $key => $value) {
-            if (array_key_exists($key, $this->variables())) {
-                $supportedVariables[$key] = $value;
+        foreach ($variables as $variable) {
+            if (array_key_exists($variable, $this->variables())) {
+                $supportedVariables[] = $variable;
                 continue;
             }
 
-            $this->logUnsupportedVariable($key);
+            $this->logUnsupportedVariable($variable);
         }
 
         return $supportedVariables;
