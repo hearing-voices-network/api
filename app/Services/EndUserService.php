@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Events\EndUser\EndUserCreated;
+use App\Events\EndUser\EndUserForceDeleted;
+use App\Events\EndUser\EndUserSoftDeleted;
+use App\Events\EndUser\EndUserUpdated;
 use App\Models\EndUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Date;
@@ -18,7 +22,8 @@ class EndUserService
      */
     public function create(array $data): EndUser
     {
-        return EndUser::create([
+        /** @var \App\Models\EndUser $endUser */
+        $endUser = EndUser::create([
             'user_id' => User::create([
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
@@ -29,6 +34,10 @@ class EndUserService
             'ethnicity' => $data['ethnicity'] ?? null,
             'gdpr_consented_at' => Date::now(),
         ]);
+
+        event(new EndUserCreated($endUser));
+
+        return $endUser;
     }
 
     /**
@@ -52,6 +61,8 @@ class EndUserService
                 : $endUser->user->password,
         ]);
 
+        event(new EndUserUpdated($endUser));
+
         return $endUser;
     }
 
@@ -63,6 +74,8 @@ class EndUserService
     public function softDelete(EndUser $endUser): EndUser
     {
         $endUser->user->delete();
+
+        event(new EndUserSoftDeleted($endUser));
 
         return $endUser;
     }
@@ -83,5 +96,7 @@ class EndUserService
         $user->notifications()->delete();
         $endUser->delete();
         $user->forceDelete();
+
+        event(new EndUserForceDeleted($endUser));
     }
 }

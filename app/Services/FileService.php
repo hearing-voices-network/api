@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Events\File\FileRequested;
 use App\Models\Admin;
 use App\Models\File;
 use App\Models\FileToken;
@@ -23,6 +24,8 @@ class FileService
             'user_id' => $admin->user_id,
             'created_at' => Date::now(),
         ]);
+
+        event(new FileRequested($file, $fileToken));
 
         return $fileToken;
     }

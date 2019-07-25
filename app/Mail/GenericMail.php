@@ -4,12 +4,24 @@ declare(strict_types=1);
 
 namespace App\Mail;
 
+use App\VariableSubstitution\VariableSubstituter;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
+use Illuminate\Contracts\Mail\Mailer;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Mail\Message;
+use Illuminate\Queue\InteractsWithQueue;
 
-class GenericMail extends Mailable
+class GenericMail implements ShouldQueue
 {
+    use Dispatchable;
+    use InteractsWithQueue;
     use Queueable;
+
+    /**
+     * @var string
+     */
+    protected $to;
 
     /**
      * @var string
@@ -19,29 +31,47 @@ class GenericMail extends Mailable
     /**
      * @var string
      */
-    protected $content;
+    protected $body;
 
     /**
-     * NewContribution constructor.
-     *
-     * @param string $subject
-     * @param string $content
+     * @var \App\VariableSubstitution\VariableSubstituter
      */
-    public function __construct(string $subject, string $content)
-    {
+    protected $substituter;
+
+    /**
+     * Dispatcher constructor.
+     *
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @param \App\VariableSubstitution\VariableSubstituter $substituter
+     */
+    public function __construct(
+        string $to,
+        string $subject,
+        string $body,
+        VariableSubstituter $substituter
+    ) {
+        $this->to = $to;
         $this->subject = $subject;
-        $this->content = $content;
+        $this->body = $body;
+        $this->substituter = $substituter;
     }
 
     /**
-     * Build the message.
+     * Dispatch the email as a job to the queue.
      *
-     * @return \App\Mail\GenericMail
+     * @param \Illuminate\Contracts\Mail\Mailer $mailer
      */
-    public function build(): self
+    public function handle(Mailer $mailer): void
     {
-        return $this
-            ->subject($this->subject)
-            ->text('mail.generic', ['content' => $this->content]);
+        $mailer->raw(
+            $this->substituter->substitute($this->body),
+            function (Message $message): void {
+                $message
+                    ->to($this->to)
+                    ->subject($this->substituter->substitute($this->subject));
+            }
+        );
     }
 }
