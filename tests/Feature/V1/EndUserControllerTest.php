@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace Tests\Feature\V1;
 
 use App\Events\EndpointInvoked;
+use App\Mail\GenericMail;
 use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\Contribution;
 use App\Models\EndUser;
 use App\Models\Notification;
+use App\Models\Setting;
 use App\Models\User;
+use App\VariableSubstitution\Email\Admin\NewEndUserSubstituter;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -410,6 +415,38 @@ class EndUserControllerTest extends TestCase
                     && $event->getDescription() === "Created end user [{$endUser->id}]."
                     && $event->getIpAddress() === '127.0.0.1'
                     && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
+    /** @test */
+    public function email_sent_to_admins_for_store(): void
+    {
+        Queue::fake();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $this->postJson('/v1/end-users', [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        Queue::assertPushed(
+            GenericMail::class,
+            function (GenericMail $mail): bool {
+                /** @var array $emailContent */
+                $emailContent = Setting::findOrFail('email_content')->value;
+
+                return $mail->getTo() === config('connecting_voices.admin_email')
+                    && $mail->getSubject() === Arr::get($emailContent, 'admin.new_end_user.subject')
+                    && $mail->getBody() === Arr::get($emailContent, 'admin.new_end_user.body')
+                    && $mail->getSubstituter() instanceof NewEndUserSubstituter;
             }
         );
     }

@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace Tests\Feature\V1\Contribution;
 
 use App\Events\EndpointInvoked;
+use App\Mail\GenericMail;
 use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\Contribution;
 use App\Models\EndUser;
+use App\Models\Setting;
+use App\VariableSubstitution\Email\Admin\ContributionApprovedSubstituter;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -133,6 +138,36 @@ class ApproveControllerTest extends TestCase
                     && $event->getDescription() === "Approved contribution [{$contribution->id}]."
                     && $event->getIpAddress() === '127.0.0.1'
                     && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
+    /** @test */
+    public function email_sent_to_end_user_for_approve(): void
+    {
+        Queue::fake();
+
+        $contribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_IN_REVIEW)
+            ->create();
+
+        /** @var \App\Models\User $user */
+        $user = factory(Admin::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->putJson("/v1/contributions/{$contribution->id}/approve");
+
+        Queue::assertPushed(
+            GenericMail::class,
+            function (GenericMail $mail) use ($contribution): bool {
+                /** @var array $emailContent */
+                $emailContent = Setting::findOrFail('email_content')->value;
+
+                return $mail->getTo() === $contribution->endUser->user->email
+                    && $mail->getSubject() === Arr::get($emailContent, 'end_user.contribution_approved.subject')
+                    && $mail->getBody() === Arr::get($emailContent, 'end_user.contribution_approved.body')
+                    && $mail->getSubstituter() instanceof ContributionApprovedSubstituter;
             }
         );
     }

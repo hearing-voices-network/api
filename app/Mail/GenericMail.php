@@ -74,4 +74,36 @@ class GenericMail implements ShouldQueue
             }
         );
     }
+
+    /**
+     * @return string
+     */
+    public function getTo(): string
+    {
+        return $this->to;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject(): string
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+
+    /**
+     * @return \App\VariableSubstitution\VariableSubstituter
+     */
+    public function getSubstituter(): VariableSubstituter
+    {
+        return $this->substituter;
+    }
 }
