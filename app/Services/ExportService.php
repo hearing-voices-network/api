@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Events\Export\ExportCreated;
+use App\Events\Export\ExportRequested;
 use App\Exceptions\ExporterNotFoundException;
 use App\Exceptions\InvalidExporterException;
 use App\Exporters\BaseExporter;
@@ -41,7 +41,7 @@ class ExportService
 
         $export = $exporter->exportFor($admin);
 
-        event(new ExportCreated($export));
+        event(new ExportRequested($export));
 
         return $export;
     }

@@ -8,7 +8,7 @@ use App\Models\Export;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ExportCreated
+class ExportRequested
 {
     use Dispatchable;
     use SerializesModels;

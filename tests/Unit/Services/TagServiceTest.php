@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Services;
 
+use App\Events\Tag\TagCreated;
+use App\Events\Tag\TagForceDeleted;
+use App\Events\Tag\TagSoftDeleted;
 use App\Models\Contribution;
 use App\Models\Tag;
 use App\Services\TagService;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class TagServiceTest extends TestCase
@@ -28,6 +32,26 @@ class TagServiceTest extends TestCase
         $this->assertDatabaseHas('tags', ['id' => $tag->id]);
         $this->assertEquals($parentTag->id, $tag->parentTag->id);
         $this->assertEquals('New Tag', $tag->name);
+    }
+
+    /** @test */
+    public function it_dispatches_an_event_when_created(): void
+    {
+        Event::fake([TagCreated::class]);
+
+        /** @var \App\Services\TagService $tagService */
+        $tagService = resolve(TagService::class);
+
+        $tag = $tagService->create([
+            'name' => 'New Tag',
+        ]);
+
+        Event::assertDispatched(
+            TagCreated::class,
+            function (TagCreated $event) use ($tag): bool {
+                return $event->getTag()->is($tag);
+            }
+        );
     }
 
     /** @test */
@@ -77,6 +101,27 @@ class TagServiceTest extends TestCase
     }
 
     /** @test */
+    public function it_dispatches_an_event_when_soft_deleted(): void
+    {
+        Event::fake([TagSoftDeleted::class]);
+
+        /** @var \App\Services\TagService $tagService */
+        $tagService = resolve(TagService::class);
+
+        /** @var \App\Models\Tag $tag */
+        $tag = factory(Tag::class)->create();
+
+        $tagService->softDelete($tag);
+
+        Event::assertDispatched(
+            TagSoftDeleted::class,
+            function (TagSoftDeleted $event) use ($tag): bool {
+                return $event->getTag()->is($tag);
+            }
+        );
+    }
+
+    /** @test */
     public function it_force_deletes_a_parent_tag_along_with_child_records(): void
     {
         /** @var \App\Services\TagService $tagService */
@@ -118,5 +163,26 @@ class TagServiceTest extends TestCase
             'contribution_id' => $contribution->id,
             'tag_id' => $tag->id,
         ]);
+    }
+
+    /** @test */
+    public function it_dispatches_an_event_when_force_deleted(): void
+    {
+        Event::fake([TagForceDeleted::class]);
+
+        /** @var \App\Services\TagService $tagService */
+        $tagService = resolve(TagService::class);
+
+        /** @var \App\Models\Tag $tag */
+        $tag = factory(Tag::class)->create();
+
+        $tagService->forceDelete($tag);
+
+        Event::assertDispatched(
+            TagForceDeleted::class,
+            function (TagForceDeleted $event) use ($tag): bool {
+                return $event->getTag()->is($tag);
+            }
+        );
     }
 }

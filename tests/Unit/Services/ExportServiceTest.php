@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Services;
 
+use App\Events\Export\ExportRequested;
 use App\Exceptions\ExporterNotFoundException;
 use App\Exceptions\InvalidExporterException;
 use App\Models\Admin;
 use App\Models\Export;
 use App\Services\ExportService;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class ExportServiceTest extends TestCase
@@ -53,5 +55,26 @@ class ExportServiceTest extends TestCase
         $exportService = resolve(ExportService::class);
 
         $exportService->create('test', $admin, 'Tests\\Stubs\\Exporters');
+    }
+
+    /** @test */
+    public function it_dispatches_an_event_when_requested(): void
+    {
+        Event::fake([ExportRequested::class]);
+
+        /** @var \App\Models\Admin $admin */
+        $admin = factory(Admin::class)->create();
+
+        /** @var \App\Services\ExportService $exportService */
+        $exportService = resolve(ExportService::class);
+
+        $export = $exportService->create('all', $admin);
+
+        Event::assertDispatched(
+            ExportRequested::class,
+            function (ExportRequested $event) use ($export): bool {
+                return $event->getExport()->is($export);
+            }
+        );
     }
 }

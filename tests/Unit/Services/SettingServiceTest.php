@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Services;
 
+use App\Events\Setting\SettingsUpdated;
 use App\Services\SettingService;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class SettingServiceTest extends TestCase
@@ -104,5 +106,37 @@ class SettingServiceTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    /** @test */
+    public function it_dispatches_an_event_when_updated(): void
+    {
+        Event::fake([SettingsUpdated::class]);
+
+        /** @var \App\Services\SettingService $settingService */
+        $settingService = resolve(SettingService::class);
+
+        $settings = $settingService->update([]);
+
+        Event::assertDispatched(
+            SettingsUpdated::class,
+            function (SettingsUpdated $event) use ($settings): bool {
+                foreach ($event->getSetting() as $eventSetting) {
+                    /** @var \App\Models\Setting $eventSetting */
+                    /** @var \App\Models\Setting|null $setting */
+                    $setting = $settings->firstWhere('key', $eventSetting->key);
+
+                    if ($setting === null) {
+                        return false;
+                    }
+
+                    if ($setting->isNot($eventSetting)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        );
     }
 }

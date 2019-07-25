@@ -44,7 +44,7 @@ class AuditServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_dispatches_an_event_when_creating()
+    public function it_dispatches_an_event_when_created(): void
     {
         Event::fake([AuditCreated::class]);
 

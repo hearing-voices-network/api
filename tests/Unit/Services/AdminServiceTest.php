@@ -37,7 +37,7 @@ class AdminServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_dispatches_an_event_when_creating(): void
+    public function it_dispatches_an_event_when_created(): void
     {
         Event::fake([AdminCreated::class]);
 
@@ -93,7 +93,7 @@ class AdminServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_dispatches_an_event_when_updating(): void
+    public function it_dispatches_an_event_when_updated(): void
     {
         Event::fake([AdminUpdated::class]);
 
@@ -134,7 +134,7 @@ class AdminServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_dispatches_an_event_when_deleting(): void
+    public function it_dispatches_an_event_when_deleted(): void
     {
         Event::fake([AdminDeleted::class]);
 
