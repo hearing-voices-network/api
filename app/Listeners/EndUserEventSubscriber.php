@@ -8,23 +8,18 @@ use App\Events\EndUser\EndUserCreated;
 use App\Mail\GenericMail;
 use App\Models\Setting;
 use App\VariableSubstitution\Email\Admin\NewEndUserSubstituter;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Arr;
 
-class EndUserEventSubscriber
+class EndUserEventSubscriber extends EventSubscriber
 {
-    use DispatchesJobs;
-
     /**
-     * @param \Illuminate\Events\Dispatcher $events
+     * @return string[]
      */
-    public function subscribe(Dispatcher $events): void
+    protected function mapping(): array
     {
-        $events->listen(
-            EndUserCreated::class,
-            static::class . '@handleEndUserCreated'
-        );
+        return [
+            EndUserCreated::class => 'handleEndUserCreated',
+        ];
     }
 
     /**

@@ -14,38 +14,21 @@ use App\VariableSubstitution\Email\Admin\ContributionApprovedSubstituter;
 use App\VariableSubstitution\Email\Admin\ContributionRejectedSubstituter;
 use App\VariableSubstitution\Email\Admin\NewContributionSubstituter;
 use App\VariableSubstitution\Email\Admin\UpdatedContributionSubstituter;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Arr;
 
-class ContributionEventSubscriber
+class ContributionEventSubscriber extends EventSubscriber
 {
-    use DispatchesJobs;
-
     /**
-     * @param \Illuminate\Events\Dispatcher $events
+     * @return string[]
      */
-    public function subscribe(Dispatcher $events): void
+    protected function mapping(): array
     {
-        $events->listen(
-            ContributionCreated::class,
-            static::class . '@handleContributionCreated'
-        );
-
-        $events->listen(
-            ContributionUpdated::class,
-            static::class . '@handleContributionUpdated'
-        );
-
-        $events->listen(
-            ContributionApproved::class,
-            static::class . '@handleContributionApproved'
-        );
-
-        $events->listen(
-            ContributionRejected::class,
-            static::class . '@handleContributionRejected'
-        );
+        return [
+            ContributionCreated::class => 'handleContributionCreated',
+            ContributionUpdated::class => 'handleContributionUpdated',
+            ContributionApproved::class => 'handleContributionApproved',
+            ContributionRejected::class => 'handleContributionRejected',
+        ];
     }
 
     /**
