@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\V1\Contribution;
 
 use App\Events\EndpointInvoked;
-use App\Mail\GenericMail;
+use App\Mail\TemplateMail;
 use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\Contribution;
@@ -173,8 +173,8 @@ class RejectControllerTest extends TestCase
         ]);
 
         Queue::assertPushed(
-            GenericMail::class,
-            function (GenericMail $mail) use ($contribution): bool {
+            TemplateMail::class,
+            function (TemplateMail $mail) use ($contribution): bool {
                 /** @var array $emailContent */
                 $emailContent = Setting::findOrFail('email_content')->value;
 

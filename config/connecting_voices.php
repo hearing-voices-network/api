@@ -27,4 +27,6 @@ return [
 
     'datetime_format' => 'd/m/Y H:i:s',
 
+    'otp_enabled' => env('OTP_ENABLED', true),
+
 ];

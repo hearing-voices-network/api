@@ -2,16 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Mail;
+namespace App\Sms;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
 
-class GenericMail implements ShouldQueue
+class GenericSms implements ShouldQueue
 {
     use Dispatchable;
     use InteractsWithQueue;
@@ -25,42 +23,28 @@ class GenericMail implements ShouldQueue
     /**
      * @var string
      */
-    protected $subject;
-
-    /**
-     * @var string
-     */
     protected $body;
 
     /**
      * Dispatcher constructor.
      *
      * @param string $to
-     * @param string $subject
      * @param string $body
      */
-    public function __construct(string $to, string $subject, string $body)
+    public function __construct(string $to, string $body)
     {
         $this->to = $to;
-        $this->subject = $subject;
         $this->body = $body;
     }
 
     /**
      * Dispatch the email as a job to the queue.
      *
-     * @param \Illuminate\Contracts\Mail\Mailer $mailer
+     * @param \App\Sms\SmsSender $sender
      */
-    public function handle(Mailer $mailer): void
+    public function handle(SmsSender $sender): void
     {
-        $mailer->raw(
-            $this->body,
-            function (Message $message): void {
-                $message
-                    ->to($this->to)
-                    ->subject($this->subject);
-            }
-        );
+        $sender->send((string)config('sms.from'), $this->to, $this->body);
     }
 
     /**
@@ -69,14 +53,6 @@ class GenericMail implements ShouldQueue
     public function getTo(): string
     {
         return $this->to;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubject(): string
-    {
-        return $this->subject;
     }
 
     /**

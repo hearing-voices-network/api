@@ -13,6 +13,16 @@
     @stack('css')
 </head>
 <body>
+    <header>
+        <p>Is logged in: {{ auth('web')->check() ? 'Yes' : 'No' }}</p>
+        @if (auth('web')->check())
+            <form action="{{ route('auth.admin.logout') }}" method="POST">
+                @csrf
+                <button type="submit">Logout</button>
+            </form>
+        @endif
+    </header>
+
     <!-- Body -->
     @yield('body')
 

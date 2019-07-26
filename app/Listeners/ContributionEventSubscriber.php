@@ -8,7 +8,7 @@ use App\Events\Contribution\ContributionApproved;
 use App\Events\Contribution\ContributionCreated;
 use App\Events\Contribution\ContributionRejected;
 use App\Events\Contribution\ContributionUpdated;
-use App\Mail\GenericMail;
+use App\Mail\TemplateMail;
 use App\Models\Setting;
 use App\VariableSubstitution\Email\Admin\ContributionApprovedSubstituter;
 use App\VariableSubstitution\Email\Admin\ContributionRejectedSubstituter;
@@ -39,7 +39,7 @@ class ContributionEventSubscriber extends EventSubscriber
         /** @var array $emailContent */
         $emailContent = Setting::findOrFail('email_content')->value;
 
-        $this->dispatch(new GenericMail(
+        $this->dispatch(new TemplateMail(
             (string)config('connecting_voices.admin_email'),
             Arr::get($emailContent, 'admin.new_contribution.subject'),
             Arr::get($emailContent, 'admin.new_contribution.body'),
@@ -55,7 +55,7 @@ class ContributionEventSubscriber extends EventSubscriber
         /** @var array $emailContent */
         $emailContent = Setting::findOrFail('email_content')->value;
 
-        $this->dispatch(new GenericMail(
+        $this->dispatch(new TemplateMail(
             (string)config('connecting_voices.admin_email'),
             Arr::get($emailContent, 'admin.updated_contribution.subject'),
             Arr::get($emailContent, 'admin.updated_contribution.body'),
@@ -71,7 +71,7 @@ class ContributionEventSubscriber extends EventSubscriber
         /** @var array $emailContent */
         $emailContent = Setting::findOrFail('email_content')->value;
 
-        $this->dispatch(new GenericMail(
+        $this->dispatch(new TemplateMail(
             $event->getContribution()->endUser->user->email,
             Arr::get($emailContent, 'end_user.contribution_approved.subject'),
             Arr::get($emailContent, 'end_user.contribution_approved.body'),
@@ -87,7 +87,7 @@ class ContributionEventSubscriber extends EventSubscriber
         /** @var array $emailContent */
         $emailContent = Setting::findOrFail('email_content')->value;
 
-        $this->dispatch(new GenericMail(
+        $this->dispatch(new TemplateMail(
             $event->getContribution()->endUser->user->email,
             Arr::get($emailContent, 'end_user.contribution_rejected.subject'),
             Arr::get($emailContent, 'end_user.contribution_rejected.body'),

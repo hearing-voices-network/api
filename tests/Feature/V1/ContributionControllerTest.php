@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\V1;
 
 use App\Events\EndpointInvoked;
-use App\Mail\GenericMail;
+use App\Mail\TemplateMail;
 use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\Contribution;
@@ -501,8 +501,8 @@ class ContributionControllerTest extends TestCase
         ]);
 
         Queue::assertPushed(
-            GenericMail::class,
-            function (GenericMail $mail): bool {
+            TemplateMail::class,
+            function (TemplateMail $mail): bool {
                 /** @var array $emailContent */
                 $emailContent = Setting::findOrFail('email_content')->value;
 
@@ -814,8 +814,8 @@ class ContributionControllerTest extends TestCase
         ]);
 
         Queue::assertPushed(
-            GenericMail::class,
-            function (GenericMail $mail): bool {
+            TemplateMail::class,
+            function (TemplateMail $mail): bool {
                 /** @var array $emailContent */
                 $emailContent = Setting::findOrFail('email_content')->value;
 

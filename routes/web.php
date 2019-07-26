@@ -36,6 +36,9 @@ Route::prefix('auth/admin')
             Route::get('login', 'LoginController@showLoginForm')
                 ->name('login');
             Route::post('login', 'LoginController@login');
+            Route::get('login/code', 'LoginController@showOtpForm')
+                ->name('login.code');
+            Route::post('login/code', 'LoginController@otp');
             Route::post('logout', 'LoginController@logout')
                 ->name('logout');
 
