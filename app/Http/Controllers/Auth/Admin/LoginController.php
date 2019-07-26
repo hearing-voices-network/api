@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Sms\GenericSms;
 use App\Models\User;
+use App\Sms\GenericSms;
 use App\Support\Pagination;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -144,7 +144,7 @@ class LoginController extends Controller
     /**
      * Redirect the user after determining they are locked out.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      */
     protected function sendOtpLockoutResponse(Request $request): void
     {
@@ -160,7 +160,7 @@ class LoginController extends Controller
     /**
      * Get the failed login response instance.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      */
     protected function sendFailedOtpResponse(Request $request): void
     {
@@ -172,7 +172,7 @@ class LoginController extends Controller
     /**
      * Get the throttle key for the given request.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @return string
      */
     protected function throttleKey(Request $request): string
