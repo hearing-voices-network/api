@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Connecting Voices'),
+    'name' => 'Connecting Voices',
 
     /*
     |--------------------------------------------------------------------------
