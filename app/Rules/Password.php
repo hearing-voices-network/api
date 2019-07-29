@@ -31,12 +31,14 @@ class Password implements Rule
     {
         $specialCharacters = static::ALLOWED_SPECIAL_CHARACTERS;
 
-        return <<<EOT
+        $message = <<<EOT
             The :attribute must be at least eight characters long, 
             contain one uppercase letter, 
             one lowercase letter, 
             one number and one special character ({$specialCharacters}).
             EOT;
+
+        return str_replace(PHP_EOL, '', $message);
     }
 
     /**

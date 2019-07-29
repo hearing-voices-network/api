@@ -27,6 +27,10 @@ class EndUserEventSubscriber extends EventSubscriber
      */
     public function handleEndUserCreated(EndUserCreated $event): void
     {
+        // Email verification to end users.
+        $event->getEndUser()->user->sendEmailVerificationNotification();
+
+        // Email to admins.
         /** @var array $emailContent */
         $emailContent = Setting::findOrFail('email_content')->value;
 

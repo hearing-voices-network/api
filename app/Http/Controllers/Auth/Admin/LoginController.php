@@ -12,7 +12,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
@@ -50,7 +49,7 @@ class LoginController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest:web')->except('logout');
         $this->middleware('otp')->only('showOtpForm', 'otp');
     }
 

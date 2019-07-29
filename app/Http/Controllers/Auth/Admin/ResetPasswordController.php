@@ -43,7 +43,7 @@ class ResetPasswordController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware('guest');
+        $this->middleware('guest:web');
     }
 
     /**

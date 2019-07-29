@@ -8,6 +8,9 @@ use App\Mail\GenericMail;
 use GoldSpecDigital\LaravelEloquentUUID\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\URL;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
@@ -47,6 +50,26 @@ class User extends Authenticatable
                 $this->email,
                 'Forgotten Password',
                 "Click here to reset your password {$passwordResetUrl}"
+            )
+        );
+    }
+
+    /**
+     * Send the email verification notification.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        $verifyEmailUrl = URL::temporarySignedRoute(
+            'auth.end-user.verification.verify',
+            Date::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            ['id' => $this->getKey()]
+        );
+
+        $this->dispatchNow(
+            new GenericMail(
+                $this->email,
+                'Please Verify Email',
+                "Click here to verify your email address {$verifyEmailUrl}"
             )
         );
     }

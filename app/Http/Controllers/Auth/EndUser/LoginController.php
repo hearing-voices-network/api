@@ -6,8 +6,10 @@ namespace App\Http\Controllers\Auth\EndUser;
 
 use App\Http\Controllers\Controller;
 use App\Support\Pagination;
+use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -29,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * LoginController constructor.
@@ -41,6 +43,26 @@ class LoginController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest:web')->except('logout');
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function showLoginForm(): View
+    {
+        return view('end-user.auth.login');
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard()
+    {
+        return Auth::guard('web');
     }
 }

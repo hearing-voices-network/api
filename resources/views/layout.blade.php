@@ -20,6 +20,12 @@
                 @csrf
                 <button type="submit">Logout</button>
             </form>
+
+            @if (session('resent'))
+                <p>Email verification has been sent.</p>
+            @elseif (!auth('web')->user()->hasVerifiedEmail())
+                <p>Email not verified <a href="{{ route('auth.end-user.verification.resend') }}">click here to resend</a>.</p>
+            @endif
         @endif
     </header>
 

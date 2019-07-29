@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Auth\EndUser;
 
 use App\Http\Controllers\Controller;
 use App\Support\Pagination;
@@ -29,7 +29,7 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * VerificationController constructor.
@@ -41,8 +41,21 @@ class VerificationController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware('auth');
+        $this->middleware('auth:web');
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
+    }
+
+    /**
+     * Show the email verification notice.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request)
+    {
+        return $request->user()->hasVerifiedEmail()
+            ? redirect($this->redirectPath())
+            : view('end-user.auth.verify-email');
     }
 }
