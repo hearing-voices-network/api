@@ -34,6 +34,8 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->registerPolicies();
 
+        // Ignore the default Laravel Passport migrations as we have modified them.
+        Passport::ignoreMigrations();
         Passport::routes(function (RouteRegistrar $router): void {
             $router->forAuthorization();
             $router->forAccessTokens();
