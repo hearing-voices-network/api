@@ -21,7 +21,7 @@ class DownloadFileRequest extends FormRequest
         $file = $this->route('file');
 
         /** @var \App\Models\Admin|null $admin */
-        $admin = optional($this->user())->admin;
+        $admin = optional($this->user('api'))->admin;
 
         return [
             'token' => [

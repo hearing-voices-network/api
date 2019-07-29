@@ -43,7 +43,7 @@ class ContributionController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified'])->except('index', 'show');
+        $this->middleware(['auth:api', 'verified'])->except('index', 'show');
         $this->authorizeResource(Contribution::class);
 
         $this->contributionService = $contributionService;
@@ -55,9 +55,9 @@ class ContributionController extends Controller
      */
     public function index(Request $request): ResourceCollection
     {
-        $isGuest = $request->user() === null;
-        $isEndUser = optional($request->user())->isEndUser();
-        $endUser = optional($request->user())->endUser;
+        $isGuest = $request->user('api') === null;
+        $isEndUser = optional($request->user('api'))->isEndUser();
+        $endUser = optional($request->user('api'))->endUser;
 
         $baseQuery = Contribution::query()
             ->with('tags.publicContributions')
@@ -95,7 +95,7 @@ class ContributionController extends Controller
     {
         $contribution = DB::transaction(function () use ($request): Contribution {
             return $this->contributionService->create([
-                'end_user_id' => $request->user()->endUser->id,
+                'end_user_id' => $request->user('api')->endUser->id,
                 'content' => $request->input('content'),
                 'status' => $request->status,
                 'tags' => $request->input('tags.*.id'),

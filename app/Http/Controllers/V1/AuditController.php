@@ -29,7 +29,7 @@ class AuditController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth:api', 'verified']);
         $this->authorizeResource(Audit::class);
     }
 

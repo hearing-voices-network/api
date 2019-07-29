@@ -37,7 +37,7 @@ class RequestController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth:api', 'verified']);
 
         $this->exportService = $exportService;
     }
@@ -53,7 +53,7 @@ class RequestController extends Controller
         $this->authorize('request', [Export::class, $type]);
 
         $export = DB::transaction(function () use ($request, $type): Export {
-            return $this->exportService->create($type, $request->user()->admin);
+            return $this->exportService->create($type, $request->user('api')->admin);
         });
 
         event(EndpointInvoked::onCreate($request, "Requested export [{$type}]."));

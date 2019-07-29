@@ -33,7 +33,7 @@ class RequestController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth:api', 'verified']);
 
         $this->fileService = $fileService;
     }
@@ -49,7 +49,7 @@ class RequestController extends Controller
         $this->authorize('request', $file);
 
         $fileToken = DB::transaction(function () use ($request, $file): FileToken {
-            return $this->fileService->request($file, $request->user()->admin);
+            return $this->fileService->request($file, $request->user('api')->admin);
         });
 
         event(EndpointInvoked::onCreate($request, "Requested file [{$file->id}]."));

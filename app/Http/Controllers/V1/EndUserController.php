@@ -49,7 +49,7 @@ class EndUserController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified'])->except('store');
+        $this->middleware(['auth:api', 'verified'])->except('store');
         $this->authorizeResource(EndUser::class);
 
         $this->endUserService = $endUserService;

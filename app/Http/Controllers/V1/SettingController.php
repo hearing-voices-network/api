@@ -35,7 +35,7 @@ class SettingController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified'])->except('index');
+        $this->middleware(['auth:api', 'verified'])->except('index');
 
         $this->settingService = $settingService;
     }
@@ -52,7 +52,7 @@ class SettingController extends Controller
         event(EndpointInvoked::onRead($request, 'Viewed settings.'));
 
         return Setting::toResponse(
-            optional($request->user())->isAdmin() ?? false
+            optional($request->user('api'))->isAdmin() ?? false
         );
     }
 
