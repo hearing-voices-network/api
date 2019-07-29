@@ -11,7 +11,7 @@ use App\Models\Audit;
 use App\Models\Contribution;
 use App\Models\EndUser;
 use App\Models\Setting;
-use App\VariableSubstitution\Email\Admin\ContributionRejectedSubstituter;
+use App\VariableSubstitution\Email\EndUser\ContributionRejectedSubstituter;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;

@@ -4,16 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Mail\GenericMail;
-use App\Mail\TemplateMail;
-use App\VariableSubstitution\Email\Admin\EmailConfirmationSubstituter;
 use GoldSpecDigital\LaravelEloquentUUID\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\URL;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
@@ -23,7 +15,6 @@ class User extends Authenticatable
     use Scopes\UserScopes;
     use HasApiTokens;
     use SoftDeletes;
-    use DispatchesJobs;
 
     /**
      * The attributes that should be cast to native types.
@@ -44,17 +35,9 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token): void
     {
-        $passwordResetUrl = $this->isAdmin()
-            ? route('auth.admin.password.reset', ['token' => $token])
-            : route('auth.end-user.password.reset', ['token' => $token]);
-
-        $this->dispatchNow(
-            new GenericMail(
-                $this->email,
-                'Forgotten Password',
-                "Click here to reset your password {$passwordResetUrl}"
-            )
-        );
+        $this->isAdmin()
+            ? $this->admin->sendPasswordResetNotification($token)
+            : $this->endUser->sendPasswordResetNotification($token);
     }
 
     /**
@@ -62,21 +45,9 @@ class User extends Authenticatable
      */
     public function sendEmailVerificationNotification(): void
     {
-        /** @var array $emailContent */
-        $emailContent = Setting::findOrFail('email_content')->value;
-
-        $verifyEmailUrl = URL::temporarySignedRoute(
-            'auth.end-user.verification.verify',
-            Date::now()->addMinutes(Config::get('auth.verification.expire', 60)),
-            ['id' => $this->getKey()]
-        );
-
-        $this->dispatchNow(new TemplateMail(
-            $this->email,
-            Arr::get($emailContent, 'end-user.email_confirmation.subject'),
-            Arr::get($emailContent, 'end-user.email_confirmation.body'),
-            new EmailConfirmationSubstituter($this->endUser, $verifyEmailUrl)
-        ));
+        if ($this->isEndUser()) {
+            $this->endUser->sendEmailVerificationNotification();
+        }
     }
 
     /**

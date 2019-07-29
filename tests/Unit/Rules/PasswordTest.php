@@ -41,6 +41,7 @@ class PasswordTest extends TestCase
             one lowercase letter, 
             one number and one special character ({$specialCharacters}).
             EOT;
+        $message = str_replace(PHP_EOL, '', $message);
 
         $this->assertEquals($message, $rule->message());
     }

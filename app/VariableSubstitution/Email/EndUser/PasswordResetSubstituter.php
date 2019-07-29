@@ -7,7 +7,7 @@ namespace App\VariableSubstitution\Email\EndUser;
 use App\Models\EndUser;
 use App\VariableSubstitution\BaseVariableSubstituter;
 
-class EmailConfirmationSubstituter extends BaseVariableSubstituter
+class PasswordResetSubstituter extends BaseVariableSubstituter
 {
     /**
      * @var \App\Models\EndUser
@@ -17,18 +17,18 @@ class EmailConfirmationSubstituter extends BaseVariableSubstituter
     /**
      * @var string
      */
-    protected $verifyEmailUrl;
+    protected $passwordResetUrl;
 
     /**
-     * EmailConfirmationSubstituter constructor.
+     * PasswordResetSubstituter constructor.
      *
      * @param \App\Models\EndUser $endUser
-     * @param string $verifyEmailUrl
+     * @param string $passwordResetUrl
      */
-    public function __construct(EndUser $endUser, string $verifyEmailUrl)
+    public function __construct(EndUser $endUser, string $passwordResetUrl)
     {
         $this->endUser = $endUser;
-        $this->verifyEmailUrl = $verifyEmailUrl;
+        $this->passwordResetUrl = $passwordResetUrl;
     }
 
     /**
@@ -38,7 +38,7 @@ class EmailConfirmationSubstituter extends BaseVariableSubstituter
     {
         return [
             'END_USER_EMAIL' => $this->endUser->user->email,
-            'VERIFY_EMAIL_URL' => $this->verifyEmailUrl,
+            'PASSWORD_RESET_URL' => $this->passwordResetUrl,
         ];
     }
 }

@@ -10,10 +10,10 @@ use App\Events\Contribution\ContributionRejected;
 use App\Events\Contribution\ContributionUpdated;
 use App\Mail\TemplateMail;
 use App\Models\Setting;
-use App\VariableSubstitution\Email\Admin\ContributionApprovedSubstituter;
-use App\VariableSubstitution\Email\Admin\ContributionRejectedSubstituter;
 use App\VariableSubstitution\Email\Admin\NewContributionSubstituter;
 use App\VariableSubstitution\Email\Admin\UpdatedContributionSubstituter;
+use App\VariableSubstitution\Email\EndUser\ContributionApprovedSubstituter;
+use App\VariableSubstitution\Email\EndUser\ContributionRejectedSubstituter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 

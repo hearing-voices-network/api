@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\VariableSubstitution\Email\Admin;
+namespace App\VariableSubstitution\Email\EndUser;
 
 use App\Models\Contribution;
 use App\VariableSubstitution\BaseVariableSubstituter;
