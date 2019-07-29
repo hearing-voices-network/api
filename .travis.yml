@@ -1,0 +1,36 @@
+# Skip builds for new tags.
+if: tag IS blank
+
+# Only build on the following branches.
+branches:
+  only:
+    - master
+    - develop
+
+# Use Python as the base image/language.
+language: python
+python:
+  - "2.7"
+
+# Sudo and Docker both required for the build.
+sudo: required
+services:
+  - docker
+
+# Commands to run before the testing.
+before_script:
+  - ./develop build
+  - ./develop up -d
+  - ./develop composer install
+  - ./develop run --rm -T api mv .env.example .env
+  - ./develop artisan key:generate
+  - ./develop artisan passport:keys
+
+# Commands to run for the tests.
+script:
+  - ./develop composer test:style
+  - ./develop composer test:unit
+
+# Commands to run if their is a failure.
+after_failure:
+  - cat storage/logs/testing.log
