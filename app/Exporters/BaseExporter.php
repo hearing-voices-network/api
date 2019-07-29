@@ -7,6 +7,7 @@ namespace App\Exporters;
 use App\Models\Admin;
 use App\Models\Export;
 use App\Models\File;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -117,7 +118,7 @@ abstract class BaseExporter
     protected function tempFileContents(callable $callback): string
     {
         $filename = Str::uuid()->toString() . '.tmp';
-        $filepath = config('filesystems.disks.temp.root') . '/' . $filename;
+        $filepath = Config::get('filesystems.disks.temp.root') . '/' . $filename;
 
         $callback($filepath);
 

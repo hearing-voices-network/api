@@ -9,6 +9,7 @@ use App\Mail\TemplateMail;
 use App\Models\Setting;
 use App\VariableSubstitution\Email\Admin\NewEndUserSubstituter;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Config;
 
 class EndUserEventSubscriber extends EventSubscriber
 {
@@ -35,7 +36,7 @@ class EndUserEventSubscriber extends EventSubscriber
         $emailContent = Setting::findOrFail('email_content')->value;
 
         $this->dispatch(new TemplateMail(
-            (string)config('connecting_voices.admin_email'),
+            Config::get('connecting_voices.admin_email'),
             Arr::get($emailContent, 'admin.new_end_user.subject'),
             Arr::get($emailContent, 'admin.new_end_user.body'),
             new NewEndUserSubstituter($event->getEndUser())

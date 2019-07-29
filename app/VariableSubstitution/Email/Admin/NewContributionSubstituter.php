@@ -6,6 +6,7 @@ namespace App\VariableSubstitution\Email\Admin;
 
 use App\Models\Contribution;
 use App\VariableSubstitution\BaseVariableSubstituter;
+use Illuminate\Support\Facades\Config;
 
 class NewContributionSubstituter extends BaseVariableSubstituter
 {
@@ -34,7 +35,7 @@ class NewContributionSubstituter extends BaseVariableSubstituter
             'CONTRIBUTION_CONTENT' => $this->contribution->content,
             'CONTRIBUTION_STATUS' => $this->contribution->status,
             'CONTRIBUTION_CREATED_AT' => $this->contribution->created_at
-                ->format(config('connecting_voices.datetime_format')),
+                ->format(Config::get('connecting_voices.datetime_format')),
             'TAGS' => $this->contribution
                 ->tags()
                 ->pluck('name')

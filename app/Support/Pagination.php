@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Support;
 
+use Illuminate\Support\Facades\Config;
+
 class Pagination
 {
     /**
@@ -12,9 +14,9 @@ class Pagination
      */
     public function perPage(int $perPage = null): int
     {
-        $perPage = $perPage ?? (int)config('connecting_voices.pagination.default');
+        $perPage = $perPage ?? Config::get('connecting_voices.pagination.default');
         $perPage = max($perPage, 1);
-        $perPage = min($perPage, (int)config('connecting_voices.pagination.max'));
+        $perPage = min($perPage, Config::get('connecting_voices.pagination.max'));
 
         return $perPage;
     }

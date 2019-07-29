@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Mail\GenericMail;
+use App\Mail\TemplateMail;
+use App\VariableSubstitution\Email\Admin\EmailConfirmationSubstituter;
 use GoldSpecDigital\LaravelEloquentUUID\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\URL;
@@ -59,19 +62,21 @@ class User extends Authenticatable
      */
     public function sendEmailVerificationNotification(): void
     {
+        /** @var array $emailContent */
+        $emailContent = Setting::findOrFail('email_content')->value;
+
         $verifyEmailUrl = URL::temporarySignedRoute(
             'auth.end-user.verification.verify',
             Date::now()->addMinutes(Config::get('auth.verification.expire', 60)),
             ['id' => $this->getKey()]
         );
 
-        $this->dispatchNow(
-            new GenericMail(
-                $this->email,
-                'Please Verify Email',
-                "Click here to verify your email address {$verifyEmailUrl}"
-            )
-        );
+        $this->dispatchNow(new TemplateMail(
+            $this->email,
+            Arr::get($emailContent, 'end-user.email_confirmation.subject'),
+            Arr::get($emailContent, 'end-user.email_confirmation.body'),
+            new EmailConfirmationSubstituter($this->endUser, $verifyEmailUrl)
+        ));
     }
 
     /**

@@ -15,6 +15,7 @@ use App\VariableSubstitution\Email\Admin\ContributionRejectedSubstituter;
 use App\VariableSubstitution\Email\Admin\NewContributionSubstituter;
 use App\VariableSubstitution\Email\Admin\UpdatedContributionSubstituter;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Config;
 
 class ContributionEventSubscriber extends EventSubscriber
 {
@@ -40,7 +41,7 @@ class ContributionEventSubscriber extends EventSubscriber
         $emailContent = Setting::findOrFail('email_content')->value;
 
         $this->dispatch(new TemplateMail(
-            (string)config('connecting_voices.admin_email'),
+            Config::get('connecting_voices.admin_email'),
             Arr::get($emailContent, 'admin.new_contribution.subject'),
             Arr::get($emailContent, 'admin.new_contribution.body'),
             new NewContributionSubstituter($event->getContribution())
@@ -56,7 +57,7 @@ class ContributionEventSubscriber extends EventSubscriber
         $emailContent = Setting::findOrFail('email_content')->value;
 
         $this->dispatch(new TemplateMail(
-            (string)config('connecting_voices.admin_email'),
+            Config::get('connecting_voices.admin_email'),
             Arr::get($emailContent, 'admin.updated_contribution.subject'),
             Arr::get($emailContent, 'admin.updated_contribution.body'),
             new UpdatedContributionSubstituter($event->getContribution())

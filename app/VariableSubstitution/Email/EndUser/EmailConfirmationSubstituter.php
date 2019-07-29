@@ -6,9 +6,8 @@ namespace App\VariableSubstitution\Email\Admin;
 
 use App\Models\EndUser;
 use App\VariableSubstitution\BaseVariableSubstituter;
-use Illuminate\Support\Facades\Config;
 
-class NewEndUserSubstituter extends BaseVariableSubstituter
+class EmailConfirmationSubstituter extends BaseVariableSubstituter
 {
     /**
      * @var \App\Models\EndUser
@@ -16,13 +15,20 @@ class NewEndUserSubstituter extends BaseVariableSubstituter
     protected $endUser;
 
     /**
-     * NewEndUserSubstituter constructor.
+     * @var string
+     */
+    protected $verifyEmailUrl;
+
+    /**
+     * EmailConfirmationSubstituter constructor.
      *
      * @param \App\Models\EndUser $endUser
+     * @param string $verifyEmailUrl
      */
-    public function __construct(EndUser $endUser)
+    public function __construct(EndUser $endUser, string $verifyEmailUrl)
     {
         $this->endUser = $endUser;
+        $this->verifyEmailUrl = $verifyEmailUrl;
     }
 
     /**
@@ -32,8 +38,7 @@ class NewEndUserSubstituter extends BaseVariableSubstituter
     {
         return [
             'END_USER_EMAIL' => $this->endUser->user->email,
-            'END_USER_CREATED_AT' => $this->endUser->user->created_at
-                ->format(Config::get('connecting_voices.datetime_format')),
+            'VERIFY_EMAIL_URL' => $this->verifyEmailUrl,
         ];
     }
 }

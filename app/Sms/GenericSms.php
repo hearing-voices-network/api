@@ -8,6 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Config;
 
 class GenericSms implements ShouldQueue
 {
@@ -44,7 +45,7 @@ class GenericSms implements ShouldQueue
      */
     public function handle(SmsSender $sender): void
     {
-        $sender->send((string)config('sms.from'), $this->to, $this->body);
+        $sender->send(Config::get('sms.from'), $this->to, $this->body);
     }
 
     /**

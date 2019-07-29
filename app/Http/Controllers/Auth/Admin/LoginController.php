@@ -13,6 +13,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -73,7 +74,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, User $user): ?RedirectResponse
     {
         // If OTP is disabled then skip this method.
-        if (!config('connecting_voices.otp_enabled')) {
+        if (!Config::get('connecting_voices.otp_enabled')) {
             return null;
         }
 

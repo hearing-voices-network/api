@@ -6,6 +6,7 @@ namespace App\VariableSubstitution\Email\Admin;
 
 use App\Models\Contribution;
 use App\VariableSubstitution\BaseVariableSubstituter;
+use Illuminate\Support\Facades\Config;
 
 class ContributionRejectedSubstituter extends BaseVariableSubstituter
 {
@@ -34,7 +35,7 @@ class ContributionRejectedSubstituter extends BaseVariableSubstituter
             'CONTRIBUTION_CONTENT' => $this->contribution->content,
             'CONTRIBUTION_CHANGES_REQUESTED' => $this->contribution->changes_requested,
             'CONTRIBUTION_REJECTED_AT' => $this->contribution->status_last_updated_at
-                ->format(config('connecting_voices.datetime_format')),
+                ->format(Config::get('connecting_voices.datetime_format')),
             'TAGS' => $this->contribution
                 ->tags()
                 ->pluck('name')

@@ -8,6 +8,7 @@ use App\Sms\LogSmsSender;
 use App\Sms\SmsSender;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rule;
@@ -51,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Bind the SMS sender concrete implementation to the interface through configuration.
-        switch (config('sms.driver')) {
+        switch (Config::get('sms.driver')) {
             case 'log':
             default:
                 $this->app->singleton(SmsSender::class, LogSmsSender::class);

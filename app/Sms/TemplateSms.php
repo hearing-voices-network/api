@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Sms;
 
 use App\VariableSubstitution\VariableSubstituter;
+use Illuminate\Support\Facades\Config;
 
 class TemplateSms extends GenericSms
 {
@@ -35,7 +36,7 @@ class TemplateSms extends GenericSms
     public function handle(SmsSender $sender): void
     {
         $sender->send(
-            (string)config('sms.from'),
+            Config::get('sms.from'),
             $this->substituter->substitute($this->to),
             $this->substituter->substitute($this->body)
         );
