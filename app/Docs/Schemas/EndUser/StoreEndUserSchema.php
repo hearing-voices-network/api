@@ -6,6 +6,7 @@ namespace App\Docs\Schemas\EndUser;
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 
 class StoreEndUserSchema extends Schema
@@ -30,8 +31,8 @@ class StoreEndUserSchema extends Schema
                     ->maxLength(255),
                 Schema::string('country'),
                 Schema::integer('birth_year')
-                    ->minimum(Date::today()->year - config('connecting_voices.age_requirement.max'))
-                    ->maximum(Date::today()->year - config('connecting_voices.age_requirement.min')),
+                    ->minimum(Date::today()->year - Config::get('connecting_voices.age_requirement.max'))
+                    ->maximum(Date::today()->year - Config::get('connecting_voices.age_requirement.min')),
                 Schema::string('gender'),
                 Schema::string('ethnicity')
             );

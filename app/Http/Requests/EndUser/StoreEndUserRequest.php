@@ -6,6 +6,7 @@ namespace App\Http\Requests\EndUser;
 
 use App\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Validation\Rule;
 
@@ -25,8 +26,8 @@ class StoreEndUserRequest extends FormRequest
             'birth_year' => [
                 'bail',
                 'integer',
-                Rule::min(Date::today()->year - config('connecting_voices.age_requirement.max')),
-                Rule::max(Date::today()->year - config('connecting_voices.age_requirement.min')),
+                Rule::min(Date::today()->year - Config::get('connecting_voices.age_requirement.max')),
+                Rule::max(Date::today()->year - Config::get('connecting_voices.age_requirement.min')),
             ],
             'gender' => ['bail', 'string', 'max:255'],
             'ethnicity' => ['bail', 'string', 'max:255'],

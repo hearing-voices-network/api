@@ -5,14 +5,20 @@ declare(strict_types=1);
 namespace Tests\Feature\V1;
 
 use App\Events\EndpointInvoked;
+use App\Mail\TemplateMail;
 use App\Models\Admin;
 use App\Models\Audit;
 use App\Models\Contribution;
 use App\Models\EndUser;
+use App\Models\Setting;
 use App\Models\Tag;
+use App\VariableSubstitution\Email\Admin\NewContributionSubstituter;
+use App\VariableSubstitution\Email\Admin\UpdatedContributionSubstituter;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Queue;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -478,6 +484,36 @@ class ContributionControllerTest extends TestCase
         );
     }
 
+    /** @test */
+    public function email_sent_to_admins_for_store(): void
+    {
+        Queue::fake();
+
+        /** @var \App\Models\User $user */
+        $user = factory(EndUser::class)->create()->user;
+
+        Passport::actingAs($user);
+
+        $this->postJson('/v1/contributions', [
+            'content' => 'Lorem ipsum',
+            'status' => Contribution::STATUS_PRIVATE,
+            'tags' => [],
+        ]);
+
+        Queue::assertPushed(
+            TemplateMail::class,
+            function (TemplateMail $mail): bool {
+                /** @var array $emailContent */
+                $emailContent = Setting::findOrFail('email_content')->value;
+
+                return $mail->getTo() === config('connecting_voices.admin_email')
+                    && $mail->getSubject() === Arr::get($emailContent, 'admin.new_contribution.subject')
+                    && $mail->getBody() === Arr::get($emailContent, 'admin.new_contribution.body')
+                    && $mail->getSubstituter() instanceof NewContributionSubstituter;
+            }
+        );
+    }
+
     /*
      * Show.
      */
@@ -752,6 +788,41 @@ class ContributionControllerTest extends TestCase
                     && $event->getDescription() === "Updated contribution [{$contribution->id}]."
                     && $event->getIpAddress() === '127.0.0.1'
                     && $event->getUserAgent() === 'Symfony';
+            }
+        );
+    }
+
+    /** @test */
+    public function email_sent_to_admins_for_update(): void
+    {
+        Queue::fake();
+
+        /** @var \App\Models\User $endUser */
+        $endUser = factory(EndUser::class)->create();
+
+        /** @var \App\Models\Contribution $contribution*/
+        $contribution = factory(Contribution::class)->create([
+            'end_user_id' => $endUser->id,
+        ]);
+
+        Passport::actingAs($endUser->user);
+
+        $this->putJson("/v1/contributions/{$contribution->id}", [
+            'content' => 'Lorem ipsum',
+            'status' => Contribution::STATUS_IN_REVIEW,
+            'tags' => [],
+        ]);
+
+        Queue::assertPushed(
+            TemplateMail::class,
+            function (TemplateMail $mail): bool {
+                /** @var array $emailContent */
+                $emailContent = Setting::findOrFail('email_content')->value;
+
+                return $mail->getTo() === config('connecting_voices.admin_email')
+                    && $mail->getSubject() === Arr::get($emailContent, 'admin.updated_contribution.subject')
+                    && $mail->getBody() === Arr::get($emailContent, 'admin.updated_contribution.body')
+                    && $mail->getSubstituter() instanceof UpdatedContributionSubstituter;
             }
         );
     }

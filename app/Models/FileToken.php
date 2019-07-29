@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 
 class FileToken extends Model
@@ -27,7 +28,7 @@ class FileToken extends Model
     {
         return Date::now()->greaterThan(
             $this->created_at->addSeconds(
-                config('connecting_voices.file_tokens.expiry_time')
+                Config::get('connecting_voices.file_tokens.expiry_time')
             )
         );
     }

@@ -46,4 +46,14 @@ class Export
 
         throw new InvalidArgumentException("The property [$name] does not exist");
     }
+
+    /**
+     * @param \App\Models\Export $export
+     * @return bool
+     */
+    public function is(self $export): bool
+    {
+        return $this->fileToken === $export->fileToken
+            && $this->decryptionKey === $export->decryptionKey;
+    }
 }

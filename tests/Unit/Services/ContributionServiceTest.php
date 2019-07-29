@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Services;
 
+use App\Events\Contribution\ContributionApproved;
+use App\Events\Contribution\ContributionCreated;
+use App\Events\Contribution\ContributionDeleted;
+use App\Events\Contribution\ContributionRejected;
+use App\Events\Contribution\ContributionUpdated;
 use App\Models\Contribution;
 use App\Models\EndUser;
 use App\Models\Tag;
 use App\Services\ContributionService;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class ContributionServiceTest extends TestCase
@@ -41,6 +47,32 @@ class ContributionServiceTest extends TestCase
         $this->assertEquals('Lorem ipsum', $contribution->content);
         $this->assertEquals(Contribution::STATUS_PRIVATE, $contribution->status);
         $this->assertEquals([$tag->id], $contribution->tags->pluck('id')->toArray());
+    }
+
+    /** @test */
+    public function it_dispatches_an_event_when_created(): void
+    {
+        Event::fake([ContributionCreated::class]);
+
+        /** @var \App\Services\ContributionService $contributionService */
+        $contributionService = resolve(ContributionService::class);
+
+        /** @var \App\Models\EndUser $endUser */
+        $endUser = factory(EndUser::class)->create();
+
+        $contribution = $contributionService->create([
+            'end_user_id' => $endUser->id,
+            'content' => 'Lorem ipsum',
+            'status' => Contribution::STATUS_PRIVATE,
+            'tags' => [],
+        ]);
+
+        Event::assertDispatched(
+            ContributionCreated::class,
+            function (ContributionCreated $event) use ($contribution): bool {
+                return $event->getContribution()->is($contribution);
+            }
+        );
     }
 
     /** @test */
@@ -132,6 +164,26 @@ class ContributionServiceTest extends TestCase
     }
 
     /** @test */
+    public function it_dispatches_an_event_when_updated(): void
+    {
+        Event::fake([ContributionUpdated::class]);
+
+        /** @var \App\Services\ContributionService $contributionService */
+        $contributionService = resolve(ContributionService::class);
+
+        $contribution = factory(Contribution::class)->create();
+
+        $contribution = $contributionService->update($contribution, []);
+
+        Event::assertDispatched(
+            ContributionUpdated::class,
+            function (ContributionUpdated $event) use ($contribution): bool {
+                return $event->getContribution()->is($contribution);
+            }
+        );
+    }
+
+    /** @test */
     public function it_deletes_the_contribution_tag_and_contribution_records(): void
     {
         /** @var \App\Services\ContributionService $contributionService */
@@ -152,6 +204,27 @@ class ContributionServiceTest extends TestCase
             'contribution_id' => $contribution->id,
             'tag_id' => $tag->id,
         ]);
+    }
+
+    /** @test */
+    public function it_dispatches_an_event_when_deleted(): void
+    {
+        Event::fake([ContributionDeleted::class]);
+
+        /** @var \App\Services\ContributionService $contributionService */
+        $contributionService = resolve(ContributionService::class);
+
+        /** @var \App\Models\Contribution $contribution */
+        $contribution = factory(Contribution::class)->create();
+
+        $contributionService->delete($contribution);
+
+        Event::assertDispatched(
+            ContributionDeleted::class,
+            function (ContributionDeleted $event) use ($contribution): bool {
+                return $event->getContribution()->is($contribution);
+            }
+        );
     }
 
     /** @test */
@@ -179,6 +252,29 @@ class ContributionServiceTest extends TestCase
     }
 
     /** @test */
+    public function it_dispatches_an_event_when_approved(): void
+    {
+        Event::fake([ContributionApproved::class]);
+
+        /** @var \App\Services\ContributionService $contributionService */
+        $contributionService = resolve(ContributionService::class);
+
+        /** @var \App\Models\Contribution $contribution */
+        $contribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_CHANGES_REQUESTED)
+            ->create();
+
+        $contribution = $contributionService->approve($contribution);
+
+        Event::assertDispatched(
+            ContributionApproved::class,
+            function (ContributionApproved $event) use ($contribution): bool {
+                return $event->getContribution()->is($contribution);
+            }
+        );
+    }
+
+    /** @test */
     public function it_rejects_a_contribution(): void
     {
         /** @var \App\Services\ContributionService $contributionService */
@@ -199,6 +295,29 @@ class ContributionServiceTest extends TestCase
         $this->assertEquals(
             $now->toIso8601String(),
             $contribution->status_last_updated_at->toIso8601String()
+        );
+    }
+
+    /** @test */
+    public function it_dispatches_an_event_when_rejected(): void
+    {
+        Event::fake([ContributionRejected::class]);
+
+        /** @var \App\Services\ContributionService $contributionService */
+        $contributionService = resolve(ContributionService::class);
+
+        /** @var \App\Models\Contribution $contribution */
+        $contribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_IN_REVIEW)
+            ->create();
+
+        $contribution = $contributionService->reject($contribution, 'Lorem ipsum');
+
+        Event::assertDispatched(
+            ContributionRejected::class,
+            function (ContributionRejected $event) use ($contribution): bool {
+                return $event->getContribution()->is($contribution);
+            }
         );
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Events\Setting\SettingsUpdated;
 use App\Models\Setting;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
@@ -71,7 +72,11 @@ class SettingService
         ];
         $emailContent->save();
 
-        return Setting::all();
+        $settings = Setting::all();
+
+        event(new SettingsUpdated($settings));
+
+        return $settings;
     }
 
     /**

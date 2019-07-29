@@ -44,7 +44,7 @@ class AdminController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware('auth');
+        $this->middleware(['auth', 'verified']);
         $this->authorizeResource(Admin::class);
 
         $this->adminService = $adminService;

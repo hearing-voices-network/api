@@ -6,6 +6,7 @@ namespace App\Docs;
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\ExternalDocs as BaseExternalDocs;
+use Illuminate\Support\Facades\Config;
 
 class ExternalDocs extends BaseExternalDocs
 {
@@ -17,6 +18,6 @@ class ExternalDocs extends BaseExternalDocs
     {
         return parent::create($objectId)
             ->description('The GitHub repo')
-            ->url((string)config('connecting_voices.repo_url'));
+            ->url(Config::get('connecting_voices.repo_url'));
     }
 }

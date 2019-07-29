@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Services;
 
+use App\Events\Audit\AuditCreated;
 use App\Models\Audit;
 use App\Services\AuditService;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class AuditServiceTest extends TestCase
@@ -39,5 +41,31 @@ class AuditServiceTest extends TestCase
         $this->assertEquals($ipAddress, $audit->ip_address);
         $this->assertEquals($userAgent, $audit->user_agent);
         $this->assertEquals($createdAt->toIso8601String(), $audit->created_at->toIso8601String());
+    }
+
+    /** @test */
+    public function it_dispatches_an_event_when_created(): void
+    {
+        Event::fake([AuditCreated::class]);
+
+        /** @var \App\Services\AuditService $auditService */
+        $auditService = resolve(AuditService::class);
+
+        $audit = $auditService->create([
+            'user_id' => null,
+            'client_id' => null,
+            'action' => Audit::ACTION_CREATE,
+            'description' => 'Lorem ipsum',
+            'ip_address' => $this->faker->ipv4,
+            'user_agent' => $this->faker->userAgent,
+            'created_at' => Date::now(),
+        ]);
+
+        Event::assertDispatched(
+            AuditCreated::class,
+            function (AuditCreated $event) use ($audit): bool {
+                return $event->getAudit()->is($audit);
+            }
+        );
     }
 }

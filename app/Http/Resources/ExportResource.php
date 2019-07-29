@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Config;
 
 /**
  * @property \App\Models\Export $resource
@@ -27,7 +28,7 @@ class ExportResource extends JsonResource
             'token' => $this->resource->fileToken->id,
             'download_url' => route('files.download', $fileId) . "?token={$fileTokenId}",
             'expires_at' => $this->resource->fileToken->created_at->addSeconds(
-                config('connecting_voices.file_tokens.expiry_time')
+                Config::get('connecting_voices.file_tokens.expiry_time')
             )->toIso8601String(),
         ];
     }

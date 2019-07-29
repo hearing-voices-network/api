@@ -35,7 +35,7 @@ class SettingController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware('auth')->except('index');
+        $this->middleware(['auth', 'verified'])->except('index');
 
         $this->settingService = $settingService;
     }

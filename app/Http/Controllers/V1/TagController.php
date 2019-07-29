@@ -37,7 +37,7 @@ class TagController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware('auth')->except('index', 'show');
+        $this->middleware(['auth', 'verified'])->except('index', 'show');
         $this->authorizeResource(Tag::class);
 
         $this->tagService = $tagService;

@@ -7,6 +7,7 @@ namespace App\Docs\Parameters;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
+use Illuminate\Support\Facades\Config;
 
 class PerPageParameter extends Parameter
 {
@@ -23,8 +24,8 @@ class PerPageParameter extends Parameter
             ->schema(
                 Schema::integer()
                     ->minimum(1)
-                    ->maximum((int)config('connecting_voices.pagination.max'))
-                    ->default((int)config('connecting_voices.pagination.default'))
+                    ->maximum(Config::get('connecting_voices.pagination.max'))
+                    ->default(Config::get('connecting_voices.pagination.default'))
             );
     }
 }

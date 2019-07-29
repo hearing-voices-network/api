@@ -29,6 +29,28 @@ class User extends Authenticatable
     ];
 
     /**
+     * Send the password reset notification.
+     *
+     * @param string $token
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->isAdmin()
+            ? $this->admin->sendPasswordResetNotification($token)
+            : $this->endUser->sendPasswordResetNotification($token);
+    }
+
+    /**
+     * Send the email verification notification.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        if ($this->isEndUser()) {
+            $this->endUser->sendEmailVerificationNotification();
+        }
+    }
+
+    /**
      * @return bool
      */
     public function isAdmin(): bool

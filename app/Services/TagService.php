@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Events\Tag\TagCreated;
+use App\Events\Tag\TagForceDeleted;
+use App\Events\Tag\TagSoftDeleted;
 use App\Models\Tag;
 
 class TagService
@@ -14,10 +17,15 @@ class TagService
      */
     public function create(array $data): Tag
     {
-        return Tag::create([
+        /** @var \App\Models\Tag $tag */
+        $tag = Tag::create([
             'parent_tag_id' => $data['parent_tag_id'] ?? null,
             'name' => $data['name'],
         ]);
+
+        event(new TagCreated($tag));
+
+        return $tag;
     }
 
     /**
@@ -31,6 +39,8 @@ class TagService
         $tag->childTags()->each(function (Tag $tag): void {
             $tag->delete();
         });
+
+        event(new TagSoftDeleted($tag));
 
         return $tag;
     }
@@ -47,5 +57,7 @@ class TagService
             $tag->forceDelete();
         });
         $tag->forceDelete();
+
+        event(new TagForceDeleted($tag));
     }
 }

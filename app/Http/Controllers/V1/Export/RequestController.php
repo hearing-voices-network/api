@@ -37,7 +37,7 @@ class RequestController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware('auth');
+        $this->middleware(['auth', 'verified']);
 
         $this->exportService = $exportService;
     }

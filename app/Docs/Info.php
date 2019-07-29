@@ -7,6 +7,7 @@ namespace App\Docs;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Contact;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Info as BaseInfo;
+use Illuminate\Support\Facades\Config;
 
 class Info extends BaseInfo
 {
@@ -17,13 +18,13 @@ class Info extends BaseInfo
     public static function create(string $objectId = null): BaseObject
     {
         return parent::create($objectId)
-            ->title(config('app.name') . ' API')
+            ->title(Config::get('app.name') . ' API')
             ->description('Documentation on how to use the API')
             ->contact(
                 Contact::create()
-                    ->name((string)config('ayup.name'))
-                    ->url((string)config('ayup.url'))
-                    ->email((string)config('ayup.email'))
+                    ->name(Config::get('ayup.name'))
+                    ->url(Config::get('ayup.url'))
+                    ->email(Config::get('ayup.email'))
             )
             ->version('v1');
     }

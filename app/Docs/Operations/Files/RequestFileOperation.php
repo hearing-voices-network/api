@@ -13,6 +13,7 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Operation;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
+use Illuminate\Support\Facades\Config;
 
 class RequestFileOperation extends Operation
 {
@@ -34,7 +35,7 @@ class RequestFileOperation extends Operation
                         This returns a download URL which will expire within %d seconds, and can 
                         only be accessed once.
                         EOT,
-                        config('connecting_voices.file_tokens.expiry_time')
+                        Config::get('connecting_voices.file_tokens.expiry_time')
                     )
                 )
             )

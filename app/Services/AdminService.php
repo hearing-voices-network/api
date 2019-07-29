@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Events\Admin\AdminCreated;
+use App\Events\Admin\AdminDeleted;
+use App\Events\Admin\AdminUpdated;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\Facades\Date;
@@ -17,7 +20,8 @@ class AdminService
      */
     public function create(array $data): Admin
     {
-        return Admin::create([
+        /** @var \App\Models\Admin $admin */
+        $admin = Admin::create([
             'name' => $data['name'],
             'phone' => $data['phone'],
             'user_id' => User::create([
@@ -26,6 +30,10 @@ class AdminService
                 'email_verified_at' => Date::now(),
             ])->id,
         ]);
+
+        event(new AdminCreated($admin));
+
+        return $admin;
     }
 
     /**
@@ -47,6 +55,8 @@ class AdminService
                 : $admin->user->password,
         ]);
 
+        event(new AdminUpdated($admin));
+
         return $admin;
     }
 
@@ -63,5 +73,7 @@ class AdminService
         $user->notifications()->delete();
         $user->fileToken()->delete();
         $user->forceDelete();
+
+        event(new AdminDeleted($admin));
     }
 }
