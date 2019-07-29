@@ -45,7 +45,7 @@
     <server name="REDIS_HOST" value="redis-testing" />
     <server name="FILESYSTEM_DRIVER" value="local_testing" />
     <server name="FILESYSTEM_CLOUD" value="local_cloud_testing" />
-    <server name="MAIL_DRIVER" value='"null"' />
+    <server name="MAIL_DRIVER" value="array" />
     <server name="SMS_DRIVER" value='"null"' />
   </php>
 </phpunit>
