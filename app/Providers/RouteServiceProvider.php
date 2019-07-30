@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\Admin;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
@@ -23,7 +25,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Route::bind('admin', function ($value): Admin {
+            return Admin::find($value)
+                ?? optional(request()->user('api'))->admin
+                ?? abort(Response::HTTP_NOT_FOUND);
+        });
 
         parent::boot();
     }
