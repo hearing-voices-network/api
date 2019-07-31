@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Passport;
 
 use Illuminate\Http\Request;
@@ -25,7 +27,7 @@ class AuthorizationController extends BaseAuthorizationController
         Request $request,
         ClientRepository $clients,
         TokenRepository $tokens
-    ) {
+    ): Response {
         return $this->withErrorHandling(
             function () use ($psrRequest, $request, $clients, $tokens): Response {
                 $authRequest = $this->server->validateAuthorizationRequest($psrRequest);

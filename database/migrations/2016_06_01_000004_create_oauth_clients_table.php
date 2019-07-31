@@ -21,7 +21,7 @@ class CreateOauthClientsTable extends Migration
             $table->text('redirect');
             $table->boolean('personal_access_client');
             $table->boolean('password_client');
-            $table->boolean('first_party_client');
+            $table->boolean('first_party_client')->default(false);
             $table->boolean('revoked');
             $table->timestamps();
         });

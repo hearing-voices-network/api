@@ -65,7 +65,7 @@ class TagControllerTest extends TestCase
                     'id',
                     'parent_tag_id',
                     'name',
-                    'public_contributions',
+                    'public_contributions_count',
                     'created_at',
                     'updated_at',
                     'deleted_at',
@@ -87,7 +87,7 @@ class TagControllerTest extends TestCase
                 'id' => $tag->id,
                 'parent_tag_id' => $tag->parent_tag_id,
                 'name' => $tag->name,
-                'public_contributions' => $tag->publicContributions()->count(),
+                'public_contributions_count' => $tag->publicContributions()->count(),
                 'created_at' => $tag->created_at->toIso8601String(),
                 'updated_at' => $tag->updated_at->toIso8601String(),
                 'deleted_at' => null,
@@ -200,7 +200,7 @@ class TagControllerTest extends TestCase
             'id',
             'parent_tag_id',
             'name',
-            'public_contributions',
+            'public_contributions_count',
             'created_at',
             'updated_at',
             'deleted_at',
@@ -225,7 +225,7 @@ class TagControllerTest extends TestCase
         $response->assertJsonFragment([
             'parent_tag_id' => null,
             'name' => 'Child tag',
-            'public_contributions' => 0,
+            'public_contributions_count' => 0,
             'created_at' => $now->toIso8601String(),
             'updated_at' => $now->toIso8601String(),
             'deleted_at' => null,
@@ -251,7 +251,7 @@ class TagControllerTest extends TestCase
         $response->assertJsonFragment([
             'parent_tag_id' => $parentTag->id,
             'name' => 'Child tag',
-            'public_contributions' => 0,
+            'public_contributions_count' => 0,
         ]);
     }
 
@@ -360,7 +360,7 @@ class TagControllerTest extends TestCase
                 'id',
                 'parent_tag_id',
                 'name',
-                'public_contributions',
+                'public_contributions_count',
                 'created_at',
                 'updated_at',
                 'deleted_at',
@@ -381,7 +381,7 @@ class TagControllerTest extends TestCase
                 'id' => $tag->id,
                 'parent_tag_id' => $tag->parent_tag_id,
                 'name' => $tag->name,
-                'public_contributions' => $tag->publicContributions()->count(),
+                'public_contributions_count' => $tag->publicContributions()->count(),
                 'created_at' => $tag->created_at->toIso8601String(),
                 'updated_at' => $tag->updated_at->toIso8601String(),
                 'deleted_at' => null,

@@ -8,7 +8,6 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
-use Laravel\Passport\RouteRegistrar;
 
 class AuthServiceProvider extends ServiceProvider
 {
