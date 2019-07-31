@@ -75,6 +75,7 @@ class EndUserController extends Controller
 
         $endUsers = QueryBuilder::for($baseQuery)
             ->allowedFilters(
+                Filter::exact('id'),
                 Filter::custom('email', EmailFilter::class),
                 Filter::custom('email_verified', EmailVerifiedFilter::class),
                 Filter::custom('with_soft_deletes', NullFilter::class)

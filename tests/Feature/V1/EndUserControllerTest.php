@@ -112,6 +112,26 @@ class EndUserControllerTest extends TestCase
     }
 
     /** @test */
+    public function can_filter_by_ids_for_index(): void
+    {
+        $endUser1 = factory(EndUser::class)->create();
+        $endUser2 = factory(EndUser::class)->create();
+        $endUser3 = factory(EndUser::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/end-users', [
+            'filter[id]' => "{$endUser1->id},{$endUser2->id}",
+        ]);
+
+        $response->assertJsonFragment(['id' => $endUser1->id]);
+        $response->assertJsonFragment(['id' => $endUser2->id]);
+        $response->assertJsonMissing(['id' => $endUser3->id]);
+    }
+
+    /** @test */
     public function can_filter_by_email_for_index(): void
     {
         $endUser1 = factory(EndUser::class)->create([
