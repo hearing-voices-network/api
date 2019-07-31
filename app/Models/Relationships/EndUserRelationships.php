@@ -35,4 +35,40 @@ trait EndUserRelationships
     {
         return $this->hasMany(Contribution::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function publicContributions(): HasMany
+    {
+        return $this->contributions()
+            ->where('contributions.status', '=', Contribution::STATUS_PUBLIC);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function privateContributions(): HasMany
+    {
+        return $this->contributions()
+            ->where('contributions.status', '=', Contribution::STATUS_PRIVATE);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function inReviewContributions(): HasMany
+    {
+        return $this->contributions()
+            ->where('contributions.status', '=', Contribution::STATUS_IN_REVIEW);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function changesRequestedContributions(): HasMany
+    {
+        return $this->contributions()
+            ->where('contributions.status', '=', Contribution::STATUS_CHANGES_REQUESTED);
+    }
 }

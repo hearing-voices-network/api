@@ -71,6 +71,13 @@ class EndUserController extends Controller
                         $query->whereNull('users.deleted_at');
                     });
                 }
+            )
+            ->withCount(
+                'contributions',
+                'publicContributions',
+                'privateContributions',
+                'inReviewContributions',
+                'changesRequestedContributions'
             );
 
         $endUsers = QueryBuilder::for($baseQuery)

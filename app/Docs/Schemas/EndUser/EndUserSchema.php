@@ -29,6 +29,11 @@ class EndUserSchema extends Schema
                     ->nullable(),
                 Schema::string('ethnicity')
                     ->nullable(),
+                Schema::integer('contributions_count'),
+                Schema::integer('public_contributions_count'),
+                Schema::integer('private_contributions_count'),
+                Schema::integer('in_review_contributions_count'),
+                Schema::integer('changes_requested_contributions_count'),
                 Schema::string('gdpr_consented_at')
                     ->format(static::FORMAT_DATE_TIME),
                 Schema::string('email_verified_at')
