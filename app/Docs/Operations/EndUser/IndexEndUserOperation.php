@@ -39,11 +39,11 @@ class IndexEndUserOperation extends Operation
                 PageParameter::create(),
                 PerPageParameter::create(),
                 FilterParameter::create(null, 'id')
-                    ->description('The IDs of the End Users to filter by')
+                    ->description('The IDs of the end users to filter by')
                     ->schema(Schema::string())
                     ->style(FilterParameter::STYLE_SIMPLE),
                 FilterParameter::create(null, 'email')
-                    ->description('The email of the End User to filter by')
+                    ->description('The email of the end user to filter by')
                     ->schema(Schema::string()),
                 FilterParameter::create(null, 'email_verified')
                     ->description('The email verification status of the End User to filter by')

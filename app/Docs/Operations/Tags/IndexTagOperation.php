@@ -42,7 +42,9 @@ class IndexTagOperation extends Operation
             ->responses(
                 Response::ok()->content(
                     MediaType::json()->schema(
-                        Schema::array()->items(TagSchema::create())
+                        Schema::object()->properties(
+                            Schema::array('data')->items(TagSchema::create())
+                        )
                     )
                 )
             );

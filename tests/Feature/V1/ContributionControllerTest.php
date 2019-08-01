@@ -137,6 +137,26 @@ class ContributionControllerTest extends TestCase
     }
 
     /** @test */
+    public function can_filter_by_ids_for_index(): void
+    {
+        $contribution1 = factory(Contribution::class)->create();
+        $contribution2 = factory(Contribution::class)->create();
+        $contribution3 = factory(Contribution::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/contributions', [
+            'filter[id]' => "{$contribution1->id},{$contribution2->id}",
+        ]);
+
+        $response->assertJsonFragment(['id' => $contribution1->id]);
+        $response->assertJsonFragment(['id' => $contribution2->id]);
+        $response->assertJsonMissing(['id' => $contribution3->id]);
+    }
+
+    /** @test */
     public function can_filter_by_end_user_id_for_index(): void
     {
         $contribution1 = factory(Contribution::class)->create();

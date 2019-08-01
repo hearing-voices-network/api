@@ -38,6 +38,10 @@ class IndexAdminOperation extends Operation
             ->parameters(
                 PageParameter::create(),
                 PerPageParameter::create(),
+                FilterParameter::create(null, 'id')
+                    ->description('The IDs of the admins to filter by')
+                    ->schema(Schema::string())
+                    ->style(FilterParameter::STYLE_SIMPLE),
                 FilterParameter::create(null, 'name')
                     ->description('The name of the Admin to filter by')
                     ->schema(Schema::string()),

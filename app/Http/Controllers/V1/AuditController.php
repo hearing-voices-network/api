@@ -44,6 +44,7 @@ class AuditController extends Controller
 
         $audits = QueryBuilder::for($baseQuery)
             ->allowedFilters([
+                Filter::exact('id'),
                 Filter::custom('admin_id', AdminIdFilter::class),
                 Filter::custom('end_user_id', EndUserIdFilter::class),
             ])

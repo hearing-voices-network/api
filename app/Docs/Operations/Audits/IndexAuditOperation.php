@@ -42,6 +42,10 @@ class IndexAuditOperation extends Operation
             ->parameters(
                 PageParameter::create(),
                 PerPageParameter::create(),
+                FilterParameter::create(null, 'id')
+                    ->description('The IDs of the audits to filter by')
+                    ->schema(Schema::string())
+                    ->style(FilterParameter::STYLE_SIMPLE),
                 FilterParameter::create(null, 'admin_id')
                     ->description('The ID of an admin to filter by')
                     ->schema(Schema::string()->format(Schema::FORMAT_UUID)),

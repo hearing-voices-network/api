@@ -73,6 +73,7 @@ class ContributionController extends Controller
 
         $contributions = QueryBuilder::for($baseQuery)
             ->allowedFilters([
+                Filter::exact('id'),
                 Filter::exact('end_user_id'),
                 Filter::custom('tag_ids', TagIdsFilter::class),
             ])

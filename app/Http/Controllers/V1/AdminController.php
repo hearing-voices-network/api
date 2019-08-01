@@ -61,6 +61,7 @@ class AdminController extends Controller
 
         $admins = QueryBuilder::for($baseQuery)
             ->allowedFilters([
+                Filter::exact('id'),
                 'name',
                 'phone',
                 Filter::custom('email', EmailFilter::class),

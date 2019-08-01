@@ -44,6 +44,7 @@ class NotificationController extends Controller
 
         $notifications = QueryBuilder::for($baseQuery)
             ->allowedFilters([
+                Filter::exact('id'),
                 Filter::custom('admin_id', AdminIdFilter::class),
                 Filter::custom('end_user_id', EndUserIdFilter::class),
             ])
