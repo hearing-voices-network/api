@@ -111,6 +111,6 @@ class ContributionPolicy
      */
     public function reject(User $user, Contribution $contribution): bool
     {
-        return $user->isAdmin() && $contribution->isInReview();
+        return $user->isAdmin() && ($contribution->isPublic() || $contribution->isInReview());
     }
 }

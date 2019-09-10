@@ -52,7 +52,7 @@ class RejectControllerTest extends TestCase
     }
 
     /** @test */
-    public function admin_cannot_reject_public(): void
+    public function admin_can_reject_public(): void
     {
         $contribution = factory(Contribution::class)
             ->state(Contribution::STATUS_PUBLIC)
@@ -66,7 +66,7 @@ class RejectControllerTest extends TestCase
             'changes_requested' => 'Lorem ipsum',
         ]);
 
-        $response->assertStatus(Response::HTTP_FORBIDDEN);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     /** @test */

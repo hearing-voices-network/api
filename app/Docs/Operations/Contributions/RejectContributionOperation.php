@@ -32,7 +32,7 @@ class RejectContributionOperation extends Operation
             ->description(
                 Utils::operationDescription(
                     [Admin::class],
-                    'This endpoint can only be invoked if the contribution is in review.'
+                    'This endpoint can only be invoked if the contribution is either public or in review.'
                 )
             )
             ->tags(ContributionsTag::create())
