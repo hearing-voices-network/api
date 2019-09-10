@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth\EndUser;
 
-use App\Http\Controllers\Controller;
 use App\Support\Pagination;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Sms\GenericSms;
 use App\Support\Pagination;
@@ -12,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;

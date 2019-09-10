@@ -49,9 +49,9 @@ class EndUserResource extends JsonResource
     protected function getContributionsCount(): int
     {
         return $this->contributions_count ?? (int)$this->whenLoaded(
-                'contributions',
-                count($this->resource->contributions),
-                $this->resource->contributions()->count()
+            'contributions',
+            count($this->resource->contributions),
+            $this->resource->contributions()->count()
             );
     }
 
@@ -65,9 +65,9 @@ class EndUserResource extends JsonResource
     protected function getPublicContributionsCount(): int
     {
         return $this->public_contributions_count ?? (int)$this->whenLoaded(
-                'publicContributions',
-                count($this->resource->publicContributions),
-                $this->resource->publicContributions()->count()
+            'publicContributions',
+            count($this->resource->publicContributions),
+            $this->resource->publicContributions()->count()
             );
     }
 
@@ -81,9 +81,9 @@ class EndUserResource extends JsonResource
     protected function getPrivateContributionsCount(): int
     {
         return $this->private_contributions_count ?? (int)$this->whenLoaded(
-                'privateContributions',
-                count($this->resource->privateContributions),
-                $this->resource->privateContributions()->count()
+            'privateContributions',
+            count($this->resource->privateContributions),
+            $this->resource->privateContributions()->count()
             );
     }
 
@@ -97,9 +97,9 @@ class EndUserResource extends JsonResource
     protected function getInReviewContributionsCount(): int
     {
         return $this->in_review_contributions_count ?? (int)$this->whenLoaded(
-                'inReviewContributions',
-                count($this->resource->inReviewContributions),
-                $this->resource->inReviewContributions()->count()
+            'inReviewContributions',
+            count($this->resource->inReviewContributions),
+            $this->resource->inReviewContributions()->count()
             );
     }
 
@@ -113,9 +113,9 @@ class EndUserResource extends JsonResource
     protected function getChangesRequestedContributionsCount(): int
     {
         return $this->changes_requested_contributions_count ?? (int)$this->whenLoaded(
-                'changesRequestedContributions',
-                count($this->resource->changesRequestedContributions),
-                $this->resource->changesRequestedContributions()->count()
+            'changesRequestedContributions',
+            count($this->resource->changesRequestedContributions),
+            $this->resource->changesRequestedContributions()->count()
             );
     }
 }
