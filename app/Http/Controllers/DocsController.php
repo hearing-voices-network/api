@@ -7,9 +7,8 @@ namespace App\Http\Controllers;
 use App\Docs\OpenApi;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Contracts\View\View;
-use Illuminate\Routing\Controller;
 
-class DocsController extends Controller
+class DocsController extends WebController
 {
     /**
      * @return \Illuminate\Contracts\View\View

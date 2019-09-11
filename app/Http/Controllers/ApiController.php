@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 
-class Controller extends BaseController
+abstract class ApiController extends BaseController
 {
     use AuthorizesRequests {
         AuthorizesRequests::resourceAbilityMap as baseResourceAbilityMap;

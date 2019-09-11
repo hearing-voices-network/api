@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1\File;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\File\DownloadFileRequest;
 use App\Models\File;
 
-class DownloadController extends Controller
+class DownloadController extends ApiController
 {
     /**
      * @param \App\Http\Requests\File\DownloadFileRequest $request

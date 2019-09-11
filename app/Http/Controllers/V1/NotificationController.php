@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Filters\Notification\AdminIdFilter;
 use App\Http\Filters\Notification\EndUserIdFilter;
 use App\Http\Resources\NotificationResource;
@@ -17,7 +17,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class NotificationController extends Controller
+class NotificationController extends ApiController
 {
     /**
      * NotificationController constructor.

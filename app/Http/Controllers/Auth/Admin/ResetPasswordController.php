@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth\Admin;
 
-use App\Support\Pagination;
+use App\Http\Controllers\WebController;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class ResetPasswordController extends Controller
+class ResetPasswordController extends WebController
 {
     /*
     |--------------------------------------------------------------------------
@@ -35,14 +34,9 @@ class ResetPasswordController extends Controller
 
     /**
      * ResetPasswordController constructor.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Support\Pagination $pagination
      */
-    public function __construct(Request $request, Pagination $pagination)
+    public function __construct()
     {
-        parent::__construct($request, $pagination);
-
         $this->middleware('guest:web');
     }
 

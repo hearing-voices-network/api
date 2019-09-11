@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Filters\EndUser\EmailFilter;
 use App\Http\Filters\EndUser\EmailVerifiedFilter;
 use App\Http\Filters\NullFilter;
@@ -28,7 +28,7 @@ use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\Sort;
 
-class EndUserController extends Controller
+class EndUserController extends ApiController
 {
     /**
      * @var \App\Services\EndUserService

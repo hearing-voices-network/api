@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1\File;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Resources\FileTokenResource;
 use App\Models\File;
 use App\Models\FileToken;
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
-class RequestController extends Controller
+class RequestController extends ApiController
 {
     /**
      * @var \App\Services\FileService

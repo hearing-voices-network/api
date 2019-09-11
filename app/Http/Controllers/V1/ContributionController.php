@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Filters\Contribution\TagIdsFilter;
 use App\Http\Requests\Contribution\StoreContributionRequest;
 use App\Http\Requests\Contribution\UpdateContributionRequest;
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class ContributionController extends Controller
+class ContributionController extends ApiController
 {
     /**
      * @var \App\Services\ContributionService

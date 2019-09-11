@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\Setting\UpdateSettingRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SettingController extends Controller
+class SettingController extends ApiController
 {
     /**
      * @var \App\Services\SettingService

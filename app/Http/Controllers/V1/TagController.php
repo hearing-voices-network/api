@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\Tag\DestroyTagRequest;
 use App\Http\Requests\Tag\StoreTagRequest;
 use App\Http\Resources\TagResource;
@@ -19,7 +19,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class TagController extends Controller
+class TagController extends ApiController
 {
     /**
      * @var \App\Services\TagService

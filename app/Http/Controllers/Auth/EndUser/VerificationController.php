@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth\EndUser;
 
-use App\Support\Pagination;
+use App\Http\Controllers\WebController;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 
-class VerificationController extends Controller
+class VerificationController extends WebController
 {
     /*
     |--------------------------------------------------------------------------
@@ -33,14 +32,9 @@ class VerificationController extends Controller
 
     /**
      * VerificationController constructor.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Support\Pagination $pagination
      */
-    public function __construct(Request $request, Pagination $pagination)
+    public function __construct()
     {
-        parent::__construct($request, $pagination);
-
         $this->middleware('auth:web');
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
