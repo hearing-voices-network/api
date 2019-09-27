@@ -26,6 +26,7 @@ class OpenApi extends BaseOpenApi implements Responsable
             ->servers(Server::create())
             ->paths(
                 Paths\Admins\AdminsRootPath::create(),
+                Paths\Admins\AdminsMePath::create(),
                 Paths\Admins\AdminsNestedPath::create(),
                 Paths\Audits\AuditsRootPath::create(),
                 Paths\Audits\AuditsNestedPath::create(),

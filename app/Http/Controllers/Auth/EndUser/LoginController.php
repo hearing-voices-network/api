@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth\EndUser;
 
-use App\Http\Controllers\Controller;
-use App\Support\Pagination;
+use App\Http\Controllers\WebController;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController extends Controller
+class LoginController extends WebController
 {
     /*
     |--------------------------------------------------------------------------
@@ -35,14 +33,9 @@ class LoginController extends Controller
 
     /**
      * LoginController constructor.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Support\Pagination $pagination
      */
-    public function __construct(Request $request, Pagination $pagination)
+    public function __construct()
     {
-        parent::__construct($request, $pagination);
-
         $this->middleware('guest:web')->except('logout');
     }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1\Contribution;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Resources\ContributionResource;
 use App\Models\Contribution;
 use App\Services\ContributionService;
@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
-class ApproveController extends Controller
+class ApproveController extends ApiController
 {
     /**
      * ApproveController constructor.
@@ -26,7 +26,7 @@ class ApproveController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth:api', 'verified']);
     }
 
     /**

@@ -109,6 +109,26 @@ class AuditControllerTest extends TestCase
     }
 
     /** @test */
+    public function can_filter_by_ids_for_index(): void
+    {
+        $audit1 = factory(Audit::class)->create();
+        $audit2 = factory(Audit::class)->create();
+        $audit3 = factory(Audit::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/audits', [
+            'filter[id]' => "{$audit1->id},{$audit2->id}",
+        ]);
+
+        $response->assertJsonFragment(['id' => $audit1->id]);
+        $response->assertJsonFragment(['id' => $audit2->id]);
+        $response->assertJsonMissing(['id' => $audit3->id]);
+    }
+
+    /** @test */
     public function can_filter_by_admin_id_for_index(): void
     {
         $admin1 = factory(Admin::class)->create();

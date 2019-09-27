@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth\EndUser;
 
-use App\Http\Controllers\Controller;
-use App\Support\Pagination;
+use App\Http\Controllers\WebController;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-use Illuminate\Http\Request;
 
-class ForgotPasswordController extends Controller
+class ForgotPasswordController extends WebController
 {
     /*
     |--------------------------------------------------------------------------
@@ -27,14 +25,9 @@ class ForgotPasswordController extends Controller
 
     /**
      * ForgotPasswordController constructor.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Support\Pagination $pagination
      */
-    public function __construct(Request $request, Pagination $pagination)
+    public function __construct()
     {
-        parent::__construct($request, $pagination);
-
         $this->middleware('guest:web');
     }
 

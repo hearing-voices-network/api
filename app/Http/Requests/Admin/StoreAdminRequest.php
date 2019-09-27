@@ -20,7 +20,7 @@ class StoreAdminRequest extends FormRequest
         return [
             'name' => ['bail', 'required', 'string', 'max:255'],
             'phone' => ['bail', 'required', 'string', 'max:255', new UkPhoneNumber()],
-            'email' => ['bail', 'required', 'email', 'max:255'],
+            'email' => ['bail', 'required', 'email', 'max:255', 'unique:users'],
             'password' => ['bail', 'required', 'string', 'max:255', new Password()],
         ];
     }

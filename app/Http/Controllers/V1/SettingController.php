@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\Setting\UpdateSettingRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SettingController extends Controller
+class SettingController extends ApiController
 {
     /**
      * @var \App\Services\SettingService
@@ -35,7 +35,7 @@ class SettingController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified'])->except('index');
+        $this->middleware(['auth:api', 'verified'])->except('index');
 
         $this->settingService = $settingService;
     }
@@ -52,7 +52,7 @@ class SettingController extends Controller
         event(EndpointInvoked::onRead($request, 'Viewed settings.'));
 
         return Setting::toResponse(
-            optional($request->user())->isAdmin() ?? false
+            optional($request->user('api'))->isAdmin() ?? false
         );
     }
 

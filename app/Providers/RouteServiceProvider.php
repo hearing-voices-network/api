@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\Admin;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
@@ -23,7 +25,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Route::bind('admin', function ($value): Admin {
+            return Admin::find($value)
+                ?? optional(request()->user('api'))->admin
+                ?? abort(Response::HTTP_NOT_FOUND);
+        });
 
         parent::boot();
     }
@@ -37,7 +43,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapPassportRoutes();
     }
 
     /**
@@ -62,5 +68,17 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('api')
             ->namespace("{$this->namespace}\V1")
             ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Define the "passport" routes for the application.
+     *
+     * These routes are for OAuth.
+     */
+    protected function mapPassportRoutes(): void
+    {
+        Route::prefix('oauth')
+            ->as('passport.')
+            ->group(base_path('routes/passport.php'));
     }
 }

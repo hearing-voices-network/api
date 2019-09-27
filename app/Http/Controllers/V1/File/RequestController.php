@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1\File;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Resources\FileTokenResource;
 use App\Models\File;
 use App\Models\FileToken;
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
-class RequestController extends Controller
+class RequestController extends ApiController
 {
     /**
      * @var \App\Services\FileService
@@ -33,7 +33,7 @@ class RequestController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth:api', 'verified']);
 
         $this->fileService = $fileService;
     }
@@ -49,7 +49,7 @@ class RequestController extends Controller
         $this->authorize('request', $file);
 
         $fileToken = DB::transaction(function () use ($request, $file): FileToken {
-            return $this->fileService->request($file, $request->user()->admin);
+            return $this->fileService->request($file, $request->user('api')->admin);
         });
 
         event(EndpointInvoked::onCreate($request, "Requested file [{$file->id}]."));

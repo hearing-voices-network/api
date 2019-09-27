@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use App\Models\User;
 use App\Sms\GenericSms;
-use App\Support\Pagination;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
@@ -18,7 +17,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-class LoginController extends Controller
+class LoginController extends WebController
 {
     /*
     |--------------------------------------------------------------------------
@@ -42,14 +41,9 @@ class LoginController extends Controller
 
     /**
      * LoginController constructor.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Support\Pagination $pagination
      */
-    public function __construct(Request $request, Pagination $pagination)
+    public function __construct()
     {
-        parent::__construct($request, $pagination);
-
         $this->middleware('guest:web')->except('logout');
         $this->middleware('otp')->only('showOtpForm', 'otp');
     }

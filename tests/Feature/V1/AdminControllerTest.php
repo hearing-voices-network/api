@@ -94,6 +94,26 @@ class AdminControllerTest extends TestCase
     }
 
     /** @test */
+    public function can_filter_by_ids_for_index(): void
+    {
+        $admin1 = factory(Admin::class)->create();
+        $admin2 = factory(Admin::class)->create();
+        $admin3 = factory(Admin::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/admins', [
+            'filter[id]' => "{$admin1->id},{$admin2->id}",
+        ]);
+
+        $response->assertJsonFragment(['id' => $admin1->id]);
+        $response->assertJsonFragment(['id' => $admin2->id]);
+        $response->assertJsonMissing(['id' => $admin3->id]);
+    }
+
+    /** @test */
     public function can_filter_by_name_for_index(): void
     {
         $admin1 = factory(Admin::class)->create([

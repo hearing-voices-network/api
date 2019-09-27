@@ -20,7 +20,7 @@ class StoreEndUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['bail', 'required', 'email', 'max:255'],
+            'email' => ['bail', 'required', 'email', 'max:255', 'unique:users'],
             'password' => ['bail', 'required', 'string', 'max:255', new Password()],
             'country' => ['bail', 'string', 'max:255'],
             'birth_year' => [

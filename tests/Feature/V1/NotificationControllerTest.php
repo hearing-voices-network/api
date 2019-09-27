@@ -104,6 +104,26 @@ class NotificationControllerTest extends TestCase
     }
 
     /** @test */
+    public function can_filter_by_ids_for_index(): void
+    {
+        $notification1 = factory(Notification::class)->create();
+        $notification2 = factory(Notification::class)->create();
+        $notification3 = factory(Notification::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/notifications', [
+            'filter[id]' => "{$notification1->id},{$notification2->id}",
+        ]);
+
+        $response->assertJsonFragment(['id' => $notification1->id]);
+        $response->assertJsonFragment(['id' => $notification2->id]);
+        $response->assertJsonMissing(['id' => $notification3->id]);
+    }
+
+    /** @test */
     public function can_filter_by_admin_id_for_index(): void
     {
         $admin1 = factory(Admin::class)->create();

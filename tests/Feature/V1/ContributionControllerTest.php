@@ -88,7 +88,7 @@ class ContributionControllerTest extends TestCase
                     'id',
                     'parent_tag_id',
                     'name',
-                    'public_contributions',
+                    'public_contributions_count',
                     'created_at',
                     'updated_at',
                     'deleted_at',
@@ -126,7 +126,7 @@ class ContributionControllerTest extends TestCase
                         'id' => $tag->id,
                         'parent_tag_id' => $tag->parent_tag_id,
                         'name' => $tag->name,
-                        'public_contributions' => $tag->publicContributions()->count(),
+                        'public_contributions_count' => $tag->publicContributions()->count(),
                         'created_at' => $tag->created_at->toIso8601String(),
                         'updated_at' => $tag->updated_at->toIso8601String(),
                         'deleted_at' => null,
@@ -134,6 +134,26 @@ class ContributionControllerTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    /** @test */
+    public function can_filter_by_ids_for_index(): void
+    {
+        $contribution1 = factory(Contribution::class)->create();
+        $contribution2 = factory(Contribution::class)->create();
+        $contribution3 = factory(Contribution::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/contributions', [
+            'filter[id]' => "{$contribution1->id},{$contribution2->id}",
+        ]);
+
+        $response->assertJsonFragment(['id' => $contribution1->id]);
+        $response->assertJsonFragment(['id' => $contribution2->id]);
+        $response->assertJsonMissing(['id' => $contribution3->id]);
     }
 
     /** @test */
@@ -369,7 +389,7 @@ class ContributionControllerTest extends TestCase
                     'id',
                     'parent_tag_id',
                     'name',
-                    'public_contributions',
+                    'public_contributions_count',
                     'created_at',
                     'updated_at',
                     'deleted_at',
@@ -412,7 +432,7 @@ class ContributionControllerTest extends TestCase
                     'id' => $tag->id,
                     'parent_tag_id' => $tag->parent_tag_id,
                     'name' => $tag->name,
-                    'public_contributions' => $tag->publicContributions()->count(),
+                    'public_contributions_count' => $tag->publicContributions()->count(),
                     'created_at' => $tag->created_at->toIso8601String(),
                     'updated_at' => $tag->updated_at->toIso8601String(),
                     'deleted_at' => null,
@@ -586,7 +606,7 @@ class ContributionControllerTest extends TestCase
                     'id',
                     'parent_tag_id',
                     'name',
-                    'public_contributions',
+                    'public_contributions_count',
                     'created_at',
                     'updated_at',
                     'deleted_at',
@@ -627,7 +647,7 @@ class ContributionControllerTest extends TestCase
                     'id' => $tag->id,
                     'parent_tag_id' => $tag->parent_tag_id,
                     'name' => $tag->name,
-                    'public_contributions' => $tag->publicContributions()->count(),
+                    'public_contributions_count' => $tag->publicContributions()->count(),
                     'created_at' => $tag->created_at->toIso8601String(),
                     'updated_at' => $tag->updated_at->toIso8601String(),
                     'deleted_at' => null,

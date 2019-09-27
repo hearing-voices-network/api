@@ -6,6 +6,10 @@ return [
 
     'repo_url' => 'https://github.com/hearing-voices-network/api',
 
+    'frontend_url' => env('FRONTEND_URL'),
+
+    'admin_url' => env('ADMIN_URL'),
+
     'age_requirement' => [
         'min' => 13,
         'max' => 100,

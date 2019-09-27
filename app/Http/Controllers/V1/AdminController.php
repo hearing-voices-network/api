@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Filters\Admin\EmailFilter;
 use App\Http\Requests\Admin\StoreAdminRequest;
 use App\Http\Requests\Admin\UpdateAdminRequest;
@@ -23,7 +23,7 @@ use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\Sort;
 
-class AdminController extends Controller
+class AdminController extends ApiController
 {
     /**
      * @var \App\Services\AdminService
@@ -44,7 +44,7 @@ class AdminController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth:api', 'verified']);
         $this->authorizeResource(Admin::class);
 
         $this->adminService = $adminService;
@@ -61,6 +61,7 @@ class AdminController extends Controller
 
         $admins = QueryBuilder::for($baseQuery)
             ->allowedFilters([
+                Filter::exact('id'),
                 'name',
                 'phone',
                 Filter::custom('email', EmailFilter::class),

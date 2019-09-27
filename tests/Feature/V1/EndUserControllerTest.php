@@ -79,6 +79,11 @@ class EndUserControllerTest extends TestCase
             'birth_year',
             'gender',
             'ethnicity',
+            'contributions_count',
+            'public_contributions_count',
+            'private_contributions_count',
+            'in_review_contributions_count',
+            'changes_requested_contributions_count',
             'gdpr_consented_at',
             'email_verified_at',
             'created_at',
@@ -104,11 +109,36 @@ class EndUserControllerTest extends TestCase
             'birth_year' => $endUser->birth_year,
             'gender' => $endUser->gender,
             'ethnicity' => $endUser->ethnicity,
+            'contributions_count' => 0,
+            'public_contributions_count' => 0,
+            'private_contributions_count' => 0,
+            'in_review_contributions_count' => 0,
+            'changes_requested_contributions_count' => 0,
             'gdpr_consented_at' => $endUser->gdpr_consented_at->toIso8601String(),
             'email_verified_at' => null,
             'created_at' => $endUser->user->created_at->toIso8601String(),
             'updated_at' => $endUser->user->updated_at->toIso8601String(),
         ]);
+    }
+
+    /** @test */
+    public function can_filter_by_ids_for_index(): void
+    {
+        $endUser1 = factory(EndUser::class)->create();
+        $endUser2 = factory(EndUser::class)->create();
+        $endUser3 = factory(EndUser::class)->create();
+
+        Passport::actingAs(
+            factory(Admin::class)->create()->user
+        );
+
+        $response = $this->getJson('/v1/end-users', [
+            'filter[id]' => "{$endUser1->id},{$endUser2->id}",
+        ]);
+
+        $response->assertJsonFragment(['id' => $endUser1->id]);
+        $response->assertJsonFragment(['id' => $endUser2->id]);
+        $response->assertJsonMissing(['id' => $endUser3->id]);
     }
 
     /** @test */
@@ -332,6 +362,11 @@ class EndUserControllerTest extends TestCase
             'birth_year',
             'gender',
             'ethnicity',
+            'contributions_count',
+            'public_contributions_count',
+            'private_contributions_count',
+            'in_review_contributions_count',
+            'changes_requested_contributions_count',
             'gdpr_consented_at',
             'email_verified_at',
             'created_at',
@@ -361,6 +396,11 @@ class EndUserControllerTest extends TestCase
             'birth_year' => 1995,
             'gender' => 'Male',
             'ethnicity' => 'Asian White',
+            'contributions_count' => 0,
+            'public_contributions_count' => 0,
+            'private_contributions_count' => 0,
+            'in_review_contributions_count' => 0,
+            'changes_requested_contributions_count' => 0,
             'gdpr_consented_at' => $now->toIso8601String(),
             'email_verified_at' => null,
             'created_at' => $now->toIso8601String(),
@@ -523,6 +563,11 @@ class EndUserControllerTest extends TestCase
             'birth_year',
             'gender',
             'ethnicity',
+            'contributions_count',
+            'public_contributions_count',
+            'private_contributions_count',
+            'in_review_contributions_count',
+            'changes_requested_contributions_count',
             'gdpr_consented_at',
             'email_verified_at',
             'created_at',
@@ -549,6 +594,11 @@ class EndUserControllerTest extends TestCase
             'birth_year' => $endUser->birth_year,
             'gender' => $endUser->gender,
             'ethnicity' => $endUser->ethnicity,
+            'contributions_count' => 0,
+            'public_contributions_count' => 0,
+            'private_contributions_count' => 0,
+            'in_review_contributions_count' => 0,
+            'changes_requested_contributions_count' => 0,
             'gdpr_consented_at' => $endUser->gdpr_consented_at->toIso8601String(),
             'email_verified_at' => null,
             'created_at' => $endUser->user->created_at->toIso8601String(),
@@ -669,6 +719,11 @@ class EndUserControllerTest extends TestCase
             'birth_year',
             'gender',
             'ethnicity',
+            'contributions_count',
+            'public_contributions_count',
+            'private_contributions_count',
+            'in_review_contributions_count',
+            'changes_requested_contributions_count',
             'gdpr_consented_at',
             'email_verified_at',
             'created_at',
@@ -703,6 +758,11 @@ class EndUserControllerTest extends TestCase
             'birth_year' => 1995,
             'gender' => 'Male',
             'ethnicity' => 'Asian White',
+            'contributions_count' => 0,
+            'public_contributions_count' => 0,
+            'private_contributions_count' => 0,
+            'in_review_contributions_count' => 0,
+            'changes_requested_contributions_count' => 0,
             'gdpr_consented_at' => $endUser->gdpr_consented_at->toIso8601String(),
             'email_verified_at' => null,
             'created_at' => $endUser->user->created_at->toIso8601String(),

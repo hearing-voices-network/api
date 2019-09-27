@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1\Contribution;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\Contribution\RejectContributionRequest;
 use App\Http\Resources\ContributionResource;
 use App\Models\Contribution;
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
-class RejectController extends Controller
+class RejectController extends ApiController
 {
     /**
      * RejectController constructor.
@@ -27,7 +27,7 @@ class RejectController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth:api', 'verified']);
     }
 
     /**

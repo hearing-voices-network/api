@@ -8,7 +8,6 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
-use Laravel\Passport\RouteRegistrar;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -34,13 +33,15 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->registerPolicies();
 
-        // Ignore the default Laravel Passport migrations as we have modified them.
+        Passport::tokensExpireIn(Date::now()->endOfDay());
+        Passport::refreshTokensExpireIn(Date::tomorrow()->endOfDay());
+    }
+
+    /**
+     * Bootstrap any authentication / authorization services.
+     */
+    public function register(): void
+    {
         Passport::ignoreMigrations();
-        Passport::routes(function (RouteRegistrar $router): void {
-            $router->forAuthorization();
-            $router->forAccessTokens();
-        });
-        Passport::tokensExpireIn(Date::now()->addMinutes(30));
-        Passport::refreshTokensExpireIn(Date::now()->addMinutes(60));
     }
 }

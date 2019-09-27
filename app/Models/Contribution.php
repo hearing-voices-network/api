@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Contribution extends Model
 {
@@ -75,6 +76,6 @@ class Contribution extends Model
     public function getExcerpt(): string
     {
         // TODO: Apply better logic here.
-        return mb_substr($this->content, 0, 125);
+        return Str::limit($this->content, 125);
     }
 }

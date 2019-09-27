@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Filters\Audit\AdminIdFilter;
 use App\Http\Filters\Audit\EndUserIdFilter;
 use App\Http\Resources\AuditResource;
@@ -17,7 +17,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class AuditController extends Controller
+class AuditController extends ApiController
 {
     /**
      * AuditController constructor.
@@ -29,7 +29,7 @@ class AuditController extends Controller
     {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth:api', 'verified']);
         $this->authorizeResource(Audit::class);
     }
 
@@ -44,6 +44,7 @@ class AuditController extends Controller
 
         $audits = QueryBuilder::for($baseQuery)
             ->allowedFilters([
+                Filter::exact('id'),
                 Filter::custom('admin_id', AdminIdFilter::class),
                 Filter::custom('end_user_id', EndUserIdFilter::class),
             ])

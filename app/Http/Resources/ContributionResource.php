@@ -19,9 +19,9 @@ class ContributionResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $isAdmin = optional($request->user())->isAdmin();
-        $isAuthor = optional($request->user())->isEndUser()
-            && $this->resource->belongsToEndUser($request->user()->endUser);
+        $isAdmin = optional($request->user('api'))->isAdmin();
+        $isAuthor = optional($request->user('api'))->isEndUser()
+            && $this->resource->belongsToEndUser($request->user('api')->endUser);
 
         return [
             'id' => $this->resource->id,

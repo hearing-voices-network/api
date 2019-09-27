@@ -8,7 +8,7 @@ use App\Docs\OpenApi;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Contracts\View\View;
 
-class DocsController extends Controller
+class DocsController extends WebController
 {
     /**
      * @return \Illuminate\Contracts\View\View

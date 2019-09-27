@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 
-class LandingController extends Controller
+class LandingController extends WebController
 {
     /**
      * @return \Illuminate\Contracts\View\View

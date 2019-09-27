@@ -62,7 +62,7 @@ class EndpointInvoked
      */
     protected function __construct(Request $request, string $action, string $description)
     {
-        $this->user = $request->user();
+        $this->user = $request->user('api');
         $this->client = optional($this->user)->token()->client ?? null;
         $this->action = $action;
         $this->description = $description;

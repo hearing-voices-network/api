@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1\Export;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\Export\RequestExportRequest;
 use App\Http\Resources\ExportResource;
 use App\Models\Export;
@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-class RequestController extends Controller
+class RequestController extends ApiController
 {
     /**
      * @var \App\Services\ExportService
@@ -37,7 +37,7 @@ class RequestController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth:api', 'verified']);
 
         $this->exportService = $exportService;
     }
@@ -53,7 +53,7 @@ class RequestController extends Controller
         $this->authorize('request', [Export::class, $type]);
 
         $export = DB::transaction(function () use ($request, $type): Export {
-            return $this->exportService->create($type, $request->user()->admin);
+            return $this->exportService->create($type, $request->user('api')->admin);
         });
 
         event(EndpointInvoked::onCreate($request, "Requested export [{$type}]."));

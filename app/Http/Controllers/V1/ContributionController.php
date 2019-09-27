@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\V1;
 
 use App\Events\EndpointInvoked;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Filters\Contribution\TagIdsFilter;
 use App\Http\Requests\Contribution\StoreContributionRequest;
 use App\Http\Requests\Contribution\UpdateContributionRequest;
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class ContributionController extends Controller
+class ContributionController extends ApiController
 {
     /**
      * @var \App\Services\ContributionService
@@ -43,7 +43,7 @@ class ContributionController extends Controller
     ) {
         parent::__construct($request, $pagination);
 
-        $this->middleware(['auth', 'verified'])->except('index', 'show');
+        $this->middleware(['auth:api', 'verified'])->except('index', 'show');
         $this->authorizeResource(Contribution::class);
 
         $this->contributionService = $contributionService;
@@ -55,9 +55,9 @@ class ContributionController extends Controller
      */
     public function index(Request $request): ResourceCollection
     {
-        $isGuest = $request->user() === null;
-        $isEndUser = optional($request->user())->isEndUser();
-        $endUser = optional($request->user())->endUser;
+        $isGuest = $request->user('api') === null;
+        $isEndUser = optional($request->user('api'))->isEndUser();
+        $endUser = optional($request->user('api'))->endUser;
 
         $baseQuery = Contribution::query()
             ->with('tags.publicContributions')
@@ -73,6 +73,7 @@ class ContributionController extends Controller
 
         $contributions = QueryBuilder::for($baseQuery)
             ->allowedFilters([
+                Filter::exact('id'),
                 Filter::exact('end_user_id'),
                 Filter::custom('tag_ids', TagIdsFilter::class),
             ])
@@ -95,7 +96,7 @@ class ContributionController extends Controller
     {
         $contribution = DB::transaction(function () use ($request): Contribution {
             return $this->contributionService->create([
-                'end_user_id' => $request->user()->endUser->id,
+                'end_user_id' => $request->user('api')->endUser->id,
                 'content' => $request->input('content'),
                 'status' => $request->status,
                 'tags' => $request->input('tags.*.id'),

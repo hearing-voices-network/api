@@ -7,6 +7,7 @@ namespace App\Http\Requests\Admin;
 use App\Rules\Password;
 use App\Rules\UkPhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateAdminRequest extends FormRequest
 {
@@ -20,7 +21,12 @@ class UpdateAdminRequest extends FormRequest
         return [
             'name' => ['bail', 'string', 'max:255'],
             'phone' => ['bail', 'string', 'max:255', new UkPhoneNumber()],
-            'email' => ['bail', 'email', 'max:255'],
+            'email' => [
+                'bail',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($this->admin->user_id),
+            ],
             'password' => ['bail', 'string', 'max:255', new Password()],
         ];
     }
