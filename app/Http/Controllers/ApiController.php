@@ -33,7 +33,7 @@ abstract class ApiController extends BaseController
      */
     public function __construct(Request $request, Pagination $pagination)
     {
-        $this->perPage = $pagination->perPage($request->per_page);
+        $this->perPage = $pagination->perPage((int)$request->per_page);
 
         Auth::shouldUse('api');
     }
