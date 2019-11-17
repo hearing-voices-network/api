@@ -21,10 +21,8 @@ class OAuth2SecurityScheme extends SecurityScheme
             ->description('The standard OAuth2 authentication')
             ->flows(
                 OAuthFlow::create()
-                    ->flow(OAuthFlow::FLOW_AUTHORIZATION_CODE)
+                    ->flow(OAuthFlow::FLOW_IMPLICIT)
                     ->authorizationUrl(route('passport.authorizations.authorize'))
-                    ->tokenUrl(route('passport.token'))
-                    ->refreshUrl(route('passport.token'))
             );
     }
 }
