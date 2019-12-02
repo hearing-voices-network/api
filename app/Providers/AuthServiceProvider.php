@@ -33,7 +33,6 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->registerPolicies();
 
-        Passport::enableImplicitGrant();
         Passport::tokensExpireIn(Date::now()->endOfDay());
         Passport::refreshTokensExpireIn(Date::tomorrow()->endOfDay());
     }
