@@ -18,7 +18,15 @@
       'serviceName' => config('app.name'),
     ])
 
-    @yield('content')
+    <div class="govuk-width-container">
+      <main
+        id="main-content"
+        class="govuk-main-wrapper govuk-main-wrapper--auto-spacing"
+        role="main"
+      >
+        @yield('content')
+      </main>
+    </div>
 
     @include('admin.partials.footer', [
       'meta' => [
