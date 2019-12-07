@@ -14,37 +14,33 @@
 
             <h2 class="govuk-heading-l">Login</h2>
 
-            <div class="govuk-form-group">
+            <div class="govuk-form-group {{ $errors->has('email') ? 'govuk-form-group--error' : null }}">
               <label class="govuk-label" for="email">Email</label>
 
-              <div>
-                <input
-                  class="govuk-input"
-                  type="email"
-                  id="email"
-                  name="email"
-                  value="{{ old('email') }}"
-                >
-              </div>
-
-              @if ($errors->has('email'))
-                <p>
-                  <strong>{{ $errors->first('email') }}</strong>
-                </p>
+              @if($errors->has('email'))
+                <span id="event-name-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ $errors->first('email') }}
+                </span>
               @endif
+
+              <input
+                class="govuk-input"
+                type="email"
+                id="email"
+                name="email"
+                value="{{ old('email') }}"
+              >
             </div>
 
             <div class="govuk-form-group">
               <label class="govuk-label" for="password">Password</label>
 
-              <div>
-                <input
-                  class="govuk-input"
-                  type="password"
-                  id="password"
-                  name="password"
-                >
-              </div>
+              <input
+                class="govuk-input"
+                type="password"
+                id="password"
+                name="password"
+              >
             </div>
 
             <div style="margin-bottom: 1rem;">
