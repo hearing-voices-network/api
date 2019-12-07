@@ -11,6 +11,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 abstract class ApiController extends BaseController
 {
@@ -33,7 +34,9 @@ abstract class ApiController extends BaseController
      */
     public function __construct(Request $request, Pagination $pagination)
     {
-        $this->perPage = $pagination->perPage((int)$request->per_page);
+        $this->perPage = $pagination->perPage(
+            $this->getPerPage($request)
+        );
 
         Auth::shouldUse('api');
     }
@@ -49,5 +52,17 @@ abstract class ApiController extends BaseController
             'list' => 'list',
             'index' => 'list',
         ], $this->baseResourceAbilityMap());
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return int
+     */
+    protected function getPerPage(Request $request): int
+    {
+        return (int)$request->input(
+            'per_page',
+            Config::get('connecting_voices.pagination.default')
+        );
     }
 }

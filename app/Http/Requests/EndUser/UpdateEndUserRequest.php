@@ -24,7 +24,7 @@ class UpdateEndUserRequest extends FormRequest
                 'bail',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->endUser->user_id),
+                Rule::unique('users')->ignore($this->end_user->user_id),
             ],
             'password' => ['bail', 'string', 'max:255', new Password()],
             'country' => ['bail', 'string', 'max:255'],
