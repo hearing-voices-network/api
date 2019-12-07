@@ -1,5 +1,8 @@
 @extends('layout')
 
+@section('html-class', 'govuk-template')
+@section('body-class', 'govuk-template__body js-enabled')
+
 @push('css')
   <link rel="stylesheet" href="{{ mix('/css/admin.css') }}">
 @endpush
@@ -10,9 +13,18 @@
 
 @section('body')
   <div>
-    <h1>Admin</h1>
+    @include('admin.partials.skip-link')
+    @include('admin.partials.header', [
+      'serviceName' => config('app.name'),
+    ])
 
-    <!-- Content -->
     @yield('content')
+
+    @include('admin.partials.footer', [
+      'meta' => [
+        'visuallyHiddenTitle' => 'Support links',
+        'items' => [],
+      ],
+    ])
   </div>
 @endsection
