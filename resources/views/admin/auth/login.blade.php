@@ -45,7 +45,7 @@
 
             <div style="margin-bottom: 1rem;">
               <a
-                class="govuk-link"
+                class="govuk-link govuk-link--no-visited-state"
                 href="{{ route('auth.admin.password.request') }}"
               >
                 Forgotten password?
