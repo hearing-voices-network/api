@@ -18,4 +18,5 @@ mix
   .sass('resources/sass/admin.scss', 'public/css')
   .sass('resources/sass/docs.scss', 'public/css')
   .sass('resources/sass/end-user.scss', 'public/css')
+  .copy('resources/assets', 'public/assets')
   .version();

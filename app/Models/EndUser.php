@@ -53,7 +53,7 @@ class EndUser extends Model
             $this->user->email,
             Arr::get($emailContent, 'end_user.password_reset.subject'),
             Arr::get($emailContent, 'end_user.password_reset.body'),
-            new PasswordResetSubstituter($this->endUser, $passwordResetUrl)
+            new PasswordResetSubstituter($this, $passwordResetUrl)
         ));
     }
 

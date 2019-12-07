@@ -1,29 +1,54 @@
 @extends('admin.layout')
 
 @section('content')
-  <form action="{{ route('auth.admin.password.email') }}" method="POST">
-    @csrf
-
-    @if (session('status'))
-      <h2>{{ session('status') }}</h2>
-    @endif
-
-    <h2>Reset password</h2>
-
-    <div>
-      <label for="email">Email</label>
-
-      <div>
-        <input type="email" id="email" name="email" value="{{ old('email') }}">
-      </div>
-
-      @if ($errors->has('email'))
-        <p>
-          <strong>{{ $errors->first('email') }}</strong>
-        </p>
+  <div class="govuk-width-container">
+    <main
+      id="main-content"
+      class="govuk-main-wrapper govuk-main-wrapper--auto-spacing"
+      role="main"
+    >
+      @if(session()->has('status'))
+        <div class="govuk-panel govuk-panel--confirmation">
+          <h1 class="govuk-panel__title">
+            Check your email
+          </h1>
+          <div class="govuk-panel__body">
+            {{ session('status') }}
+          </div>
+        </div>
       @endif
-    </div>
 
-    <button type="submit">Send password reset link</button>
-  </form>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <form action="{{ route('auth.admin.password.email') }}" method="POST">
+            @csrf
+
+            <h2 class="govuk-heading-l">Reset password</h2>
+
+            <div class="govuk-form-group {{ $errors->has('email') ? 'govuk-form-group--error' : null }}">
+              <label class="govuk-label" for="email">Email</label>
+
+              @if($errors->has('email'))
+                <span id="event-name-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ $errors->first('email') }}
+                </span>
+              @endif
+
+              <input
+                class="govuk-input"
+                type="email"
+                id="email"
+                name="email"
+                value="{{ old('email') }}"
+              >
+            </div>
+
+            <button class="govuk-button" type="submit">
+              Send password reset link
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
 @endsection

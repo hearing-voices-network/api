@@ -81,7 +81,11 @@ Create a user for yourself to login with:
 And finally create OAuth clients for trusted apps:
 
 ```bash
-# TODO
+# Password grant clients (frontend webapp):
+./develop art passport:client --password
+
+# Authorization grant clients (admin webapp):
+./develop art cv:make:client "Connecting Voices Admin" "http://localhost:3000/auth/callback"
 ```
 
 You should now be able to login to the API, and the admin web app once you've 
