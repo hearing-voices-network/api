@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')
     ->group(
         function (): void {
+            Route::get('admins/me', 'Admin\\MeController')
+                ->name('admins.me');
             Route::apiResource('admins', 'AdminController');
 
             Route::apiResource('audits', 'AuditController')
@@ -29,6 +31,8 @@ Route::prefix('v1')
             Route::put('contributions/{contribution}/reject', 'Contribution\\RejectController')
                 ->name('contributions.reject');
 
+            Route::get('end-users/me', 'EndUser\\MeController')
+                ->name('end-users.me');
             Route::apiResource('end-users', 'EndUserController');
 
             Route::post('exports/{type}/request', 'Export\\RequestController')

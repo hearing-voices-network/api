@@ -69,4 +69,15 @@ class AdminPolicy
     {
         return $user->isAdmin();
     }
+
+    /**
+     * Determine whether the user can view the authenticated admin.
+     *
+     * @param \App\Models\User $user
+     * @return bool
+     */
+    public function me(User $user): bool
+    {
+        return $user->isAdmin();
+    }
 }

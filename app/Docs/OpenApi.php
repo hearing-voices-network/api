@@ -35,6 +35,7 @@ class OpenApi extends BaseOpenApi implements Responsable
                 Paths\Contributions\ContributionsApprovePath::create(),
                 Paths\Contributions\ContributionsRejectPath::create(),
                 Paths\EndUsers\EndUsersRootPath::create(),
+                Paths\EndUsers\EndUsersMePath::create(),
                 Paths\EndUsers\EndUsersNestedPath::create(),
                 Paths\Exports\ExportsRequestPath::create(),
                 Paths\Files\FilesRequestPath::create(),

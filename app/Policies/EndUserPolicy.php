@@ -85,4 +85,15 @@ class EndUserPolicy
 
         return false;
     }
+
+    /**
+     * Determine whether the user can view the authenticated end user.
+     *
+     * @param \App\Models\User $user
+     * @return bool
+     */
+    public function me(User $user): bool
+    {
+        return $user->isEndUser();
+    }
 }

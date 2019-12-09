@@ -29,8 +29,11 @@ class RequestController extends ApiController
      * @param \App\Support\Pagination $pagination
      * @param \App\Services\FileService $fileService
      */
-    public function __construct(Request $request, Pagination $pagination, FileService $fileService)
-    {
+    public function __construct(
+        Request $request,
+        Pagination $pagination,
+        FileService $fileService
+    ) {
         parent::__construct($request, $pagination);
 
         $this->middleware(['auth:api', 'verified']);
