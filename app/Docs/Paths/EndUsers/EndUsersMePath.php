@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Docs\Paths\EndUsers;
 
-use App\Docs\Operations\EndUser\DestroyEndUserOperation;
 use App\Docs\Operations\EndUser\ShowEndUserOperation;
-use App\Docs\Operations\EndUser\UpdateEndUserOperation;
 use App\Docs\Utils;
 use App\Models\EndUser;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\BaseObject;
