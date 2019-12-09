@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')
     ->group(
         function (): void {
+            Route::get('admins/me', 'Admin\\MeController')
+                ->name('admins.me');
             Route::apiResource('admins', 'AdminController');
 
             Route::apiResource('audits', 'AuditController')
