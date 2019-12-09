@@ -71,7 +71,7 @@ class AdminPolicy
     }
 
     /**
-     * Determine whether the user can approve the contribution.
+     * Determine whether the user can view the authenticated admin.
      *
      * @param \App\Models\User $user
      * @return bool

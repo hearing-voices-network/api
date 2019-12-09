@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\V1\Admin;
+namespace App\Http\Controllers\V1\EndUser;
 
 use App\Events\EndpointInvoked;
 use App\Http\Controllers\ApiController;
-use App\Http\Resources\AdminResource;
-use App\Models\Admin;
+use App\Http\Resources\EndUserResource;
+use App\Models\EndUser;
 use App\Support\Pagination;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -34,12 +34,12 @@ class MeController extends ApiController
      */
     public function __invoke(Request $request): JsonResource
     {
-        $this->authorize('me', Admin::class);
+        $this->authorize('me', EndUser::class);
 
-        $admin = $request->user('api')->admin;
+        $endUser = $request->user('api')->endUser;
 
-        event(EndpointInvoked::onRead($request, "Viewed admin [{$admin->id}]."));
+        event(EndpointInvoked::onRead($request, "Viewed end user [{$endUser->id}]."));
 
-        return new AdminResource($admin);
+        return new EndUserResource($endUser);
     }
 }
