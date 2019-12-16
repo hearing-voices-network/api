@@ -11,7 +11,7 @@ class TagIdsFilter implements Filter
 {
     /**
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $tagIds
+     * @param array|string $tagIds
      * @param string $property
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -23,7 +23,7 @@ class TagIdsFilter implements Filter
         }
 
         return $query->whereHas('tags', function (Builder $query) use ($tagIds): void {
-            $query->whereIn('tags.id', explode(',', $tagIds));
+            $query->whereIn('tags.id', (array)$tagIds);
         });
     }
 }
