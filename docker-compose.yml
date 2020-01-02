@@ -78,6 +78,15 @@ services:
     networks:
       - app-net
 
+  troposphere:
+    image: hearing-voices-network/api/troposphere
+    build:
+      context: ./docker/troposphere
+      dockerfile: Dockerfile
+    volumes:
+      - ./aws:/tmp
+    command: "python ${CFN_TEMPLATE}.py"
+
 networks:
   app-net:
     driver: bridge

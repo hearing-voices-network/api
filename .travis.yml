@@ -35,3 +35,13 @@ script:
 # Commands to run if their is a failure.
 after_failure:
   - cat storage/logs/testing.log
+
+# Commands to run for deploying.
+deploy:
+  - provider: script
+    script: ./.travis/deploy.sh
+    skip_cleanup: true
+    on:
+      branch:
+        - master
+        - develop
