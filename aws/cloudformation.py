@@ -13,7 +13,6 @@ import troposphere.ecr as ecr
 import troposphere.logs as logs
 import troposphere.elasticloadbalancingv2 as elb
 import troposphere.autoscaling as autoscaling
-import troposphere.elasticsearch as elasticsearch
 import uuid
 
 # ==================================================
@@ -202,38 +201,11 @@ queue_worker_task_count_parameter = template.add_parameter(
   )
 )
 
-elasticsearch_instance_class_parameter = template.add_parameter(
-  Parameter(
-    'ElasticsearchInstanceClass',
-    Description='The Elasticseach instance class.',
-    Type='String',
-    Default='t2.small.elasticsearch',
-    AllowedValues=[
-      't2.micro.elasticsearch',
-      't2.small.elasticsearch',
-      't2.medium.elasticsearch'
-    ],
-    ConstraintDescription='Must select a valid Elasticsearch instance type.'
-  )
-)
-
-elasticsearch_instance_count_parameter = template.add_parameter(
-  Parameter(
-    'ElasticsearchInstanceCount',
-    Description='The number of Elasticsearch nodes to run.',
-    Type='Number',
-    Default='1',
-    MinValue='1',
-    ConstraintDescription='Must be 1 or more.'
-  )
-)
-
 # ==================================================
 # Variables.
 # ==================================================
 default_queue_name_variable = Join('-', ['default', Ref(environment_parameter), Ref(uuid_parameter)])
 notifications_queue_name_variable = Join('-', ['notifications', Ref(environment_parameter), Ref(uuid_parameter)])
-search_queue_name_variable = Join('-', ['search', Ref(environment_parameter), Ref(uuid_parameter)])
 uploads_bucket_name_variable = Join('-', ['uploads', Ref(environment_parameter), Ref(uuid_parameter)])
 api_launch_template_name_variable = Join('-', ['api-launch-template', Ref(environment_parameter)])
 docker_repository_name_variable = Join('-', ['api', Ref(environment_parameter), Ref(uuid_parameter)])
@@ -247,7 +219,6 @@ api_user_name_variable = Join('-', ['api', Ref(environment_parameter)])
 ci_user_name_variable = Join('-', ['ci', Ref(environment_parameter)])
 database_name_variable = 'connecting_voices'
 database_username_variable = 'connecting_voices'
-elasticsearch_domain_name_variable=Join('-', ['search', Ref(environment_parameter)])
 
 # ==================================================
 # Resources.
@@ -378,13 +349,6 @@ notifications_queue_resource = template.add_resource(
   sqs.Queue(
     'NotificationsQueue',
     QueueName=notifications_queue_name_variable
-  )
-)
-
-search_queue_resource = template.add_resource(
-  sqs.Queue(
-    'SearchQueue',
-    QueueName=search_queue_name_variable
   )
 )
 
@@ -828,11 +792,6 @@ api_user_resource = template.add_resource(
               'Action': 'sqs:*',
               'Effect': 'Allow',
               'Resource': GetAtt(notifications_queue_resource, 'Arn')
-            },
-            {
-              'Action': 'sqs:*',
-              'Effect': 'Allow',
-              'Resource': GetAtt(search_queue_resource, 'Arn')
             }
           ]
         }
@@ -870,36 +829,6 @@ ci_user_resource = template.add_resource(
         }
       )
     ]
-  )
-)
-
-elasticsearch_resource = template.add_resource(
-  elasticsearch.Domain(
-    'Elasticsearch',
-    AccessPolicies={
-      'Version': '2012-10-17',
-      'Statement': [
-        {
-          'Effect': 'Allow',
-          'Principal': {
-            'AWS': GetAtt(api_user_resource, 'Arn')
-          },
-          'Action': 'es:*',
-          'Resource': Sub('arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${DomainName}/*', DomainName=elasticsearch_domain_name_variable)
-        }
-      ]
-    },
-    DomainName=elasticsearch_domain_name_variable,
-    EBSOptions=elasticsearch.EBSOptions(
-        EBSEnabled=True,
-        VolumeSize=10,
-        VolumeType='gp2'
-    ),
-    ElasticsearchClusterConfig=elasticsearch.ElasticsearchClusterConfig(
-      InstanceCount=Ref(elasticsearch_instance_count_parameter),
-      InstanceType=Ref(elasticsearch_instance_class_parameter)
-    ),
-    ElasticsearchVersion='6.3'
   )
 )
 
@@ -975,14 +904,6 @@ template.add_output(
     'LoadBalancerDomain',
     Description='The domain name of the load balancer',
     Value=GetAtt(load_balancer_resource, 'DNSName')
-  )
-)
-
-template.add_output(
-  Output(
-    'ElasticsearchHost',
-    Description='The host of the Elasticsearch instance',
-    Value=GetAtt(elasticsearch_resource, 'DomainEndpoint')
   )
 )
 
