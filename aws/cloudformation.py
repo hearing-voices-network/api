@@ -520,8 +520,7 @@ queue_worker_task_definition_resource = template.add_resource(
         'php',
         'artisan',
         'queue:work',
-        '--tries=1',
-        Join('=', ['--queue', Join(',', [default_queue_name_variable])])
+        '--tries=1'
       ],
       WorkingDirectory='/var/www/html',
       HealthCheck=ecs.HealthCheck(
@@ -567,7 +566,7 @@ scheduler_task_definition_resource = template.add_resource(
       Command=[
         'php',
         'artisan',
-        'tlr:run-scheduler'
+        'cv:schedule:loop'
       ],
       WorkingDirectory='/var/www/html',
       HealthCheck=ecs.HealthCheck(
