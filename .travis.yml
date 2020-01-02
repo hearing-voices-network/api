@@ -36,6 +36,12 @@ script:
 after_failure:
   - cat storage/logs/testing.log
 
+# Commands to run before deploying.
+before_deploy:
+  - curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+  - unzip awscli-bundle.zip
+  - sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+
 # Commands to run for deploying.
 deploy:
   - provider: script
