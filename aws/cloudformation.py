@@ -205,7 +205,6 @@ queue_worker_task_count_parameter = template.add_parameter(
 # Variables.
 # ==================================================
 default_queue_name_variable = Join('-', ['default', Ref(environment_parameter), Ref(uuid_parameter)])
-notifications_queue_name_variable = Join('-', ['notifications', Ref(environment_parameter), Ref(uuid_parameter)])
 uploads_bucket_name_variable = Join('-', ['uploads', Ref(environment_parameter), Ref(uuid_parameter)])
 api_launch_template_name_variable = Join('-', ['api-launch-template', Ref(environment_parameter)])
 docker_repository_name_variable = Join('-', ['api', Ref(environment_parameter), Ref(uuid_parameter)])
@@ -342,13 +341,6 @@ default_queue_resource = template.add_resource(
   sqs.Queue(
     'DefaultQueue',
     QueueName=default_queue_name_variable
-  )
-)
-
-notifications_queue_resource = template.add_resource(
-  sqs.Queue(
-    'NotificationsQueue',
-    QueueName=notifications_queue_name_variable
   )
 )
 
@@ -529,7 +521,7 @@ queue_worker_task_definition_resource = template.add_resource(
         'artisan',
         'queue:work',
         '--tries=1',
-        Join('=', ['--queue', Join(',', [default_queue_name_variable, notifications_queue_name_variable])])
+        Join('=', ['--queue', Join(',', [default_queue_name_variable])])
       ],
       WorkingDirectory='/var/www/html',
       HealthCheck=ecs.HealthCheck(
@@ -787,11 +779,6 @@ api_user_resource = template.add_resource(
               'Action': 'sqs:*',
               'Effect': 'Allow',
               'Resource': GetAtt(default_queue_resource, 'Arn')
-            },
-            {
-              'Action': 'sqs:*',
-              'Effect': 'Allow',
-              'Resource': GetAtt(notifications_queue_resource, 'Arn')
             }
           ]
         }
@@ -888,14 +875,6 @@ template.add_output(
     'DefaultQueue',
     Description='The name of the default queue',
     Value=default_queue_name_variable
-  )
-)
-
-template.add_output(
-  Output(
-    'NotificationsQueue',
-    Description='The name of the notifications queue',
-    Value=notifications_queue_name_variable
   )
 )
 
