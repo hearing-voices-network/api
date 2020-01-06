@@ -19,7 +19,7 @@ import uuid
 # Template details.
 # ==================================================
 template = Template('Create the infrastructure needed to run the Connecting Voices API')
-template.add_version('2010-09-09')
+template.set_version('2010-09-09')
 
 # ==================================================
 # Parameters.
@@ -609,16 +609,37 @@ api_target_group_resource = template.add_resource(
   )
 )
 
-load_balancer_listener_resource = template.add_resource(
+load_balancer_http_listener_resource = template.add_resource(
+  elb.Listener(
+    'LoadBalancerHttpListener',
+    LoadBalancerArn=Ref(load_balancer_resource),
+    Port=80,
+    Protocol='HTTP',
+    DefaultActions=[
+      elb.Action(
+        Type='redirect',
+        RedirectConfig=elb.RedirectConfig(
+          Port='443',
+          Protocol='HTTPS',
+          StatusCode='HTTP_301'
+        )
+      )
+    ]
+  )
+)
+
+load_balancer_https_listener_resource = template.add_resource(
   elb.Listener(
     'LoadBalancerListener',
     LoadBalancerArn=Ref(load_balancer_resource),
     Port=443,
     Protocol='HTTPS',
-    DefaultActions=[elb.Action(
-      Type='forward',
-      TargetGroupArn=Ref(api_target_group_resource)
-    )],
+    DefaultActions=[
+      elb.Action(
+        Type='forward',
+        TargetGroupArn=Ref(api_target_group_resource)
+      )
+    ],
     Certificates=[
       elb.Certificate(
         CertificateArn=Ref(certificate_arn_parameter)
@@ -708,7 +729,10 @@ api_service_resource = template.add_resource(
       TargetGroupArn=Ref(api_target_group_resource)
     )],
     Role=Ref(ecs_service_role_resource),
-    DependsOn=[load_balancer_listener_resource]
+    DependsOn=[
+      load_balancer_http_listener_resource,
+      load_balancer_https_listener_resource
+    ]
   )
 )
 
