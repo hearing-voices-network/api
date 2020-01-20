@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Contribution;
 
 use App\Models\Contribution;
+use App\Rules\Words;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -18,7 +19,7 @@ class UpdateContributionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['bail', 'string', 'max:255'],
+            'content' => ['bail', 'string', 'max:10000', new Words()],
             'status' => [
                 'bail',
                 'string',
