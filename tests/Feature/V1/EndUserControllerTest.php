@@ -491,6 +491,39 @@ class EndUserControllerTest extends TestCase
         );
     }
 
+    /** @test */
+    public function validation_error_given_when_email_belongs_to_soft_deleted_end_user(): void
+    {
+        $user = factory(User::class)->create([
+            'email' => 'john.doe@example.com',
+            'deleted_at' => Date::today(),
+        ]);
+        factory(EndUser::class)->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->postJson('/v1/end-users', [
+            'email' => 'john.doe@example.com',
+            'password' => 'P@55w0rD!',
+            'country' => 'United Kingdom',
+            'birth_year' => 1995,
+            'gender' => 'Male',
+            'ethnicity' => 'Asian White',
+        ]);
+
+        $response->assertJsonValidationErrors('email');
+        $response->assertJsonFragment([
+            'errors' => [
+                'email' => [
+                    sprintf(
+                        'The account has been withdrawn. Please contact the admin team via %s for more info.',
+                        config('connecting_voices.admin_email')
+                    ),
+                ],
+            ],
+        ]);
+    }
+
     /*
      * Show.
      */
