@@ -33,4 +33,19 @@ class StoreEndUserRequest extends FormRequest
             'ethnicity' => ['bail', 'string', 'max:255'],
         ];
     }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'email.unique' => sprintf(
+                'The account has been withdrawn. Please contact the admin team via %s for more info.',
+                config('connecting_voices.admin_email')
+            ),
+        ];
+    }
 }
