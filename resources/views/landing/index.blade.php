@@ -12,16 +12,7 @@
         Admin Login
       </a>
     </li>
-
-    <li>
-      <a
-        class="govuk-link govuk-link--no-visited-state"
-        href="{{ route('auth.end-user.login')}}"
-      >
-        End User Login
-      </a>
-    </li>
-
+    
     <li>
       <a
         class="govuk-link govuk-link--no-visited-state"
