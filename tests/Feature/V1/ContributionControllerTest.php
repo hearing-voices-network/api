@@ -157,7 +157,7 @@ class ContributionControllerTest extends TestCase
     }
 
     /** @test */
-    public function can_filter_by_end_user_id_for_index(): void
+    public function admin_can_filter_by_end_user_id_for_index(): void
     {
         $contribution1 = factory(Contribution::class)->create();
         $contribution2 = factory(Contribution::class)->create();
@@ -283,6 +283,37 @@ class ContributionControllerTest extends TestCase
 
         $response->assertJsonFragment(['id' => $endUserContribution->id]);
         $response->assertJsonFragment(['id' => $publicContribution->id]);
+        $response->assertJsonMissing(['id' => $privateContribution->id]);
+        $response->assertJsonMissing(['id' => $inReviewContribution->id]);
+        $response->assertJsonMissing(['id' => $changesRequestedContribution->id]);
+    }
+
+    /** @test */
+    public function end_user_can_filter_only_their_own_for_index(): void
+    {
+        $endUser = factory(EndUser::class)->create();
+
+        $endUserContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_PRIVATE)
+            ->create(['end_user_id' => $endUser->id]);
+        $publicContribution = factory(Contribution::class)
+            ->create();
+        $privateContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_PRIVATE)
+            ->create();
+        $inReviewContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_IN_REVIEW)
+            ->create();
+        $changesRequestedContribution = factory(Contribution::class)
+            ->state(Contribution::STATUS_CHANGES_REQUESTED)
+            ->create();
+
+        Passport::actingAs($endUser->user);
+
+        $response = $this->getJson('/v1/contributions', ['filter[end_user_id]' => $endUser->id]);
+
+        $response->assertJsonFragment(['id' => $endUserContribution->id]);
+        $response->assertJsonMissing(['id' => $publicContribution->id]);
         $response->assertJsonMissing(['id' => $privateContribution->id]);
         $response->assertJsonMissing(['id' => $inReviewContribution->id]);
         $response->assertJsonMissing(['id' => $changesRequestedContribution->id]);
