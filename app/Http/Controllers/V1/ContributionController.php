@@ -7,6 +7,7 @@ namespace App\Http\Controllers\V1;
 use App\Events\EndpointInvoked;
 use App\Http\Controllers\ApiController;
 use App\Http\Filters\Contribution\TagIdsFilter;
+use App\Http\Requests\Contribution\IndexContributionRequest;
 use App\Http\Requests\Contribution\StoreContributionRequest;
 use App\Http\Requests\Contribution\UpdateContributionRequest;
 use App\Http\Resources\ContributionResource;
@@ -50,10 +51,10 @@ class ContributionController extends ApiController
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param \App\Http\Requests\Contribution\IndexContributionRequest $request
      * @return \Illuminate\Http\Resources\Json\ResourceCollection
      */
-    public function index(Request $request): ResourceCollection
+    public function index(IndexContributionRequest $request): ResourceCollection
     {
         $isGuest = $request->user('api') === null;
         $isEndUser = optional($request->user('api'))->isEndUser();
@@ -65,11 +66,14 @@ class ContributionController extends ApiController
                 // When guest, filter only public.
                 $query->where('contributions.status', '=', Contribution::STATUS_PUBLIC);
             })
-            ->when($isEndUser, function (Builder $query) use ($endUser): void {
-                // When end user, filter only public and all of own.
-                $query->where('contributions.status', '=', Contribution::STATUS_PUBLIC)
-                    ->orWhere('contributions.end_user_id', '=', $endUser->id);
-            });
+            ->when(
+                $isEndUser && $request->doesntHaveFilter('end_user_id'),
+                function (Builder $query) use ($endUser): void {
+                    // When end user, filter only public and all of own.
+                    $query->where('contributions.status', '=', Contribution::STATUS_PUBLIC)
+                        ->orWhere('contributions.end_user_id', '=', $endUser->id);
+                }
+            );
 
         $contributions = QueryBuilder::for($baseQuery)
             ->allowedFilters([

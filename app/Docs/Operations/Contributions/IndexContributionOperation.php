@@ -57,7 +57,8 @@ class IndexContributionOperation extends Operation
                         <<<'EOT'
                         The ID of an end user to filter by
 
-                        * Only usable by an admin.
+                        * Can only be used by an end user when specifying their own ID.
+                        * Can be used by an admin.
                         EOT
                     )
                     ->schema(Schema::string()->format(Schema::FORMAT_UUID)),
