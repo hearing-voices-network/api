@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\EndUser;
 
-use App\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
@@ -26,7 +25,7 @@ class UpdateEndUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users')->ignore($this->end_user->user_id),
             ],
-            'password' => ['bail', 'string', 'max:255', new Password()],
+            'password' => ['bail', 'string', 'min:1', 'max:255'],
             'country' => ['bail', 'string', 'max:255'],
             'birth_year' => [
                 'bail',

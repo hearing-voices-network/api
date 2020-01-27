@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\EndUser;
 
-use App\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
@@ -21,7 +20,7 @@ class StoreEndUserRequest extends FormRequest
     {
         return [
             'email' => ['bail', 'required', 'email', 'max:255', 'unique:users'],
-            'password' => ['bail', 'required', 'string', 'max:255', new Password()],
+            'password' => ['bail', 'required', 'string', 'min:1', 'max:255'],
             'country' => ['bail', 'string', 'max:255'],
             'birth_year' => [
                 'bail',
