@@ -410,22 +410,6 @@ class EndUserControllerTest extends TestCase
     }
 
     /** @test */
-    public function secure_password_required_for_store(): void
-    {
-        $response = $this->postJson('/v1/end-users', [
-            'email' => 'john.doe@example.com',
-            'password' => 'secret',
-            'country' => 'United Kingdom',
-            'birth_year' => 1995,
-            'gender' => 'Male',
-            'ethnicity' => 'Asian White',
-        ]);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertJsonValidationErrors('password');
-    }
-
-    /** @test */
     public function endpoint_invoked_event_dispatched_for_store(): void
     {
         Event::fake([EndpointInvoked::class]);
