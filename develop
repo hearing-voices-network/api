@@ -15,14 +15,14 @@ if [[ $# -gt 0  ]]; then
 
         art|artisan )
             shift 1
-            docker-compose exec ${TTY} \
+            docker-compose run --rm ${TTY} \
                 api \
                 php artisan "$@"
             ;;
 
         composer )
             shift 1
-            docker-compose exec ${TTY} \
+            docker-compose run --rm ${TTY} \
                 api \
                 composer "$@"
             ;;
