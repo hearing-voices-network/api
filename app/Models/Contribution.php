@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Support\Markdown;
 use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -75,7 +76,12 @@ class Contribution extends Model
      */
     public function getExcerpt(): string
     {
-        // TODO: Apply better logic here.
-        return Str::limit($this->content, 125);
+        // TODO: Apply better logic here so words aren't cut off.
+
+        /** @var \App\Support\Markdown $markdown */
+        $markdown = app()->get(Markdown::class);
+        $content = $markdown->strip($this->content);
+
+        return Str::limit($content, 125);
     }
 }
