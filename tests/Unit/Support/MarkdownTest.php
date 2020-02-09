@@ -9,33 +9,52 @@ use Tests\TestCase;
 
 class MarkdownTest extends TestCase
 {
-    /** @test */
-    public function it_strips_tags(): void
-    {
-        $markdown = new Markdown();
+    /**
+     * @var \App\Support\Markdown
+     */
+    protected $markdown;
 
-        $results = $markdown->sanitise('<h1>Lorem ipsum</h1>');
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->markdown = $this->app->get(Markdown::class);
+    }
+
+    /** @test */
+    public function sanitise_strips_tags(): void
+    {
+        $results = $this->markdown->sanitise('<h1>Lorem ipsum</h1>');
 
         $this->assertEquals('Lorem ipsum', $results);
     }
 
     /** @test */
-    public function it_strips_javascript(): void
+    public function sanitise_strips_javascript(): void
     {
-        $markdown = new Markdown();
-
-        $results = $markdown->sanitise('[javascript:alert("hello")](Lorem ipsum)');
+        $results = $this->markdown->sanitise('[javascript:alert("hello")](Lorem ipsum)');
 
         $this->assertEquals('[alert("hello")](Lorem ipsum)', $results);
     }
 
     /** @test */
-    public function it_trims_spaces(): void
+    public function sanitise_trims_spaces(): void
     {
-        $markdown = new Markdown();
-
-        $results = $markdown->sanitise(" Lorem ipsum\t");
+        $results = $this->markdown->sanitise(" Lorem ipsum\t");
 
         $this->assertEquals('Lorem ipsum', $results);
+    }
+
+    /** @test */
+    public function strip_strips_markdown(): void
+    {
+        $content = $this->markdown->strip(
+            "# This is a heading!\n\nThis is a paragraph."
+        );
+
+        $this->assertEquals(
+            'This is a heading! This is a paragraph.',
+            $content
+        );
     }
 }
